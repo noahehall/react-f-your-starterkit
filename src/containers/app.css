@@ -1,0 +1,13 @@
+body {
+  background-color: white;
+  color:blue;
+  display: flex;
+  background: "linear-gradient(#ccc, #666)";
+  transform: "rotate(5deg)";
+  & #root {
+    & p {
+
+      font-size: 20px;
+    }
+  }
+}
