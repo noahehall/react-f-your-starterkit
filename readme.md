@@ -12,11 +12,11 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 - testing: mocha - chai - sinon - enzyme - eslint - sass-lint
 - isomorphic/universal: express + react + react-router + helmet
 - styling (injected style tags): postcss
-- developer happiness (hot reload): watchify
+- developer happiness (hot reload): watchify + livereactload
 - build tool: gulp
 - compilation : babel
 
-# boilerplates used in this project
+# boilerplates used in this project TBD
 - [live react load gulp example](https://github.com/milankinen/livereactload/tree/master/examples/03-build-systems)
 - [react boilerplate](https://github.com/jarredwitt/react-boilerplate/blob/master/gulpfile.js)
 - [express js boilerplate](https://github.com/yhagio/express-boilerplate/blob/master/server.js)
