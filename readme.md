@@ -24,7 +24,6 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 - Testing boilerplate: combined the two below repos   
   - [Enzyme Example](https://github.com/lelandrichardson/enzyme-example-mocha)
   - [Gulp Spawn Mocha](https://github.com/knpwrs/gulp-spawn-mocha/tree/master/test)
-- [express-handlebars](https://github.com/ericf/express-handlebars/blob/master/examples/advanced/server.js)
 - isomorphic
   - [ponyfoo](https://ponyfoo.com/articles/universal-react-babel)
   - [smashing magazine](https://www.smashingmagazine.com/2016/03/server-side-rendering-react-node-express/)
