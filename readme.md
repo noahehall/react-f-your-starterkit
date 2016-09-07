@@ -10,12 +10,11 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 - immutability: immutable js
 - state management: redux
 - testing: mocha - chai - sinon - enzyme - eslint - sass-lint
-- isomorphic/universal: express - handlebars
-- styling (injected style tags): sass + postcss
+- isomorphic/universal: express + react + react-router + helmet
+- styling (injected style tags): postcss
 - developer happiness (hot reload): watchify
 - build tool: gulp
 - compilation : babel
-- security: helmet, method-override, csurf
 
 # boilerplates used in this project
 - [live react load gulp example](https://github.com/milankinen/livereactload/tree/master/examples/03-build-systems)
