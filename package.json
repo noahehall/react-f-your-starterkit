@@ -1,7 +1,7 @@
 {
-  "name": "livereactload-build-systems-example",
-  "version": "2.0.0",
-  "author": "Matti Lankinen <m.lankinen@iki.fi> (https://github.com/milankinen)",
+  "name": "react-f-your-starterkit",
+  "version": "0.1.0",
+  "author": "noah edward hall <noahedwardhall@gmail.com> (https://github.com/noahehall)",
   "license": "MIT",
   "scripts": {
     "start": "./node_modules/.bin/gulp"
