@@ -37,6 +37,8 @@ function createBundler(useWatchify, server) {
       browserField : false,
       builtins : false,
       commondir : false,
+      detectGlobals: false, //ignore all globals
+      /* ignore specific globals
       insertGlobalVars : {
           process: undefined,
           global: undefined,
@@ -44,6 +46,7 @@ function createBundler(useWatchify, server) {
           Buffer: undefined,
           __dirname: undefined
       }
+      */
     })
   }
   return browserify({
