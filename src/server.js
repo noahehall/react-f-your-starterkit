@@ -16,7 +16,7 @@ function renderFullPage(html, preloadedState) {
     <!doctype html>
     <html>
       <head>
-        <title>Redux Universal Example</title>
+        <title>for your starter kit needs</title>
       </head>
       <body>
         <div id="root">${html}</div>
