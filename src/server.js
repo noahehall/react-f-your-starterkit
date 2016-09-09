@@ -15,8 +15,7 @@ function renderFullPage(html, preloadedState) {
         <title>Redux Universal Example</title>
       </head>
       <body>
-        <div id="root"></div>
-        ${html}
+        <div id="root">${html}</div>
         <script src="/js/bundle.js"></script>
       </body>
     </html>

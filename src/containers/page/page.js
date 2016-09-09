@@ -13,7 +13,6 @@ export default class Page extends React.Component {
       <div className="page">
         <Link to={`/about`}>About</Link>
         <Link to={`/`}>Home</Link>
-        <div>hello noah</div>
         {this.props.children}
       </div>
     );

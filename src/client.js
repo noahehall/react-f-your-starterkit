@@ -1,13 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-//import { Provider } from 'react-redux';
-//import App from './containers/App';
+import { render } from 'react-dom';
+import { Router, browserHistory }  from 'react-router';
+import routes from './routes';
 import Page from './containers/page/page';
-//import configureStore from './store/configureStore';
 
-//  <Provider store={configureStore()}>
-//  </Provider>,
-ReactDOM.render(
-    <Page />,
+render(
+    <Router children={routes} history={browserHistory} />,
   document.getElementById('root')
 );
