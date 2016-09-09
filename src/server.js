@@ -3,10 +3,11 @@ import React from 'react';
 import Router from 'react-router';
 import Helmet from 'react-helmet';
 //import routes from './routes';
-console.log('dirname is',__dirname);
-const app = express();
 
-app.get("/", function (req, res) {
+const app = express();
+app.use(express.static(__dirname +'/public'));
+
+app.get("*", function (req, res) {
   res.send("<!DOCTYPE html>" +
   "<html>" +
     "<head>" +
@@ -14,14 +15,9 @@ app.get("/", function (req, res) {
     "</head>" +
     "<body>" +
       "<div id='root'></div>" +
-      "<script type='text/javascript' src='/public/js/bundle.js'></script>" +
+      "<script type='text/javascript' src='/js/bundle.js'></script>" +
     "</body>" +
   "</html>")
-})
-
-app.get("/public/js/bundle.js", function (req, res) {
-  console.log('noah');
-  res.sendFile("public/js/bundle.js", {root: __dirname})
 })
 
 app.listen(3000)
