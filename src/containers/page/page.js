@@ -3,7 +3,7 @@ var Link = require('react-router').Link
 
 import styles from './page.css';
 
-export default class PageContainer extends React.Component {
+export default class Page extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -14,9 +14,8 @@ export default class PageContainer extends React.Component {
         <Link to={`/about`}>About</Link>
         <Link to={`/`}>Home</Link>
         <div>hello noah</div>
+        {this.props.children}
       </div>
     );
   }
 }
-
-//{this.props.children}

@@ -25,6 +25,17 @@ function createBundler(useWatchify, server) {
     return browserify({
       entries:      [ "src/server.js" ],
       transform:    [
+        [postCss, {
+          plugin:[
+            ['postcss-cssnext',{
+              browsers: ['last 3 versions']
+            }],
+            'postcss-import',
+            'postcss-extend',
+          ],
+          inject: true,
+          extensions: ['.css','.scss']
+        }],
         [babelify, {
           presets: [ 'es2015', 'stage-0', 'react' ]
         }]
