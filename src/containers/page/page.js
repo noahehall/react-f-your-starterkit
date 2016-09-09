@@ -11,7 +11,6 @@ export default class Page extends React.Component {
   render() {
     return (
       <div className="page">
-        <Link to={`/about`}>About</Link>
         <Link to={`/`}>Home</Link>
         {this.props.children}
       </div>

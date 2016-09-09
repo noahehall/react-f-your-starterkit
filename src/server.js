@@ -7,6 +7,10 @@ import createLocation            from 'history/lib/createLocation';
 import routes                    from './routes';
 import Immutable from 'immutable';
 
+//store
+import { Provider } from 'react-redux';
+import configure from './store/configure';
+
 function renderFullPage(html, preloadedState) {
   return `
     <!doctype html>
@@ -33,17 +37,14 @@ app.get("*", function (req, res) {
       return res.status(500).end('Internal server error');
     }
     if (!renderProps) return res.status(404).end('Not found.');
-/*
     //setup store based on data sent in
     let store = configure(Immutable.fromJS({msg:'hello noah'}));
     let initialState = store.getState();
 
-
-*/
       const InitialComponent = (
-        //<Provider store={store} >
+        <Provider store={store} >
           <RouterContext {...renderProps} />
-        //</Provider>
+        </Provider>
       );
       const html = renderToString(InitialComponent);
       res.send(renderFullPage(html));

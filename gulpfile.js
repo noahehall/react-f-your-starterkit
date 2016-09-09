@@ -19,7 +19,6 @@ var gulp       = require("gulp"),
 
 var isProd = process.env.NODE_ENV === "production"
 
-
 function createBundler(useWatchify, server) {
   if (server) {
     return browserify({
@@ -33,7 +32,7 @@ function createBundler(useWatchify, server) {
             'postcss-import',
             'postcss-extend',
           ],
-          inject: true,
+          inject: false,
           extensions: ['.css','.scss']
         }],
         [babelify, {
