@@ -26,7 +26,7 @@ function createBundler(useWatchify, server) {
       entries:      [ "src/server.js" ],
       transform:    [
         [babelify, {
-          presets: [ 'es2015', 'react' ]
+          presets: [ 'es2015', 'stage-0', 'react' ]
         }]
       ],
       plugin: [],
@@ -64,7 +64,7 @@ function createBundler(useWatchify, server) {
         extensions: ['.css','.scss']
       }],
       [babelify, {
-        presets: [ 'es2015', 'react' ]
+        presets: [ 'es2015', 'stage-0', 'react' ]
       }],
       [envify, {}]
     ],
