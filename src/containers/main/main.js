@@ -10,7 +10,7 @@ export default class Main extends React.Component {
 
   render() {
     return (
-        <div>hello noah</div>
+        <div className='main'>hello noah</div>
     );
   }
 }

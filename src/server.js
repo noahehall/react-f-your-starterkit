@@ -16,6 +16,7 @@ function renderFullPage(html, preloadedState) {
       </head>
       <body>
         <div id="root"></div>
+        ${html}
         <script src="/js/bundle.js"></script>
       </body>
     </html>
@@ -26,8 +27,30 @@ const app = express();
 app.use(express.static(__dirname +'/public'));
 
 app.get("*", function (req, res) {
+  const location = createLocation(req.url);
+  match({ routes, location }, (err, redirectLocation, renderProps) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).end('Internal server error');
+    }
+    if (!renderProps) return res.status(404).end('Not found.');
+/*
+    //setup store based on data sent in
+    let store = configure(Immutable.fromJS({msg:'hello noah'}));
+    let initialState = store.getState();
 
-  res.send(renderFullPage(renderToString(routes)));
+
+*/
+      const InitialComponent = (
+        //<Provider store={store} >
+          <RouterContext {...renderProps} />
+        //</Provider>
+      );
+      const html = renderToString(InitialComponent);
+      res.send(renderFullPage(html));
+
+  });
+
 })
 
 app.listen(3000)
