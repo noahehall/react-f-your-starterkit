@@ -17,6 +17,7 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 - compilation : babel
 
 # boilerplates used in this project TBD
+- [redux server side example](http://redux.js.org/docs/recipes/ServerRendering.html)
 - [live react load gulp example](https://github.com/milankinen/livereactload/tree/master/examples/03-build-systems)
 - [react boilerplate](https://github.com/jarredwitt/react-boilerplate/blob/master/gulpfile.js)
 - [express js boilerplate](https://github.com/yhagio/express-boilerplate/blob/master/server.js)

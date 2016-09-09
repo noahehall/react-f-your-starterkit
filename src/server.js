@@ -20,6 +20,9 @@ function renderFullPage(html, preloadedState) {
       </head>
       <body>
         <div id="root">${html}</div>
+        <script>
+          window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)}
+        </script>
         <script src="/js/bundle.js"></script>
       </body>
     </html>
@@ -41,13 +44,13 @@ app.get("*", function (req, res) {
     let store = configure(Immutable.fromJS({msg:'hello noah'}));
     let initialState = store.getState();
 
-      const InitialComponent = (
-        <Provider store={store} >
-          <RouterContext {...renderProps} />
-        </Provider>
-      );
-      const html = renderToString(InitialComponent);
-      res.send(renderFullPage(html));
+    const InitialComponent = (
+      <Provider store={store} >
+        <RouterContext {...renderProps} />
+      </Provider>
+    );
+    const html = renderToString(InitialComponent);
+    res.end(renderFullPage(html, initialState));
 
   });
 

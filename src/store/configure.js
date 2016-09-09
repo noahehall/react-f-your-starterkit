@@ -5,12 +5,8 @@ import Immutable from 'immutable';
 import thunk from 'redux-thunk';
 import * as reducers from './reducers';
 
-const someState = Immutable.fromJS({
-  msg: 'Welcome to the noahs React.JS Boilerplate'
-});
-
-export default (initialState = someState) => {
-  console.log('blah');
+export default (initialState) => {
+  console.log('init state', initialState);
   initialState = process.env.state || initialState
   return createStore(
     combineReducers(reducers),
