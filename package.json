@@ -4,6 +4,7 @@
   "author": "noah edward hall <noahedwardhall@gmail.com> (https://github.com/noahehall)",
   "license": "MIT",
   "scripts": {
+    "prestart": "npm run test",
     "start": "./node_modules/.bin/gulp",
     "test": "./node_modules/.bin/gulp test"
   },
