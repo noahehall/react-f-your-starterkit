@@ -1,13 +1,18 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-//import { Provider } from 'react-redux';
-//import App from './containers/App';
+import { render } from 'react-dom';
+import { Router, browserHistory }  from 'react-router';
+import routes from './routes';
 import Page from './containers/page/page';
-//import configureStore from './store/configureStore';
+import Immutable from 'immutable';
 
-//  <Provider store={configureStore()}>
-//  </Provider>,
-ReactDOM.render(
-    <Page />,
+import { Provider } from 'react-redux';
+import configure from './store/configure';
+
+const preloadedState = Immutable.fromJS(window.__PRELOADED_STATE__);
+
+render(
+  <Provider store={configure(preloadedState)} >
+    <Router children={routes} history={browserHistory} />
+  </Provider>,
   document.getElementById('root')
 );
