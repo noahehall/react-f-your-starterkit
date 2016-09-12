@@ -1,4 +1,4 @@
-# Where are we here?
+# Why are we here?
 if you need [the following](https://medium.com/front-end-developers/handcrafting-an-isomorphic-redux-application-with-love-40ada4468af4#.vfm0r9hd8):
 
  - Wholegrain server-side rendering
@@ -39,3 +39,5 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
   - [quick eslint starter](https://gist.github.com/cletusw/e01a85e399ab563b1236)
   - [find eslint rules](https://github.com/sarbbottam/eslint-find-rules)
   - [lint for accessibility](https://www.npmjs.com/package/eslint-plugin-jsx-a11y)
+  - [stylint](http://stylelint.io/user-guide/rules/)
+  - [gulp-stylelint](https://github.com/olegskl/gulp-stylelint)

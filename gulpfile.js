@@ -7,6 +7,7 @@ const
   buffer = require("vinyl-buffer"),
   envify = require("envify"),
   eslint = require('gulp-eslint'),
+  gstylelint = require('gulp-stylelint'),
   gulp = require("gulp"),
   gulpSequence = require('gulp-sequence'),
   gutil = require("gulp-util"),
@@ -14,6 +15,7 @@ const
   mocha = require('gulp-spawn-mocha'),
   nodemon = require("gulp-nodemon"),
   postCss = require('browserify-postcss'),
+  reporter = require('postcss-reporter'),
   source = require("vinyl-source-stream"),
   watchify = require("watchify");
 
@@ -41,7 +43,8 @@ function createBundler(useWatchify, server) {
             browsers: ['last 3 versions']
           }],
           'postcss-import',
-          'postcss-extend'
+          'postcss-extend',
+          [reporter, { clearMessages: true }]
         ]
       }],
       [babelify, {}],
@@ -124,7 +127,7 @@ gulp.task('test', () => { //eslint-disable-line arrow-body-style
     .on("error", gutil.log);
 });
 
-gulp.task('lint', () => { //eslint-disable-line arrow-body-style
+gulp.task('eslint', () => { //eslint-disable-line arrow-body-style
     // ESLint ignores files with "node_modules" paths.
     // So, it's best to have gulp ignore the directory as well.
     // Also, Be sure to return the stream from the task;
@@ -141,8 +144,24 @@ gulp.task('lint', () => { //eslint-disable-line arrow-body-style
       .pipe(eslint.failAfterError());
 });
 
+gulp.task('stylelint', () => { //eslint-disable-line arrow-body-style
+  return gulp
+    .src('src/**/*.css')
+    .pipe(gstylelint({
+      debug: !isProd,
+      failAfterError: true,
+      reportOutputDir: 'coverage/lint',
+      reporters: [
+        {console: true, formatter: 'verbose'},
+        {formatter: 'json', save: 'report.json'}
+      ]
+    }));
+});
+
 gulp.task("default", gulpSequence(
-    'lint',
+    'stylelint',
+    'eslint',
+    'test',
     'transpile:server',
     ["watch:server", "watch:js"]
 ));
