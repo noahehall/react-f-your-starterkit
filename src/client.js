@@ -1,12 +1,10 @@
-import React from 'react';
-import { render } from 'react-dom';
-import { Router, browserHistory }  from 'react-router';
-import routes from './routes';
-import Page from './containers/page/page';
-import Immutable from 'immutable';
-
+import { browserHistory, Router } from 'react-router';
 import { Provider } from 'react-redux';
+import { render } from 'react-dom';
 import configure from './store/configure';
+import Immutable from 'immutable';
+import React from 'react';
+import routes from './routes';
 
 const preloadedState = Immutable.fromJS(window.__PRELOADED_STATE__);
 

@@ -1,8 +1,9 @@
-import { combineReducers } from 'redux';
-import counter from './counter';
+import { Map } from 'immutable';
 
-const rootReducer = combineReducers({
-  counter
-});
-
-export default rootReducer;
+export function msg(state = Map({}), action) {
+  //console.log('state',state,action);
+  return action.type === 'UPDATE_MSG' &&
+         typeof action.text === 'string' ?
+            action.text:
+            state;
+}

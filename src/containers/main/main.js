@@ -1,16 +1,6 @@
 import React from 'react';
-var Link = require('react-router').Link
+import './main.css';
 
-import styles from './main.css';
+const Main = () => <div className='main'>hello noah</div>;
 
-export default class Main extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-        <div className='main'>hello noah</div>
-    );
-  }
-}
+export default Main;

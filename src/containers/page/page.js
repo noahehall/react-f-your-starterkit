@@ -1,19 +1,12 @@
 import React from 'react';
-var Link = require('react-router').Link
+import { Link } from 'react-router';
+import './page.css';
 
-import styles from './page.css';
+const Page = (props) =>
+  <div className="page">
+    <Link to={`/`}>Home</Link>
+    {props.children}
+  </div>;
 
-export default class Page extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div className="page">
-        <Link to={`/`}>Home</Link>
-        {this.props.children}
-      </div>
-    );
-  }
-}
+Page.propTypes = { children: React.PropTypes.node };
+export default Page;

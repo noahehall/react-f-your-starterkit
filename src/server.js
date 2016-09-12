@@ -1,10 +1,11 @@
+/* eslint-disable no-console */
 import express from 'express';
 import React from 'react';
-import Helmet from 'react-helmet';
-import { renderToString }        from 'react-dom/server'
+//import Helmet from 'react-helmet';
+import { renderToString } from 'react-dom/server';
 import { RouterContext, match } from 'react-router';
-import createLocation            from 'history/lib/createLocation';
-import routes                    from './routes';
+import createLocation from 'history/lib/createLocation';
+import routes from './routes';
 import Immutable from 'immutable';
 
 //store
@@ -26,34 +27,36 @@ function renderFullPage(html, preloadedState) {
         <script src="/js/bundle.js"></script>
       </body>
     </html>
-    `
+    `;
 }
 
 const app = express();
-app.use(express.static(__dirname +'/public'));
+app.use(express.static(`${__dirname}/public`));
 
-app.get("*", function (req, res) {
+app.get("*", (req, res) => {
   const location = createLocation(req.url);
-  match({ routes, location }, (err, redirectLocation, renderProps) => {
+  match({ location, routes }, (err, redirectLocation, renderProps) => {
     if (err) {
       console.error(err);
+
       return res.status(500).end('Internal server error');
     }
     if (!renderProps) return res.status(404).end('Not found.');
     //setup store based on data sent in
-    let store = configure(Immutable.fromJS({msg:'hello noah'}));
-    let initialState = store.getState();
+    const store = configure(Immutable.fromJS({msg:'hello noah'}));
+    const initialState = store.getState();
 
-    const InitialComponent = (
+    const InitialComponent = ( //eslint-disable-line no-extra-parens
       <Provider store={store} >
         <RouterContext {...renderProps} />
       </Provider>
     );
     const html = renderToString(InitialComponent);
-    res.end(renderFullPage(html, initialState));
 
+    return res.end(renderFullPage(html, initialState));
   });
 
-})
+  return true;
+});
 
-app.listen(3000)
+app.listen(3000);
