@@ -16,8 +16,6 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 - build tool: gulp
 - transpilation : babel
 
-
-
 # Supporting knowledge and projects
 - [redux server side example](http://redux.js.org/docs/recipes/ServerRendering.html)
 - [live react load gulp example](https://github.com/milankinen/livereactload/tree/master/examples/03-build-systems)
@@ -40,3 +38,4 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
   - [awesome eslint](https://github.com/dustinspecker/awesome-eslint)
   - [quick eslint starter](https://gist.github.com/cletusw/e01a85e399ab563b1236)
   - [find eslint rules](https://github.com/sarbbottam/eslint-find-rules)
+  - [lint for accessibility](https://www.npmjs.com/package/eslint-plugin-jsx-a11y)

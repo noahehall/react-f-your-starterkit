@@ -16,6 +16,7 @@ var gulp       = require("gulp"),
   gulpSequence = require('gulp-sequence'),
   postCss = require('browserify-postcss'),
   mocha      = require('gulp-spawn-mocha'),
+  eslint = require('gulp-eslint'),
   concat = require('gulp-concat');
 
 var isProd = process.env.NODE_ENV === "production"
@@ -119,7 +120,25 @@ gulp.task('test', function () {
     .on("error", gutil.log);
 });
 
+gulp.task('lint', () => {
+    // ESLint ignores files with "node_modules" paths.
+    // So, it's best to have gulp ignore the directory as well.
+    // Also, Be sure to return the stream from the task;
+    // Otherwise, the task may end before the stream has finished.
+    return gulp.src(['./src/**/*.js', '!node_modules/**'])
+        // eslint() attaches the lint output to the "eslint" property
+        // of the file object so it can be used by other modules.
+        .pipe(eslint())
+        // eslint.format() outputs the lint results to the console.
+        // Alternatively use eslint.formatEach() (see Docs).
+        .pipe(eslint.format())
+        // To have the process exit with an error code (1) on
+        // lint error, return the stream and pipe to failAfterError last.
+        .pipe(eslint.failAfterError());
+});
+
 gulp.task("default", gulpSequence(
+    'lint',
     'transpile:server',
     ["watch:server", "watch:js"]
 ));
