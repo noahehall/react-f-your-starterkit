@@ -9,12 +9,14 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 # opinions
 - immutability: immutable js
 - state management: redux
-- testing: mocha - chai - sinon - enzyme - eslint - sass-lint
+- testing: mocha - chai - sinon - enzyme - eslint
 - isomorphic/universal: express + react + react-router + helmet
 - styling (injected style tags): postcss
 - developer happiness (hot reload): watchify + livereactload
 - build tool: gulp
-- compilation : babel
+- transpilation : babel
+
+
 
 # Supporting knowledge and projects
 - [redux server side example](http://redux.js.org/docs/recipes/ServerRendering.html)
@@ -33,3 +35,8 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
   - [babel webpack plugin loader](https://github.com/istarkov/babel-plugin-webpack-loaders)
 - redux
   - [ducks bundling](https://github.com/erikras/ducks-modular-redux)
+- linting
+  - [official eslint rules](http://eslint.org/docs/rules/)
+  - [awesome eslint](https://github.com/dustinspecker/awesome-eslint)
+  - [quick eslint starter](https://gist.github.com/cletusw/e01a85e399ab563b1236)
+  - [find eslint rules](https://github.com/sarbbottam/eslint-find-rules)
