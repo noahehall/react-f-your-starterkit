@@ -1,8 +1,14 @@
 {
   "name": "react-f-your-starterkit",
   "version": "0.1.0",
+  "description": "For all of your reactjs starter kit needs",
+  "keywords": "reactjs, starter kit",
   "author": "noah edward hall <noahedwardhall@gmail.com> (https://twitter.com/noahedwardhall)",
   "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url":"https://github.com/noahehall/react-f-your-starterkit.git"
+  },
   "scripts": {
     "start": "./node_modules/.bin/gulp",
     "test": "./node_modules/.bin/gulp test",
