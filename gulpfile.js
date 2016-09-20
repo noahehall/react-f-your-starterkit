@@ -17,6 +17,7 @@ const
   postCss = require('browserify-postcss'),
   reporter = require('postcss-reporter'),
   source = require("vinyl-source-stream"),
+  stringify = require('stringify'),
   watchify = require("watchify");
 
 const isProd = process.env.NODE_ENV === "production";
@@ -35,6 +36,10 @@ function createBundler(useWatchify, server) {
     packageCache: {},
     plugin: isProd || !useWatchify ? [] : [lrload],
     transform: [
+      [stringify, {
+        appliesTo: { includeExtensions: ['.md'] },
+        minify: true
+      }],
       [postCss, {
         extensions: ['.css', '.scss'],
         inject: true,
