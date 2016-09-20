@@ -6,6 +6,17 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
  - Buttery asynchronous data loading
  - A Smooth functional after-taste
 
+# Whats next
+  - [review our list of enhancements](https://github.com/noahehall/react-f-your-startkit/labels/enhancement)
+  - We are *definitely* looking for contributors!
+
+# Quick start
+  - $ npm install #install all required npm modules
+  - $ npm run start #start app on localhost:3000
+  - $ npm run test #test all test.js files within src/*
+  - $ npm run eslint-unused #see all eslint rules not defined in .eslintrc
+  - $ npm run eslint #run eslint on all .js files within /src*
+
 # opinions
 - immutability: immutable js
 - state management: redux
