@@ -1,8 +1,8 @@
 {
   "name": "react-f-your-starterkit",
   "version": "0.1.0",
-  "author": "noah edward hall <noahedwardhall@gmail.com> (https://github.com/noahehall)",
-  "license": "MIT",
+  "author": "noah edward hall <noahedwardhall@gmail.com> (https://twitter.com/noahedwardhall)",
+  "license": "MPL-2.0",
   "scripts": {
     "start": "./node_modules/.bin/gulp",
     "test": "./node_modules/.bin/gulp test",
