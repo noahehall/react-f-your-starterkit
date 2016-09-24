@@ -112,7 +112,8 @@ gulp.task("watch:server", () => { //eslint-disable-line arrow-body-style
   return nodemon({
     ext: "js",
     ignore: ["gulpfile.js", "bundle.js", "node_modules/*"],
-    script: "dist/server.js"
+    script: "dist/server.js",
+    watch: 'src/server.js'
   })
     .on("error", gutil.log)
     .on("change", gutil.log('file changed'))
