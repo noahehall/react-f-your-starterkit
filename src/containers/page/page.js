@@ -10,7 +10,14 @@ class Page extends Component {
   render() {
     return (
       <div className="page">
-        <Link to={`/`}>Home</Link>
+        <ul className='navbar'>
+          <li className='navitem'>
+            <Link activeClassName='active' className='navlink' onlyActiveOnIndex={true} to={`/`} >Home</Link>
+          </li>
+          <li className='navitem'>
+            <Link activeClassName='active' className='navlink' to={`/about`} >Not Found</Link>
+          </li>
+        </ul>
         {this.props.children}
       </div>
     );

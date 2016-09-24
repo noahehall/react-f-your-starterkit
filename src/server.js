@@ -43,7 +43,9 @@ app.get("*", (req, res) => {
     }
     if (!renderProps) return res.status(404).end('Not found.');
     //setup store based on data sent in
-    const store = configure(Immutable.fromJS({msg:'hello noah'}));
+    const store = configure(Immutable.fromJS({
+      msg:'hello noah'
+    }));
     const initialState = store.getState();
 
     const InitialComponent = ( //eslint-disable-line no-extra-parens
