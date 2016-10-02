@@ -42,7 +42,7 @@ function createBundler(useWatchify, server) {
       }],
       [postCss, {
         extensions: ['.css', '.scss'],
-        inject: true,
+        inject: false,
         plugin:[
           ['postcss-cssnext', {
             browsers: ['last 3 versions']
@@ -108,27 +108,26 @@ gulp.task("watch:js", () => {
     .on("update", rebundle);
 });
 
-gulp.task("watch:server", () => { //eslint-disable-line arrow-body-style
-  return nodemon({
+gulp.task("watch:server", () =>
+  nodemon({
     ext: "js",
-    ignore: ["gulpfile.js", "bundle.js", "node_modules/*"],
+    ignore: ["gulpfile.js", "node_modules/*"],
     script: "dist/server.js",
-    watch: 'src/server.js'
+    tasks: ['transpile:server'],
+    watch: ['src/server.js', 'dist/public/js/bundle.js']
   })
     .on("error", gutil.log)
-    .on("change", gutil.log('file changed'))
-    .on("restart", gutil.log('server restarted'));
-});
+    .on("change", gutil.log)
+    .on("restart", gutil.log)
+);
 
 gulp.task('test', () => { //eslint-disable-line arrow-body-style
   return gulp.src(['./src/**/*.test.js'], {read: false})
     .pipe(mocha({
-      bail: false,
       debugBrk: !isProd,
       istanbul: !isProd,
       reporter: !isProd ? 'spec' : 'nyan',
-      require: './.setup.test.js',
-      ui: 'bdd'
+      require: './.setup.test.js'
     }))
     .on("error", gutil.log);
 });
@@ -169,5 +168,6 @@ gulp.task("default", gulpSequence(
     'eslint',
     'test',
     'transpile:server',
-    ["watch:server", "watch:js"]
+    "watch:js",
+    "watch:server"
 ));

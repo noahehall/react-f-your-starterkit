@@ -43,6 +43,8 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 - isomorphic
   - [ponyfoo](https://ponyfoo.com/articles/universal-react-babel)
   - [smashing magazine](https://www.smashingmagazine.com/2016/03/server-side-rendering-react-node-express/)
+  - [isomorphic with react-helmet](https://github.com/mattdennewitz/react-helmet-example/blob/master/server.js)
+  - [react cookies > localstorage](https://github.com/eXon/react-cookie)
 - compilation core
   - [babel webpack plugin loader](https://github.com/istarkov/babel-plugin-webpack-loaders)
 - redux

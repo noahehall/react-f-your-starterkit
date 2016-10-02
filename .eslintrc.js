@@ -1,29 +1,43 @@
-{
+"use strict";
+
+module.exports = {
   "parser": "babel-eslint",
-  "parserOptions":{
+  "globals": {},
+  "root": true,
+  "extends": [
+    "eslint:recommended",
+    "defaults/rules/eslint/best-practices/eslint",
+    "defaults/rules/eslint/errors/eslint",
+    "defaults/rules/eslint/es6/eslint",
+    "defaults/rules/eslint/node/eslint",
+    "defaults/rules/eslint/strict/eslint",
+    "defaults/rules/eslint/style/eslint",
+    "defaults/rules/eslint/variables/eslint"
+  ],
+  "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 6,
     "ecmaFeatures": {
-      "experimentalObjectRestSpread": true",
-        "binaryLiterals": false,
-        "blockBindings": false,
-        "defaultParams": false,
-        "forOf": false,
-        "generators": false,
-        "objectLiteralComputedProperties": false,
-        "objectLiteralDuplicateProperties": false,
-        "objectLiteralShorthandMethods": false,
-        "objectLiteralShorthandProperties": false,
-        "octalLiterals": false,
-        "regexUFlag": false,
-        "regexYFlag": false,
-        "templateStrings": false,
-        "unicodeCodePointEscapes": false,
-        "jsx": false
+      "experimentalObjectRestSpread": true,
+      "binaryLiterals": false,
+      "blockBindings": true,
+      "defaultParams": true,
+      "forOf": true,
+      "generators": true,
+      "objectLiteralComputedProperties": true,
+      "objectLiteralDuplicateProperties": true,
+      "objectLiteralShorthandMethods": true,
+      "objectLiteralShorthandProperties": true,
+      "octalLiterals": false,
+      "regexUFlag": false,
+      "regexYFlag": false,
+      "templateStrings": true,
+      "unicodeCodePointEscapes": true,
+      "jsx": true
     }
   },
   "env": {
-    "browser": false,
+    "browser": true,
     "node": true,
     "amd": false,
     "mocha": true,
@@ -32,18 +46,65 @@
     "jquery": false,
     "prototypejs": false,
     "shelljs": false,
+    "commonjs": true,
+    "es6": true,
+    "node": true
   },
-
-  "globals": {
-
-  },
-
   "plugins": [
     "react",
-    "jsx-a11y"
+    "jsx-a11y",
+    "eslint-plugin-flowtype"
   ],
-
   "rules": {
+    "flowtype/boolean-style": [
+      0,
+      "boolean"
+    ],
+    "flowtype/define-flow-type": 1,
+    "flowtype/delimiter-dangle": [
+      0,
+      "never"
+    ],
+    "flowtype/generic-spacing": [
+      0,
+      "never"
+    ],
+    "flowtype/no-weak-types": 0,
+    "flowtype/require-parameter-type": 0,
+    "flowtype/require-return-type": [
+      0,
+      "always",
+      {
+        "annotateUndefined": "never"
+      }
+    ],
+    "flowtype/require-valid-file-annotation": 0,
+    "flowtype/semi": [
+      0,
+      "always"
+    ],
+    "flowtype/space-after-type-colon": [
+      0,
+      "always"
+    ],
+    "flowtype/space-before-generic-bracket": [
+      0,
+      "never"
+    ],
+    "flowtype/space-before-type-colon": [
+      0,
+      "never"
+    ],
+    "flowtype/type-id-match": [
+      0,
+      "^([A-Z][a-z0-9]+)+Type$"
+    ],
+    "flowtype/union-intersection-spacing": [
+      0,
+      "always"
+    ],
+    "flowtype/use-flow-type": 1,
+    "flowtype/valid-syntax": 1,
     "accessor-pairs": 0,
     "array-bracket-spacing": 2,
     "array-callback-return": 2,
@@ -56,7 +117,7 @@
     "callback-return": 0,
     "camelcase": 2,
     "class-methods-use-this": 0,
-    "comma-dangle": ["error", "never"],
+    "comma-dangle": ["error", "only-multiline"],
     "comma-spacing": 2,
     "comma-style": 2,
     "complexity": 0,
@@ -107,7 +168,7 @@
     "jsx-a11y/role-supports-aria-props": 2,
     "jsx-a11y/scope": 0,
     "jsx-a11y/tabindex-no-positive": 0,
-    "jsx-quotes": 0,
+    "jsx-quotes": [2, "prefer-single"],
     "key-spacing": 0,
     "keyword-spacing": 0,
     "line-comment-position": 2,
@@ -121,7 +182,7 @@
     "max-params": 2,
     "max-statements": 0,
     "max-statements-per-line": 0,
-    "multiline-ternary": 2,
+    "multiline-ternary": 0,
     "new-cap": 0,
     "new-parens": 2,
     "newline-after-var": 0,
@@ -136,7 +197,7 @@
     "no-class-assign": 0,
     "no-cond-assign": 0,
     "no-confusing-arrow": 2,
-    "no-console": 2,
+    "no-console": 1,
     "no-const-assign": 2,
     "no-constant-condition": 2,
     "no-continue": 0,
@@ -173,7 +234,7 @@
     "no-inline-comments": 0,
     "no-inner-declarations": 0,
     "no-invalid-regexp": 2,
-    "no-invalid-this": 2,
+    "no-invalid-this": 0,
     "no-irregular-whitespace": 2,
     "no-iterator": 0,
     "no-label-var": 2,
@@ -287,7 +348,7 @@
     "react/jsx-first-prop-new-line": 0,
     "react/jsx-handler-names": 0,
     "react/jsx-indent": [2, 2],
-    "react/jsx-indent-props": 2,
+    "react/jsx-indent-props": [1, 2],
     "react/jsx-key": 0,
     "react/jsx-max-props-per-line": 0,
     "react/jsx-no-bind": 0,
@@ -313,10 +374,10 @@
     "react/no-is-mounted": 2,
     "react/no-multi-comp": 2,
     "react/no-render-return-value": 2,
-    "react/no-set-state": 2,
+    "react/no-set-state": 1,
     "react/no-string-refs": 0,
     "react/no-unknown-property": 0,
-    "react/no-unused-prop-types": 2,
+    "react/no-unused-prop-types": [2, {skipShapeProps: true}],
     "react/prefer-es6-class": 2,
     "react/prefer-stateless-function": 0,
     "react/prop-types": 2,

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-import './page.css';
+import Helmet from 'react-helmet';
+
+import styles from './page.css';
 
 class Page extends Component {
   constructor(props) {
@@ -9,13 +11,22 @@ class Page extends Component {
 
   render() {
     return (
-      <div className="page">
+      <div className='page'>
+        <Helmet
+          htmlAttributes={{lang: 'en'}}
+          meta={[
+            {content: "React F Your Starterkit by @noahedwardhall", name: "description"},
+            {content: 'Home', property: 'og:title'},
+          ]}
+          title='React F Your Starterkit'
+        />
+        <style scoped type='text/css'>{styles}</style>
         <ul className='navbar'>
           <li className='navitem'>
             <Link activeClassName='active' className='navlink' onlyActiveOnIndex={true} to={`/`} >Home</Link>
           </li>
           <li className='navitem'>
-            <Link activeClassName='active' className='navlink' to={`/about`} >Not Found</Link>
+            <Link activeClassName='active' className='navlink' to={`/start`} >Start</Link>
           </li>
         </ul>
         {this.props.children}

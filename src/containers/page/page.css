@@ -29,7 +29,10 @@
           color: red;
           background-color: black;
         }
+      }
 
+      & .fr {
+        float: right;
       }
     }
   }

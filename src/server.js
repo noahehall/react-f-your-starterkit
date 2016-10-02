@@ -7,17 +7,25 @@ import { RouterContext, match } from 'react-router';
 import createLocation from 'history/lib/createLocation';
 import routes from './routes';
 import Immutable from 'immutable';
+import Helmet from 'react-helmet';
 
 //store
 import { Provider } from 'react-redux';
 import configure from './store/configure';
 
 function renderFullPage(html, preloadedState) {
+  const head = Helmet.rewind();
+
   return `
     <!doctype html>
-    <html>
+      <html ${head.htmlAttributes.toString()}>
       <head>
-        <title>for your starter kit needs</title>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        ${head.title}
+        ${head.meta}
+        ${head.link}
       </head>
       <body>
         <div id="root">${html}</div>
@@ -44,7 +52,7 @@ app.get("*", (req, res) => {
     if (!renderProps) return res.status(404).end('Not found.');
     //setup store based on data sent in
     const store = configure(Immutable.fromJS({
-      msg:'hello noah'
+      msg: 'react for your starter kit needs!',
     }));
     const initialState = store.getState();
 
