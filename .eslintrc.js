@@ -16,7 +16,7 @@ module.exports = {
   ],
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 6,
+    "ecmaVersion": 7,
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true,
       "binaryLiterals": false,

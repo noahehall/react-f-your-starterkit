@@ -4,12 +4,14 @@ require('babel-core/register');
 const
   babelify = require("babelify"),
   browserify = require("browserify"),
+  // <----- convert from streaming to buffered vinyl file object
   buffer = require("vinyl-buffer"),
-  envify = require("envify"),
+  envify = require("loose-envify"),
   eslint = require('gulp-eslint'),
   gstylelint = require('gulp-stylelint'),
   gulp = require("gulp"),
   gulpSequence = require('gulp-sequence'),
+  gulpif = require('gulp-if'),
   gutil = require("gulp-util"),
   lrload = require("livereactload"),
   mocha = require('gulp-spawn-mocha'),
@@ -17,7 +19,10 @@ const
   postCss = require('browserify-postcss'),
   reporter = require('postcss-reporter'),
   source = require("vinyl-source-stream"),
+  sourcemaps = require('gulp-sourcemaps'),
   stringify = require('stringify'),
+  // check https://github.com/ben-ng/minifyify
+  uglify = require('gulp-uglify'),
   watchify = require("watchify");
 
 const isProd = process.env.NODE_ENV === "production";
@@ -34,7 +39,7 @@ function createBundler(useWatchify, server) {
     entries: [`src/${server ? 'server' : 'client'}.js`],
     fullPaths: !isProd,
     packageCache: {},
-    plugin: isProd || !useWatchify ? [] : [lrload],
+    plugin: isProd || !useWatchify ? []: [lrload],
     transform: [
       [stringify, {
         appliesTo: { includeExtensions: ['.md'] },
@@ -75,6 +80,8 @@ gulp.task('transpile:server', () => {
     .bundle()
     .on("error", gutil.log)
     .pipe(source('server.js'))
+    .pipe(buffer())
+    .pipe(gulpif(isProd, uglify()))
     .pipe(gulp.dest('./dist'));
 });
 
@@ -85,6 +92,8 @@ gulp.task("bundle:js", () => {
     .bundle()
     .on("error", gutil.log)
     .pipe(source("bundle.js"))
+    .pipe(buffer())
+    .pipe(gulpif(isProd, uglify()))
     .pipe(gulp.dest("./dist/public/js"));
 });
 
@@ -98,6 +107,9 @@ gulp.task("watch:js", () => {
       .on("error", gutil.log)
       .pipe(source("bundle.js"))
       .pipe(buffer())
+      .pipe(gulpif(!isProd, sourcemaps.init()))
+      .pipe(gulpif(isProd, uglify()))
+      .pipe(gulpif(!isProd, sourcemaps.write('./')))
       .pipe(gulp.dest("./dist/public/js"));
   }
   // start JS file watching and rebundling with watchify
@@ -116,9 +128,9 @@ gulp.task("watch:server", () =>
     tasks: ['transpile:server'],
     watch: ['src/server.js', 'dist/public/js/bundle.js']
   })
-    .on("error", gutil.log)
-    .on("change", gutil.log)
-    .on("restart", gutil.log)
+  .on("error", gutil.log)
+  .on("change", gutil.log)
+  .on("restart", gutil.log)
 );
 
 gulp.task('test', () => { //eslint-disable-line arrow-body-style
@@ -167,7 +179,15 @@ gulp.task("default", gulpSequence(
     'stylelint',
     'eslint',
     'test',
+    //'transpile:server',
+    "watch:server",
+    "watch:js"
+));
+
+gulp.task("prod", gulpSequence(
+    'stylelint',
+    'eslint',
+    'test',
     'transpile:server',
-    "watch:js",
-    "watch:server"
+    'bundle:js'
 ));
