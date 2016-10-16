@@ -57,3 +57,5 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
   - [lint for accessibility](https://www.npmjs.com/package/eslint-plugin-jsx-a11y)
   - [stylint](http://stylelint.io/user-guide/rules/)
   - [gulp-stylelint](https://github.com/olegskl/gulp-stylelint)
+- developing
+  - [babel aliases](https://github.com/tleunen/babel-plugin-module-resolver)

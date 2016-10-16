@@ -3,6 +3,12 @@
   "env": {
     "development": {
       "plugins": [
+        ["module-resolver", {
+          "root": ["./src"],
+          "alias": {
+            "readme": "./readme.md",
+          }
+        }],
         ["react-transform", {
           "transforms": [{
             "transform": "livereactload/babel-transform",

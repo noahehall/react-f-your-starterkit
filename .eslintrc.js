@@ -53,9 +53,20 @@ module.exports = {
   "plugins": [
     "react",
     "jsx-a11y",
-    "eslint-plugin-flowtype"
+    "eslint-plugin-flowtype",
+    "import"
   ],
+  "settings": {
+    "import/resolver": {
+      "babel-module": {}
+    }
+  },
   "rules": {
+    "import/no-unresolved": [2, {commonjs: true, amd: true}],
+    "import/named": 2,
+    "import/namespace": 2,
+    "import/default": 2,
+    "import/export": 2,
     "flowtype/boolean-style": [
       0,
       "boolean"
