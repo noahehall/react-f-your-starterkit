@@ -1,17 +1,36 @@
 /* eslint-disable no-console */
-import express from 'express';
-import React from 'react';
-//import Helmet from 'react-helmet';
 import { renderToString } from 'react-dom/server';
 import { RouterContext, match } from 'react-router';
 import createLocation from 'history/lib/createLocation';
-import routes from './routes';
-import Immutable from 'immutable';
+import express from 'express';
+import fs from 'fs';
+import helmet from 'helmet';
 import Helmet from 'react-helmet';
+import Immutable from 'immutable';
+// import path from 'path';
+import React from 'react';
+import routes from './routes';
+import spdy from 'spdy';
 
 //store
 import { Provider } from 'react-redux';
 import configure from './store/configure';
+
+const isProd = process.env.NODE_ENV === "production";
+const port = 3000;
+
+// https: only in production
+const options = {
+  cert: fs.readFileSync(`${__dirname}/server/localhost-cert.pem`),
+  key: fs.readFileSync(`${__dirname}/server/localhost-key.pem`),
+  plain: true,
+  spdy: {
+    plain: true,
+    protocols: ['h2', 'spdy/3.1', 'spdy/3', 'spdy/2', 'http/1.1', 'http/1.0'],
+    ssl: false
+  }
+};
+
 
 function renderFullPage(html, preloadedState) {
   const head = Helmet.rewind();
@@ -39,6 +58,7 @@ function renderFullPage(html, preloadedState) {
 }
 
 const app = express();
+app.use(helmet());
 app.use(express.static(`${__dirname}/public`));
 
 app.get("*", (req, res) => {
@@ -63,10 +83,20 @@ app.get("*", (req, res) => {
     );
     const html = renderToString(InitialComponent);
 
-    return res.end(renderFullPage(html, initialState));
+    return res.status(200).send(renderFullPage(html, initialState));
   });
 
   return true;
 });
 
-app.listen(3000);
+// app.listen(3000);
+spdy.createServer(options, app)
+  .listen(port, (error) => { // eslint-disable-line consistent-return
+    if (error) {
+      console.error('error occured in spdy', error);
+
+      return process.exit(1);
+    }
+
+    console.log(`Server running: ${isProd ? 'https://localhost:'+port : 'http:://127.0.0.1:'+port}`); // eslint-disable-line prefer-template
+  });

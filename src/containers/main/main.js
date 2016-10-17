@@ -6,7 +6,12 @@ import styles from './main.css';
 
 class Main extends Component {
   render() {
-    return <div className='main'><style scoped type='text/css'>{styles}</style><Markdown source={md} /></div>;
+    return (
+      <div className='main'>
+        <style scoped type='text/css'>{styles}</style>
+        <Markdown source={md} />
+      </div>
+    );
   }
 }
 

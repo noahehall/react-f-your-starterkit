@@ -1,6 +1,6 @@
 {
   "name": "react-f-your-starterkit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "For all of your reactjs starter kit needs",
   "keywords": "reactjs, starter kit",
   "author": "noah edward hall <noahedwardhall@gmail.com> (https://twitter.com/noahedwardhall)",
@@ -12,7 +12,7 @@
   "scripts": {
     "prestart": "npm run eslint-fix",
     "start": "./node_modules/.bin/gulp",
-    "prod": "NODE_ENV=production ./node_modules/.bin/gulp prod && echo 'now running on localhost:3000' && node dist/server.js",
+    "prod": "NODE_ENV=production ./node_modules/.bin/gulp prod && echo 'now running on https://localhost:3000' && node dist/server.js",
     "test": "./node_modules/.bin/gulp test",
     "eslint": "./node_modules/.bin/gulp eslint",
     "eslint-unused": "./node_modules/.bin/eslint-find-rules -u ./.eslintrc -n",
@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "express": "^4.14.0",
+    "helmet": "^2.3.0",
     "immutable": "^3.8.1",
     "moment": "^2.15.1",
     "react": "^15.2.1",
@@ -32,7 +33,8 @@
     "react-router": "^2.7.0",
     "redux": "^3.6.0",
     "redux-immutable": "^3.0.8",
-    "redux-thunk": "^2.1.0"
+    "redux-thunk": "^2.1.0",
+    "spdy": "^3.4.4"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.2",
@@ -45,7 +47,6 @@
     "browserify": "^13.0.1",
     "browserify-postcss": "^0.3.2",
     "chai": "^3.5.0",
-    "envify": "^3.4.1",
     "enzyme": "^2.4.1",
     "eslint": "^3.5.0",
     "eslint-config-defaults": "^9.0.0",
@@ -56,6 +57,7 @@
     "eslint-plugin-jsx-a11y": "^2.2.2",
     "eslint-plugin-react": "^6.2.0",
     "gulp": "^3.9.1",
+    "gulp-copy": "0.0.2",
     "gulp-eslint": "^3.0.1",
     "gulp-if": "^2.0.1",
     "gulp-nodemon": "^2.1.0",

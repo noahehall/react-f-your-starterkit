@@ -10,6 +10,7 @@ const
   eslint = require('gulp-eslint'),
   gstylelint = require('gulp-stylelint'),
   gulp = require("gulp"),
+  gulpCopy = require('gulp-copy'),
   gulpSequence = require('gulp-sequence'),
   gulpif = require('gulp-if'),
   gutil = require("gulp-util"),
@@ -39,7 +40,12 @@ function createBundler(useWatchify, server) {
     entries: [`src/${server ? 'server' : 'client'}.js`],
     fullPaths: !isProd,
     packageCache: {},
-    plugin: isProd || !useWatchify ? []: [lrload],
+    plugin: isProd || !useWatchify ? []: [[lrload, {
+      client: true,
+      host: '127.0.0.1',
+      port: 4474,
+      server: true,
+    }]],
     transform: [
       [stringify, {
         appliesTo: { includeExtensions: ['.md'] },
@@ -73,7 +79,7 @@ function createBundler(useWatchify, server) {
   });
 }
 
-gulp.task('transpile:server', () => {
+gulp.task('bundle:server', () => {
   const bundler = createBundler(false, true);
 
   return bundler
@@ -85,7 +91,7 @@ gulp.task('transpile:server', () => {
     .pipe(gulp.dest('./dist'));
 });
 
-gulp.task("bundle:js", () => {
+gulp.task("bundle:client", () => {
   const bundler = createBundler(false, false);
 
   return bundler
@@ -97,7 +103,7 @@ gulp.task("bundle:js", () => {
     .pipe(gulp.dest("./dist/public/js"));
 });
 
-gulp.task("watch:js", () => {
+gulp.task("watch:client", () => {
   const bundler = createBundler(true, false);
   const watcher = watchify(bundler);
   function rebundle() {
@@ -125,7 +131,7 @@ gulp.task("watch:server", () =>
     ext: "js",
     ignore: ["gulpfile.js", "node_modules/*"],
     script: "dist/server.js",
-    tasks: ['transpile:server'],
+    tasks: ['bundle:server'],
     watch: ['src/server.js', 'dist/public/js/bundle.js']
   })
   .on("error", gutil.log)
@@ -133,61 +139,68 @@ gulp.task("watch:server", () =>
   .on("restart", gutil.log)
 );
 
-gulp.task('test', () => { //eslint-disable-line arrow-body-style
-  return gulp.src(['./src/**/*.test.js'], {read: false})
+gulp.task('test', () =>
+  gulp.src(['./src/**/*.test.js'], {read: false})
     .pipe(mocha({
       debugBrk: !isProd,
       istanbul: !isProd,
       reporter: !isProd ? 'spec' : 'nyan',
       require: './.setup.test.js'
     }))
-    .on("error", gutil.log);
-});
+    .on("error", gutil.log)
+);
 
-gulp.task('eslint', () => { //eslint-disable-line arrow-body-style
+gulp.task('eslint', () =>
     // ESLint ignores files with "node_modules" paths.
     // So, it's best to have gulp ignore the directory as well.
     // Also, Be sure to return the stream from the task;
     // Otherwise, the task may end before the stream has finished.
-  return gulp.src(['./src/**/*.js', '!node_modules/**'])
-      // eslint() attaches the lint output to the "eslint" property
-      // of the file object so it can be used by other modules.
-      .pipe(eslint())
-      // eslint.format() outputs the lint results to the console.
-      // Alternatively use eslint.formatEach() (see Docs).
-      .pipe(eslint.format())
-      // To have the process exit with an error code (1) on
-      // lint error, return the stream and pipe to failAfterError last.
-      .pipe(eslint.failAfterError());
-});
+  gulp.src(['./src/**/*.js', '!node_modules/**'])
+    // eslint() attaches the lint output to the "eslint" property
+    // of the file object so it can be used by other modules.
+    .pipe(eslint())
+    // eslint.format() outputs the lint results to the console.
+    // Alternatively use eslint.formatEach() (see Docs).
+    .pipe(eslint.format())
+    // To have the process exit with an error code (1) on
+    // lint error, return the stream and pipe to failAfterError last.
+    .pipe(eslint.failAfterError())
+);
 
-gulp.task('stylelint', () => { //eslint-disable-line arrow-body-style
-  return gulp
-    .src('src/**/*.css')
-    .pipe(gstylelint({
-      debug: !isProd,
-      failAfterError: true,
-      reportOutputDir: 'coverage/lint',
-      reporters: [
-        {console: true, formatter: 'verbose'},
-        {formatter: 'json', save: 'report.json'}
-      ]
-    }));
-});
+gulp.task('stylelint', () =>
+  gulp
+  .src('src/**/*.css')
+  .pipe(gstylelint({
+    debug: !isProd,
+    failAfterError: true,
+    reportOutputDir: 'coverage/lint',
+    reporters: [
+      {console: true, formatter: 'verbose'},
+      {formatter: 'json', save: 'report.json'}
+    ]
+  }))
+);
+
+gulp.task('copy:server-certs', () =>
+  gulp
+    .src('./src/server/*')
+    .pipe(gulpCopy('./dist/server', { prefix: 2 }))
+);
 
 gulp.task("default", gulpSequence(
     'stylelint',
     'eslint',
     'test',
-    //'transpile:server',
+    'copy:server-certs',
     "watch:server",
-    "watch:js"
+    "watch:client"
 ));
 
 gulp.task("prod", gulpSequence(
     'stylelint',
     'eslint',
     'test',
-    'transpile:server',
-    'bundle:js'
+    'copy:server-certs',
+    'bundle:server',
+    'bundle:client'
 ));

@@ -2,6 +2,9 @@
 if you need [the following](https://medium.com/front-end-developers/handcrafting-an-isomorphic-redux-application-with-love-40ada4468af4#.vfm0r9hd8):
 
  - Wholegrain server-side rendering
+ - http2/spdy
+ - offline first
+ - security best practices
  - Extensible routing rich in Omega-3
  - Buttery asynchronous data loading
  - A Smooth functional after-taste
@@ -45,8 +48,6 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
   - [smashing magazine](https://www.smashingmagazine.com/2016/03/server-side-rendering-react-node-express/)
   - [isomorphic with react-helmet](https://github.com/mattdennewitz/react-helmet-example/blob/master/server.js)
   - [react cookies > localstorage](https://github.com/eXon/react-cookie)
-- compilation core
-  - [babel webpack plugin loader](https://github.com/istarkov/babel-plugin-webpack-loaders)
 - redux
   - [ducks bundling](https://github.com/erikras/ducks-modular-redux)
 - linting
@@ -59,3 +60,12 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
   - [gulp-stylelint](https://github.com/olegskl/gulp-stylelint)
 - developing
   - [babel aliases](https://github.com/tleunen/babel-plugin-module-resolver)
+- security
+  - [Helmet](https://github.com/helmetjs/helmet)
+  - [http2 + ssl](https://webapplog.com/http2-node/)
+    - [cert created from here](https://certsimple.com/blog/localhost-ssl-fix)
+      - password: starterkit
+- Progress Web app
+  - Offline first
+    - [service workers](https://github.com/MicheleBertoli/react-worker)
+    - [caching](https://pouchdb.com/learn.html)
