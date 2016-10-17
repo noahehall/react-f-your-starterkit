@@ -98,5 +98,5 @@ spdy.createServer(options, app)
       return process.exit(1);
     }
 
-    console.log(`Server running: ${isProd ? 'https://localhost:'+port : 'http:://127.0.0.1:'+port}`); // eslint-disable-line prefer-template
+    console.log(`Server running: ${isProd ? 'https://localhost' : 'http:://127.0.0.1'}:${port}`);
   });

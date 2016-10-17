@@ -5,6 +5,7 @@
       "plugins": [
         ["module-resolver", {
           "root": ["./src"],
+          "extensions": [".js", ".md"],
           "alias": {
             "readme": "./readme.md",
           }

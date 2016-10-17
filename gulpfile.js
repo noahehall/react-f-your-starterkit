@@ -49,7 +49,7 @@ function createBundler(useWatchify, server) {
     transform: [
       [stringify, {
         appliesTo: { includeExtensions: ['.md'] },
-        minify: true
+        minify: isProd
       }],
       [postCss, {
         extensions: ['.css', '.scss'],
@@ -197,9 +197,6 @@ gulp.task("default", gulpSequence(
 ));
 
 gulp.task("prod", gulpSequence(
-    'stylelint',
-    'eslint',
-    'test',
     'copy:server-certs',
     'bundle:server',
     'bundle:client'
