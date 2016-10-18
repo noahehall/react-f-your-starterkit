@@ -21,14 +21,14 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
   - $ npm run eslint #run eslint on all .js files within /src*
 
 # opinions
-- immutability: immutable js
+- immutability: [seamless-immutable](https://github.com/rtfeldman/seamless-immutable)
 - state management: redux
 - testing: mocha - chai - sinon - enzyme - eslint
-- isomorphic/universal: express + react + react-router + helmet
-- styling (injected style tags): postcss
-- developer happiness (hot reload): watchify + livereactload
+- isomorphic/universal: express
+- styling: postcss
+- developer happiness (hot reload): livereactload
 - build tool: gulp
-- transpilation : babel
+- javascript: babel
 
 # Supporting knowledge and projects
 - [gulp recipes](http://gulpjs.org/recipes/)
@@ -50,6 +50,10 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
   - [react cookies > localstorage](https://github.com/eXon/react-cookie)
 - redux
   - [ducks bundling](https://github.com/erikras/ducks-modular-redux)
+  - [redux+immutable](https://github.com/gajus/redux-immutable-examples)
+  - [redux-logger](https://github.com/evgenyrodionov/redux-logger)
+  - [redux-promise](https://github.com/acdlite/redux-promise)
+  - [redux-seamless-immutable](https://github.com/eadmundo/redux-seamless-immutable)
 - linting
   - [official eslint rules](http://eslint.org/docs/rules/)
   - [awesome eslint](https://github.com/dustinspecker/awesome-eslint)
@@ -58,7 +62,7 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
   - [lint for accessibility](https://www.npmjs.com/package/eslint-plugin-jsx-a11y)
   - [stylint](http://stylelint.io/user-guide/rules/)
   - [gulp-stylelint](https://github.com/olegskl/gulp-stylelint)
-- developing
+- development
   - [babel aliases](https://github.com/tleunen/babel-plugin-module-resolver)
 - security
   - [Helmet](https://github.com/helmetjs/helmet)

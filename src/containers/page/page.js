@@ -1,10 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router';
 import Helmet from 'react-helmet';
 
 import styles from './page.css';
 
-class Page extends Component {
+class Page extends React.Component {
+  static propTypes = {
+    children: React.PropTypes.node
+  }
+
   constructor(props) {
     super(props);
   }
@@ -34,7 +38,5 @@ class Page extends Component {
     );
   }
 }
-
-Page.propTypes = { children: React.PropTypes.node };
 
 export default Page;

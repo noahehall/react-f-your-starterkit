@@ -33,7 +33,10 @@
     "react-router": "^2.7.0",
     "redux": "^3.6.0",
     "redux-immutable": "^3.0.8",
+    "redux-promise": "^0.5.3",
+    "redux-seamless-immutable": "^0.3.0",
     "redux-thunk": "^2.1.0",
+    "seamless-immutable": "^6.3.0",
     "spdy": "^3.4.4"
   },
   "devDependencies": {
@@ -80,6 +83,7 @@
     "postcss-import": "^8.1.2",
     "postcss-reporter": "^1.4.1",
     "react-addons-test-utils": "^15.3.1",
+    "redux-logger": "^2.7.0",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0",
     "stringify": "^5.1.0",

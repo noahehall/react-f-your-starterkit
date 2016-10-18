@@ -6,7 +6,7 @@ import express from 'express';
 import fs from 'fs';
 import helmet from 'helmet';
 import Helmet from 'react-helmet';
-import Immutable from 'immutable';
+import Immutable from 'seamless-immutable';
 // import path from 'path';
 import React from 'react';
 import routes from './routes';
@@ -23,11 +23,11 @@ const port = 3000;
 const options = {
   cert: fs.readFileSync(`${__dirname}/server/localhost-cert.pem`),
   key: fs.readFileSync(`${__dirname}/server/localhost-key.pem`),
-  plain: true,
+  plain: !isProd,
   spdy: {
-    plain: true,
+    plain: !isProd,
     protocols: ['h2', 'spdy/3.1', 'spdy/3', 'spdy/2', 'http/1.1', 'http/1.0'],
-    ssl: false
+    ssl: isProd
   }
 };
 
@@ -71,7 +71,7 @@ app.get("*", (req, res) => {
     }
     if (!renderProps) return res.status(404).end('Not found.');
     //setup store based on data sent in
-    const store = configure(Immutable.fromJS({
+    const store = configure(Immutable({
       msg: 'react for your starter kit needs!',
     }));
     const initialState = store.getState();

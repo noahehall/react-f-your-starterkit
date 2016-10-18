@@ -1,8 +1,10 @@
 //https://github.com/jarredwitt/react-boilerplate/blob/master/app/store/store.jsx
 import { compose, createStore, applyMiddleware } from 'redux';
-import { combineReducers } from 'redux-immutable';
+import { combineReducers, routerReducer, stateTransformer } from 'redux-seamless-immutable';
 import thunk from 'redux-thunk';
-import * as reducers from '../reducers';
+import promise from 'redux-promise';
+import createLogger from 'redux-logger';
+import * as reducers from './reducers';
 
 export default (initialState) => {
   //console.log('init state', initialState);
@@ -13,11 +15,22 @@ export default (initialState) => {
       window.devToolsExtension() :
       (f) => f;
 
+  const loggerMiddleware = createLogger({
+    stateTransformer: stateTransformer
+  });
+
   return createStore(
-    combineReducers(reducers),
+    combineReducers({
+      ...reducers,
+      routing: routerReducer
+    }),
     initialState,
     compose(
-      applyMiddleware(thunk),
+      applyMiddleware(
+        thunk,
+        loggerMiddleware,
+        promise
+      ),
       reduxTools
     )
   );
