@@ -8,6 +8,7 @@
           "extensions": [".js", ".md"],
           "alias": {
             "readme": "./readme.md",
+            "actions": "./src/store/actions/index.js"
           }
         }],
         ["react-transform", {

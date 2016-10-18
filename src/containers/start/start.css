@@ -1,0 +1,12 @@
+.main {
+  background-color: white;
+  padding: 20px;
+
+  & ul {
+    list-style: none;
+
+    & li {
+      margin-top: 15px;
+    }
+  }
+}

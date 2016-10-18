@@ -1,8 +1,7 @@
-import { Map } from 'immutable';
+import Immutable from 'seamless-immutable';
 
-export function msg(state = Map({}), action) {
-  //console.log('state',state,action);
+export function msg(state = Immutable({}), action) {
   return action.type === 'UPDATE_MSG' && typeof action.text === 'string' ?
-    action.text :
+    Immutable({ ...state, msg: action.text }) :
     state;
 }

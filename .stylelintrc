@@ -13,6 +13,6 @@
       "ignore": ["after-comment"],
     } ],
     "unit-whitelist": ["em", "rem", "%", "px"],
-    color-hex-case: "lower"
+    color-hex-case: "upper"
   }
 }

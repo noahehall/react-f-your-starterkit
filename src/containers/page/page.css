@@ -31,7 +31,14 @@
         }
       }
 
-      & .fr {
+      &.ra {
+        float: none;
+        text-align: right;
+        padding-top: 14px;
+        padding-right: 4px;
+      }
+
+      &.fr {
         float: right;
       }
     }

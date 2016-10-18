@@ -12,6 +12,7 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 # Whats next
   - [review our list of enhancements](https://github.com/noahehall/react-f-your-startkit/labels/enhancement)
   - We are *definitely* looking for contributors!
+  - Hopefully this will become the goto app dev kit for progressive web applications!
 
 # Quick start
   - $ npm install #install all required npm modules
@@ -25,7 +26,7 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 - state management: redux
 - testing: mocha - chai - sinon - enzyme - eslint
 - isomorphic/universal: express
-- styling: postcss
+- styling: postcss + stylint (+stylfmt)
 - developer happiness (hot reload): livereactload
 - build tool: gulp
 - javascript: babel
@@ -61,6 +62,7 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
   - [find eslint rules](https://github.com/sarbbottam/eslint-find-rules)
   - [lint for accessibility](https://www.npmjs.com/package/eslint-plugin-jsx-a11y)
   - [stylint](http://stylelint.io/user-guide/rules/)
+  - [stylefmt](https://github.com/morishitter/stylefmt)
   - [gulp-stylelint](https://github.com/olegskl/gulp-stylelint)
 - development
   - [babel aliases](https://github.com/tleunen/babel-plugin-module-resolver)
