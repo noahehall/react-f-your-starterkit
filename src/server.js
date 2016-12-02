@@ -24,12 +24,12 @@ const options = {
   plain: !appConsts.isProd,
   spdy: {
     plain: !appConsts.isProd,
-    protocols: ['h2', 'spdy/3.1', 'spdy/3', 'spdy/2', 'http/1.1', 'http/1.0'],
+    protocols: [ 'h2', 'spdy/3.1', 'spdy/3', 'spdy/2', 'http/1.1', 'http/1.0' ],
     ssl: appConsts.isProd
   }
 };
 
-function renderFullPage(html, preloadedState) {
+function renderFullPage (html, preloadedState) {
   const head = Helmet.rewind();
 
   return `

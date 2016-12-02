@@ -6,24 +6,11 @@
  */
 require('./constants.js');
 
-const appFuncs = {
-  scheduleUrl ({ from, to, date, scheduleConfigDepartBool, time }) {
-    const
-    cmd = scheduleConfigDepartBool ? 'depart' : 'arrive',
-    thisDate = `&date=${date || 'now'}`,
-    thisTime = time ? `&time=${time}` : '';
+import * as math from './lib/math';
+import * as time from './lib/time';
+import * as dom from './lib/dom';
 
-    return `http://api.bart.gov/api/sched.aspx?cmd=${cmd}&orig=${from}&dest=${to}${thisDate}${thisTime}&b=4&a=4&l=1&key=${appConsts.apiKey}`;
-  },
-
-  stationInfoUrl ({ from }) {
-    return `http://api.bart.gov/api/stn.aspx?cmd=stninfo&orig=${from}&key=${appConsts.apiKey}`;
-  },
-
-  stationUrl () {
-    return `http://api.bart.gov/api/stn.aspx?cmd=stns&key=${appConsts.apiKey}`;
-  },
-
+const uncategorized = {
   getBlobType (blob, url) {
     return url.includes('http://fonts.googleapis.com/css') ?
       // http://stackoverflow.com/questions/2871655/proper-mime-type-for-fonts
@@ -127,6 +114,13 @@ const appFuncs = {
       "status" : 500 , "statusText" : "Sorry, you need to connect to the internet!"
     });
   }
+}
+
+const appFuncs = {
+  ...uncategorized,
+  ...math,
+  ...time,
+  ...dom,
 }
 /**
  * Set global variables on worker & main threads, else node

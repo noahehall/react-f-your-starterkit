@@ -1,11 +1,11 @@
-/* eslint-disable multiline-ternary, no-unneeded-ternary */
 require('babel-core/register');
 require('./src/.globals');
 
-const // eslint-disable
+// TODO: check https://github.com/ben-ng/minifyify
+
+const
   babelify = require("babelify"),
   browserify = require("browserify"),
-  // <----- convert from streaming to buffered vinyl file object
   buffer = require("vinyl-buffer"),
   checkInternet = require('./src/server/checkconnection.js').checkInternet,
   env = require('gulp-env'),
@@ -28,19 +28,18 @@ const // eslint-disable
   source = require("vinyl-source-stream"),
   sourcemaps = require('gulp-sourcemaps'),
   stringify = require('stringify'),
-  // check https://github.com/ben-ng/minifyify
   uglify = require('gulp-uglify'),
   watchify = require("watchify");
 
 function createBundler (useWatchify, server) {
   return browserify({
-    browserField : server ? false : true,
-    builtins : server ? false : true,
+    browserField : !server && true,
+    builtins : !server && true,
     cache: {},
-    commondir : server ? false : true,
+    commondir : !server && true,
     debug: !appConsts.isProd,
     // ignore all globals
-    detectGlobals: server ? false : true,
+    detectGlobals: !server && true,
     entries: [`src/${server ? 'server' : 'client'}.js`],
     fullPaths: !appConsts.isProd,
     packageCache: {},
@@ -183,11 +182,11 @@ gulp.task('stylelint', () =>
     .pipe(gstylelint({
       debug: !appConsts.isProd,
       failAfterError: true,
+      reportOutputDir: 'coverage/lint',
       reporters: [
         { console: true, formatter: 'verbose' },
         { formatter: 'json', save: 'report.json' }
       ],
-      reportOutputDir: 'coverage/lint',
     }))
 );
 
@@ -230,7 +229,7 @@ gulp.task('copy:service-workers', (done) =>
 gulp.task('checkconnection', (cb) =>
   checkInternet((isConnected) => {
     if (isConnected) {
-      console.log('is connected:', isConnected); // eslint-disable-line
+      appFuncs.console()(`is connected: ${isConnected}`);
       env.set({
         NODE_ONLINE: 'true'
       });
@@ -238,7 +237,8 @@ gulp.task('checkconnection', (cb) =>
       return cb(null);
     }
 
-    console.log('is not connected:', isConnected); // eslint-disable-line
+    appFuncs.console()(`is not connected: ${isConnected}`);
+
     return cb(null);
   })
 );

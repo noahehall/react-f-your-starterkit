@@ -13,7 +13,7 @@ class Page extends React.Component {
     msg: React.PropTypes.string,
   }
 
-  render() {
+  render () {
     return (
       <div className='page'>
         <Helmet

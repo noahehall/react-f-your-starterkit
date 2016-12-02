@@ -1,4 +1,4 @@
-function checkInternet(cb) {
+function checkInternet (cb) {
   if (typeof require !== 'undefined')
     return require('dns').lookup('google.com', (err) => {
       if (err && err.code === "ENOTFOUND") return cb(false);
