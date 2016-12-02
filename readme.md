@@ -1,3 +1,6 @@
+# CI
+  - [![Build Status](https://api.travis-ci.org/noahehall/react-f-your-starterkit.svg?branch=master)
+
 # Why are we here?
 if you need [the following](https://medium.com/front-end-developers/handcrafting-an-isomorphic-redux-application-with-love-40ada4468af4#.vfm0r9hd8):
 
@@ -16,7 +19,7 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 
 # Quick start
   - $ npm install #install all required npm modules
-  - $ npm run start #start app on localhost:3000
+  - $ npm run dev #start app on localhost:3000
   - $ npm run test #test all test.js files within src/*
   - $ npm run eslint-unused #see all eslint rules not defined in .eslintrc
   - $ npm run eslint #run eslint on all .js files within /src*
@@ -24,12 +27,13 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 # opinions
 - immutability: [seamless-immutable](https://github.com/rtfeldman/seamless-immutable)
 - state management: redux
-- testing: mocha - chai - sinon - enzyme - eslint
-- isomorphic/universal: express
+- testing: mocha - chai - sinon - enzyme
+- universal app with express
 - styling: postcss + stylint (+stylfmt)
-- developer happiness (hot reload): livereactload
+- hot reloadable
 - build tool: gulp
 - javascript: babel
+- progressiveness: service workers
 
 # Supporting knowledge and projects
 - [gulp recipes](http://gulpjs.org/recipes/)
@@ -66,6 +70,8 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
   - [gulp-stylelint](https://github.com/olegskl/gulp-stylelint)
 - development
   - [babel aliases](https://github.com/tleunen/babel-plugin-module-resolver)
+  - [gulp and browserify](https://fettblog.eu/gulp-browserify-multiple-bundles/)
+  - [gulp logging](https://gist.github.com/kyohei8/097b859efeb5bfddcd2d)
 - security
   - [Helmet](https://github.com/helmetjs/helmet)
   - [http2 + ssl](https://webapplog.com/http2-node/)
@@ -74,4 +80,9 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 - Progress Web app
   - Offline first
     - [service workers](https://github.com/MicheleBertoli/react-worker)
-    - [caching](https://pouchdb.com/learn.html)
+      + [strategies](https://serviceworke.rs/)
+      + [general pattern](https://github.com/react-europe/www/blob/cfp/app/sw.js)
+      + [good readme](https://developers.google.com/web/fundamentals/getting-started/primers/service-workers)
+      + [good tuts](https://jakearchibald.github.io/isserviceworkerready/resources.html)
+      + [good Q&A](http://stackoverflow.com/questions/tagged/service-worker)
+      + [see all service workers](chrome://serviceworker-internals)

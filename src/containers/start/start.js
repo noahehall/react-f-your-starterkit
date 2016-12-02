@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './start.css';
 
 class Start extends React.Component {
-  render() {
+  render () {
     return (
       <div className='main'>
         <style scoped type='text/css'>{styles}</style>

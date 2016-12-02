@@ -5,7 +5,7 @@ import md from 'readme';
 import styles from './main.css';
 
 class Main extends React.Component {
-  render() {
+  render () {
     return (
       <div className='main'>
         <style scoped type='text/css'>{styles}</style>
