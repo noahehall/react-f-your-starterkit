@@ -34,6 +34,7 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 - build tool: gulp
 - javascript: babel
 - progressiveness: service workers
+- QA: logmonitor, rollbar
 
 # Supporting knowledge and projects
 - [gulp recipes](http://gulpjs.org/recipes/)
