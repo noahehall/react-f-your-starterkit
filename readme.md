@@ -77,3 +77,19 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
   - Offline first
     - [service workers](https://github.com/MicheleBertoli/react-worker)
     - [caching](https://pouchdb.com/learn.html)
+
+
+
+# need to add
+
+// https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers
+// https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer
+// https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope
+// https://serviceworke.rs/
+// https://github.com/MicheleBertoli/react-worker/blob/master/public/worker.js
+// navigator.serviceWorker === https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer
+* general pattern taken from: https://github.com/react-europe/www/blob/cfp/app/sw.js
+* good readme: https://developers.google.com/web/fundamentals/getting-started/primers/service-workers
+* good tuts: https://jakearchibald.github.io/isserviceworkerready/resources.html
+* good Q&A: http://stackoverflow.com/questions/tagged/service-worker
+* see all service workers: chrome://serviceworker-internals

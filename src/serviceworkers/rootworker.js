@@ -1,11 +1,6 @@
 /**
  * @file service worker for root
  * @author @noahedwardhall
- * general pattern taken from: https://github.com/react-europe/www/blob/cfp/app/sw.js
- * good readme: https://developers.google.com/web/fundamentals/getting-started/primers/service-workers
- * good tuts: https://jakearchibald.github.io/isserviceworkerready/resources.html
- * good Q&A: http://stackoverflow.com/questions/tagged/service-worker
- * see all service workers: chrome://serviceworker-internals
  */
 
 /* eslint-disable indent */
@@ -29,13 +24,13 @@ db.dbPromise
 self.addEventListener('install', (event) => {
   const urlsToPrefetch = [
     '/',
-    'http://fonts.googleapis.com/css?family=Muli|Eczar|Varela%20Round',
+    'https://cdn.logrocket.com/LogRocket.min.js',
+    // 'http://fonts.googleapis.com/css?family=Muli|Eczar|Varela%20Round',
+    // 'https://api.travis-ci.org/noahehall/udacity-trainschedule.svg?branch=master',
     `${protocol}//localhost:3000/container.js`,
     `${protocol}//localhost:3000/favicon.ico`,
     `${protocol}//localhost:3000/js/bundle.js`,
     `${protocol}//localhost:3000/rootworker.js`,
-    'https://api.travis-ci.org/noahehall/udacity-trainschedule.svg?branch=master',
-    'https://cdn.logrocket.com/LogRocket.min.js',
   ];
 
   /**
@@ -72,7 +67,7 @@ self.addEventListener('install', (event) => {
  */
 self.addEventListener('fetch', (event) => {
   const neverCacheUrls = [
-    // `${protocol}//localhost:3000/js/bundle.js`,
+    `${protocol}//localhost:3000/js/bundle.js`,
     // `${protocol}//logrocket-1356.appspot.com/v1/ingest`, // handled by neverCacheHttpMethods
   ];
 
