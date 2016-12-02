@@ -16,7 +16,7 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 
 # Quick start
   - $ npm install #install all required npm modules
-  - $ npm run start #start app on localhost:3000
+  - $ npm run dev #start app on localhost:3000
   - $ npm run test #test all test.js files within src/*
   - $ npm run eslint-unused #see all eslint rules not defined in .eslintrc
   - $ npm run eslint #run eslint on all .js files within /src*
@@ -24,12 +24,13 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 # opinions
 - immutability: [seamless-immutable](https://github.com/rtfeldman/seamless-immutable)
 - state management: redux
-- testing: mocha - chai - sinon - enzyme - eslint
-- isomorphic/universal: express
+- testing: mocha - chai - sinon - enzyme
+- universal app with express
 - styling: postcss + stylint (+stylfmt)
-- developer happiness (hot reload): livereactload
+- hot reloadable
 - build tool: gulp
 - javascript: babel
+- progressiveness: service workers
 
 # Supporting knowledge and projects
 - [gulp recipes](http://gulpjs.org/recipes/)
@@ -76,20 +77,9 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 - Progress Web app
   - Offline first
     - [service workers](https://github.com/MicheleBertoli/react-worker)
-    - [caching](https://pouchdb.com/learn.html)
-
-
-
-# need to add
-
-// https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers
-// https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer
-// https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope
-// https://serviceworke.rs/
-// https://github.com/MicheleBertoli/react-worker/blob/master/public/worker.js
-// navigator.serviceWorker === https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer
-* general pattern taken from: https://github.com/react-europe/www/blob/cfp/app/sw.js
-* good readme: https://developers.google.com/web/fundamentals/getting-started/primers/service-workers
-* good tuts: https://jakearchibald.github.io/isserviceworkerready/resources.html
-* good Q&A: http://stackoverflow.com/questions/tagged/service-worker
-* see all service workers: chrome://serviceworker-internals
+      + [strategies](https://serviceworke.rs/)
+      + [general pattern](https://github.com/react-europe/www/blob/cfp/app/sw.js)
+      + [good readme](https://developers.google.com/web/fundamentals/getting-started/primers/service-workers)
+      + [good tuts](https://jakearchibald.github.io/isserviceworkerready/resources.html)
+      + [good Q&A](http://stackoverflow.com/questions/tagged/service-worker)
+      + [see all service workers](chrome://serviceworker-internals)
