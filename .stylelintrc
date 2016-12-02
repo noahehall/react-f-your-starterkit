@@ -12,7 +12,6 @@
       "except": ["first-nested"],
       "ignore": ["after-comment"],
     } ],
-    "unit-whitelist": ["em", "rem", "%", "px"],
-    color-hex-case: "upper"
+    "unit-whitelist": ["em", "rem", "%", "px"]
   }
 }

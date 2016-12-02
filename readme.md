@@ -66,6 +66,8 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
   - [gulp-stylelint](https://github.com/olegskl/gulp-stylelint)
 - development
   - [babel aliases](https://github.com/tleunen/babel-plugin-module-resolver)
+  - [gulp and browserify](https://fettblog.eu/gulp-browserify-multiple-bundles/)
+  - [gulp logging](https://gist.github.com/kyohei8/097b859efeb5bfddcd2d)
 - security
   - [Helmet](https://github.com/helmetjs/helmet)
   - [http2 + ssl](https://webapplog.com/http2-node/)
