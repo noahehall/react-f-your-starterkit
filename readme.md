@@ -1,3 +1,6 @@
+# CI
+  - [![Build Status](https://api.travis-ci.org/noahehall/react-f-your-starterkit.svg?branch=master)
+
 # Why are we here?
 if you need [the following](https://medium.com/front-end-developers/handcrafting-an-isomorphic-redux-application-with-love-40ada4468af4#.vfm0r9hd8):
 
