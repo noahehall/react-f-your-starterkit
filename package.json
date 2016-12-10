@@ -1,6 +1,6 @@
 {
   "name": "react-f-your-starterkit",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "For all of your progressive reactjs starter kit needs",
   "keywords": [
     "reactjs",
@@ -12,8 +12,8 @@
   ],
   "homepage": "https://github.com/noahehall/react-f-your-starterkit",
   "bugs": {
-    "url" : "https://github.com/noahehall/react-f-your-starterkit/issues",
-    "email" : "noahedwardhall@gmail.com"
+    "url": "https://github.com/noahehall/react-f-your-starterkit/issues",
+    "email": "noahedwardhall@gmail.com"
   },
   "license": "MPL-2.0",
   "author": "noah edward hall <noahedwardhall@gmail.com> (https://twitter.com/noahedwardhall)",
@@ -39,11 +39,11 @@
     "stylefmt": "./node_modules/.bin/stylefmt -r src/**/*.css",
     "stylelint": "npm run stylefmt && ./node_modules/.bin/gulp stylelint"
   },
-  "engines" : {
-    "node" : ">=6",
-    "npm" :" >=4"
+  "engines": {
+    "node": ">=6",
+    "npm": " >=4"
   },
-  "os" : [
+  "os": [
     "darwin",
     "linux"
   ],
@@ -87,22 +87,18 @@
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
     "babelify": "^7.3.0",
-    "browserify-postcss": "^0.3.2",
     "browserify": "^13.0.1",
+    "browserify-postcss": "^0.3.2",
     "chai": "^3.5.0",
     "del": "^2.2.2",
     "enzyme": "^2.4.1",
-    "eslint-config-defaults": "^9.0.0",
-    "eslint-find-rules": "^1.13.1",
-    "eslint-import-resolver-babel-module": "^2.0.1",
-    "eslint-plugin-flowtype": "^2.19.0",
-    "eslint-plugin-import": "^2.0.1",
-    "eslint-plugin-jsx-a11y": "^3.0.1",
-    "eslint-plugin-react": "^6.2.0",
     "eslint": "^3.5.0",
+    "eslint-config-ct-fletcher": "^1.0.3",
+    "eslint-find-rules": "^1.13.1",
     "event-stream": "^3.3.4",
     "flow-bin": "^0",
     "glob": "^7.1.1",
+    "gulp": "^3.9.1",
     "gulp-copy": "0.0.2",
     "gulp-env": "^0.4.0",
     "gulp-eslint": "^3.0.1",
@@ -115,7 +111,6 @@
     "gulp-stylelint": "^3.2.0",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
-    "gulp": "^3.9.1",
     "ignore-styles": "^5.0.1",
     "istanbul": "1.1.0-alpha.1",
     "jsdom": "^9.5.0",
@@ -131,8 +126,8 @@
     "postcss-reporter": "^2.0.0",
     "react-addons-test-utils": "^15.3.1",
     "redux-logger": "^2.7.0",
-    "sinon-chai": "^2.8.0",
     "sinon": "^1.17.5",
+    "sinon-chai": "^2.8.0",
     "stringify": "^5.1.0",
     "stylefmt": "github:morishitter/stylefmt",
     "stylelint-csstree-validator": "^1.0.3",

@@ -96,7 +96,7 @@ self.addEventListener('fetch', (event) => {
 
         return fetch(event.request.clone())
           .then((response) => {
-            if (!response || response.type !== 'opaque' && !response.ok) {
+            if (!response || (response.type !== 'opaque' && !response.ok)) {
               appFuncs.console()(`received invalid response from fetch: ${response}`);
               appFuncs.console('dir')(response);
 

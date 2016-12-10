@@ -61,6 +61,7 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
   - [redux-promise](https://github.com/acdlite/redux-promise)
   - [redux-seamless-immutable](https://github.com/eadmundo/redux-seamless-immutable)
 - linting
+  - [eslint config ct fletcher](https://github.com/noahehall/eslint-config-ct-fletcher)
   - [official eslint rules](http://eslint.org/docs/rules/)
   - [awesome eslint](https://github.com/dustinspecker/awesome-eslint)
   - [quick eslint starter](https://gist.github.com/cletusw/e01a85e399ab563b1236)

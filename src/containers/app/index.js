@@ -22,7 +22,7 @@ class App extends React.Component {
 
     // only include scripts if able to connect to internet
     // update this to include scripts to serve both online and offline
-    return appConsts.nodeOnline || nav && nav.onLine ?
+    return appConsts.nodeOnline || (nav && nav.onLine) ?
       [
         { src: 'https://cdn.logrocket.com/LogRocket.min.js', type: 'text/javascript' },
         // to log session urls in production console.log(LogRocket.recordingURL);
