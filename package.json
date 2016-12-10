@@ -23,7 +23,6 @@
   },
   "scripts": {
     "start": "./node_modules/.bin/gulp",
-    "nodeOnline": "node ./src/server/checkconnection.js",
     "security": "./node_modules/.bin/nsp check",
     "predev": "npm run stylefmt",
     "dev": "NODE_ENV=development && npm run start",
@@ -37,7 +36,7 @@
     "lint": "./node_modules/.bin/gulp lint",
     "eslint-unused": "./node_modules/.bin/eslint-find-rules -u ./.eslintrc -n",
     "eslint-fix": "./node_modules/.bin/eslint --fix \"./src/**/*.js\" --config ./.eslintrc.js",
-    "stylefmt": "./node_modules/.bin/stylefmt -r src/**/*.css --diff",
+    "stylefmt": "./node_modules/.bin/stylefmt -r src/**/*.css",
     "stylelint": "npm run stylefmt && ./node_modules/.bin/gulp stylelint"
   },
   "engines" : {
