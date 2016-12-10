@@ -2,6 +2,12 @@
   background-color: white;
   padding: 20px;
 
+  & > h1 {
+    font-family: 'Varela Round';
+    margin: 0 auto;
+    text-align: center;
+  }
+
   & ul {
     list-style: none;
 

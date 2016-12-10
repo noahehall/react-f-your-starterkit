@@ -8,7 +8,7 @@ require('../.globals');
 import Promised from 'bluebird';
 import Idbstore from 'serviceworkers/idb/idb';
 const protocol = self.location.protocol;
-appFuncs.console()(`protocol is: ${protocol}`);
+const hostname = self.location.hostname;
 
 const db = new Idbstore();
 db.dbPromise
@@ -25,18 +25,18 @@ self.addEventListener('install', (event) => {
   const urlsToPrefetch = [
     '/',
     'https://cdn.logrocket.com/LogRocket.min.js',
-    // 'http://fonts.googleapis.com/css?family=Muli|Eczar|Varela%20Round',
-    // 'https://api.travis-ci.org/noahehall/udacity-trainschedule.svg?branch=master',
-    `${protocol}//localhost:3000/container.js`,
-    `${protocol}//localhost:3000/favicon.ico`,
-    `${protocol}//localhost:3000/js/bundle.js`,
-    `${protocol}//localhost:3000/rootworker.js`,
+    'https://fonts.googleapis.com/css?family=Muli|Varela%20Round',
+    'https://api.travis-ci.org/noahehall/udacity-restaurant.svg?branch=master',
+    `${protocol}//${hostname}:3000/container.js`,
+    `${protocol}//${hostname}:3000/favicon.ico`,
+    //`${protocol}//${hostname}:3000/js/bundle.js`,
+    //`${protocol}//${hostname}:3000/rootworker.js`,
   ];
 
   /**
    * all prefetch urls are required or installation will fail
    */
-  event.waitUntil(new Promised((resolve, reject) => {
+  event.waitUntil(new Promised((resolve) => {
     const complete = urlsToPrefetch.map((prefetchThisUrl) =>
       navigator.onLine && fetch(new Request(prefetchThisUrl))
         .then((resp) =>
@@ -49,16 +49,21 @@ self.addEventListener('install', (event) => {
         )
     );
 
-    if (complete.length)
-      resolve(complete);
-    else {
+    if (!complete.length) {
       appFuncs.console('error')(`did not complete fetching: ${complete.length}`);
       reject();
     }
+
+    return resolve(true);
   })
+    .then(() => self.skipWaiting())
     .catch((addAllError) => appFuncs.console('error')(`error in adding prefetch urls: ${addAllError}`))
   );
 });
+
+self.addEventListener('activate', (event) =>
+  // take ocntrol immediately
+  event.waitUntil(self.clients.claim()));
 
 /**
  * event api: https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent
@@ -67,8 +72,9 @@ self.addEventListener('install', (event) => {
  */
 self.addEventListener('fetch', (event) => {
   const neverCacheUrls = [
-    `${protocol}//localhost:3000/js/bundle.js`,
-    // `${protocol}//logrocket-1356.appspot.com/v1/ingest`, // handled by neverCacheHttpMethods
+    `${protocol}//${hostname}:3000/js/bundle.js`,
+    'https://logrocket-1356.appspot.com/v1/ingest',
+    `${protocol}//${hostname}:3000/rootworker.js`,
   ];
 
   const neverCacheHttpMethods = [
@@ -77,25 +83,24 @@ self.addEventListener('fetch', (event) => {
 
   // never cache urls
   if (navigator.onLine && neverCacheUrls.indexOf(event.request.clone().url) !== -1)
-     // appFuncs.console()(`not caching url: ${event.request.url} `);
     return event.respondWith(fetch(event.request));
-
   // never cache http methods
   if (navigator.onLine && neverCacheHttpMethods.indexOf(event.request.clone().method) !== -1)
-    // appFuncs.console()(`not caching http method: ${event.request.url}, ${event.request.clone().method} `);
     return event.respondWith(fetch(event.request));
 
-  return event.respondWith(new Promised((resolve, reject) => {
+  return event.respondWith(new Promised((resolve) => {
     db.get(event.request.url).then((blobFound) => {
       if (!blobFound) {
+        appFuncs.console('error')(`blob not found: ${event.request.url}`);
         if (!navigator.onLine) return appFuncs.fakeResponse();
 
-        return fetch(event.request.clone().url)
+        return fetch(event.request.clone())
           .then((response) => {
-            if (!response) {
+            if (!response || response.type !== 'opaque' && !response.ok) {
               appFuncs.console()(`received invalid response from fetch: ${response}`);
+              appFuncs.console('dir')(response);
 
-              return reject(response);
+              return appFuncs.fakeResponse();
             }
 
             // insert response body in db
@@ -114,23 +119,29 @@ self.addEventListener('fetch', (event) => {
                 }
 
                 // never insert blobs with 0 bytes
+                appFuncs.console('error')(`blob size 0: ${blob}, ${event.request.url}`);
+
                 return false;
               },
               (noBlob) => appFuncs.console()(`blob not generated from cloned response:${noBlob}`)
             );
 
             return resolve(response);
+          })
+          .catch((error) => {
+            appFuncs.console('dir')(error);
+            appFuncs.console()('got error');
+
+            return null;
           });
       }
       // blob found logic
-      const contentType = appFuncs.getBlobType(blobFound, event.request.url);
+      const contentType = appFuncs.getBlobType(blobFound, event.request.url, event.request.headers);
       appFuncs.console()(`responding from cache: ${event.request.url}, contentType: ${contentType}, size: ${blobFound.size}`);
 
-      const myHeaders = {
-        "Content-Length": String(blobFound.size),
-        "Content-Type": contentType,
-        "X-Custom-type": "Provided by Serviceworker",
-      };
+      const myHeaders = {};
+      for ( const key of event.request.headers.entries())
+        myHeaders[key[0]] = key[1];
 
       const init = {
         'headers': myHeaders,
@@ -144,36 +155,14 @@ self.addEventListener('fetch', (event) => {
   }));
 });
 
+
 /*
-self.addEventListener('activate', (event) => {
-  const expectedCacheNames = Object.keys(CURRENT_CACHES).map((key) =>
-    CURRENT_CACHES[key]
-  );
-
-  /**
-   * Delete all caches that aren't named in CURRENT_CACHES.
-   *
-  event.waitUntil(
-    caches.keys().then((cacheNames) =>
-      Promised.all(
-        cacheNames.map((cacheName) =>
-          expectedCacheNames.indexOf(cacheName) === -1 ?
-            caches.delete(cacheName) :
-            null
-        )
-      )
-    )
-  );
-});
-
 self.addEventListener('sync', (event) => {
   appFuncs.console()(`sync event: ${JSON.stringify(event)}`);
 });
-
 self.addEventListener('push', (event) => {
   appFuncs.console()(`push event: ${JSON.stringify(event)}`);
 });
-
 self.addEventListener('message', (event) => {
   // event.data === whatever sent from Client.postMessage
   appFuncs.console()(`message event: ${JSON.stringify(event)}`);

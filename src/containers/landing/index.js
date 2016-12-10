@@ -2,9 +2,9 @@ import React from 'react';
 import Markdown from 'react-markdown';
 import md from 'readme';
 
-import styles from './main.css';
+import styles from './index.css';
 
-class Main extends React.Component {
+class Landing extends React.Component {
   render () {
     return (
       <div className='main'>
@@ -15,4 +15,4 @@ class Main extends React.Component {
   }
 }
 
-export default Main;
+export default Landing;

@@ -1,14 +1,12 @@
-import React from 'react';
-import { Link } from 'react-router';
-import Helmet from 'react-helmet';
-import { connect } from 'react-redux';
-import * as actionCreators from 'store/actions/index.js';
 import { bindActionCreators } from 'redux';
-import styles from './page.css';
+import { connect } from 'react-redux';
+import { Link } from 'react-router';
+import * as actionCreators from 'store/actions/index.js';
+import Helmet from 'react-helmet';
+import React from 'react';
+import styles from './index.css';
 
-// import checkInternet from 'server/checkconnection.js';
-
-class Page extends React.Component {
+class App extends React.Component {
   static propTypes = {
     children: React.PropTypes.node,
     msg: React.PropTypes.string,
@@ -22,6 +20,8 @@ class Page extends React.Component {
   getScripts = () => {
     const nav = typeof navigator !== 'undefined' ? navigator : null;
 
+    // only include scripts if able to connect to internet
+    // update this to include scripts to serve both online and offline
     return appConsts.nodeOnline || nav && nav.onLine ?
       [
         { src: 'https://cdn.logrocket.com/LogRocket.min.js', type: 'text/javascript' },
@@ -37,37 +37,39 @@ class Page extends React.Component {
 
   render () {
     return (
-      <div className='page'>
+      <article className='app'>
         <Helmet
           htmlAttributes={{ lang: 'en' }}
           link={[
             {
-              'href': 'http://fonts.googleapis.com/css?family=Muli|Eczar|Varela Round',
+              'href': `${appConsts.isProd ? 'https' : 'http'}://fonts.googleapis.com/css?family=Muli|Varela%20Round`,
               'rel': 'stylesheet',
               type:'text/css',
             },
           ]}
           meta={[
-            { content: 'React F Your Starterkit by @noahedwardhall', name: 'description' },
+            { content: 'F Your Starterkit by @noahedwardhall', name: 'description' },
             { content: 'Home', property: 'og:title' },
           ]}
           script={this.getScripts()}
-          title='For Your Progressive React Starterkit'
+          title='For Your Progressive Starterkit Needs'
         />
         <style scoped type='text/css'>{styles}</style>
-        <ul className='navbar'>
-          <li className='navitem'>
-            <Link activeClassName='active' className='navlink' onlyActiveOnIndex={true} to={`/`} >Home</Link>
-          </li>
-          <li className='navitem'>
-            <Link activeClassName='active' className='navlink' to={`start`} >Start</Link>
-          </li>
-          <li className='navitem ra'>
-            <div>{this.props.msg}</div>
-          </li>
-        </ul>
+        <nav>
+          <ul className='navbar'>
+            <li className='navitem'>
+              <Link activeClassName='active' className='navlink' onlyActiveOnIndex={true} to={`/`} >Home</Link>
+            </li>
+            <li className='navitem'>
+              <Link activeClassName='active' className='navlink' to={`start`} >Start</Link>
+            </li>
+            <li className='navitem ra'>
+              <section>{this.props.msg}</section>
+            </li>
+          </ul>
+        </nav>
         {this.props.children}
-      </div>
+      </article>
     );
   }
 }
@@ -82,4 +84,4 @@ const mapDispatchToProps = (dispatch) =>
     actions: bindActionCreators(actionCreators, dispatch)
   });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Page);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -8,6 +8,7 @@ const
   browserify = require("browserify"),
   buffer = require("vinyl-buffer"),
   checkInternet = require('./src/server/checkconnection.js').checkInternet,
+  del = require('del'),
   env = require('gulp-env'),
   envify = require("loose-envify"),
   es = require('event-stream'),
@@ -30,6 +31,12 @@ const
   stringify = require('stringify'),
   uglify = require('gulp-uglify'),
   watchify = require("watchify");
+
+gulp.task('clean', (fn) => {
+  del([
+    'dist',
+  ], fn);
+});
 
 function createBundler (useWatchify, server) {
   return browserify({
@@ -135,18 +142,32 @@ gulp.task("watch:client", () => {
     .on("update", rebundle);
 });
 
-gulp.task("watch:server", () =>
-  nodemon({
+gulp.task("watch:server", (cb) => {
+  let called = false;
+  const stream = nodemon({
+    args: ['--trace-sync-io'],
     ext: "js",
     ignore: [ "gulpfile.js", "node_modules/*" ],
     script: "dist/server.js",
-    tasks: [ 'copy:service-workers', 'bundle:server' ],
-    watch: [ 'src/server.js', 'dist/public/js/bundle.js', 'src/serviceworkers' ]
-  })
+    tasks: ['bundle:server'],
+    watch: [ 'src/server.js', 'dist/public/js/bundle.js' ]
+  });
+
+  stream
     .on("error", gutil.log)
+    .on("start", () => {
+      // ensure start only got called once
+      if (!called) cb();
+      called = true;
+    })
     .on("change", gutil.log)
     .on("restart", gutil.log)
-);
+    .on('crash', () => {
+      appFuncs.console('error')('Application has crashed!\n');
+      // restart the server in 5 seconds
+      stream.emit('restart', 5);
+    });
+});
 
 gulp.task('test', () =>
   gulp.src(['./src/**/*.test.js'], { read: false })
@@ -159,22 +180,26 @@ gulp.task('test', () =>
     .on("error", gutil.log)
 );
 
-gulp.task('eslint', () =>
-    // ESLint ignores files with "node_modules" paths.
-    // So, it's best to have gulp ignore the directory as well.
-    // Also, Be sure to return the stream from the task;
-    // Otherwise, the task may end before the stream has finished.
-  gulp.src([ './src/**/*.js', '!node_modules/**' ])
-    // eslint() attaches the lint output to the "eslint" property
-    // of the file object so it can be used by other modules.
-    .pipe(eslint())
-    // eslint.format() outputs the lint results to the console.
-    // Alternatively use eslint.formatEach() (see Docs).
+gulp.task('eslint', () => {
+  /**
+   * Captures eslint log for each file
+   * @method isFixed
+   * @param  {Object} file file.eslint[filePath|messages|errorCount|warningCount]
+   * @return {Boolean} [description]
+   */
+  function isFixed (file) {
+    const didFix = file.eslint && typeof file.eslint.output === 'string';
+    if (didFix) appFuncs.console()(`eslint fixed file: ${file.filePath}`);
+
+    return didFix;
+  }
+
+  return gulp.src([ './src/**/*.js', '!node_modules/**' ])
+    .pipe(eslint({ fix: true }))
     .pipe(eslint.format())
-    // To have the process exit with an error code (1) on
-    // lint error, return the stream and pipe to failAfterError last.
-    .pipe(eslint.failAfterError())
-);
+    .pipe(gulpif(isFixed, gulp.dest('./src')))
+    .pipe(eslint.failAfterError());
+});
 
 gulp.task('stylelint', () =>
   gulp
@@ -196,7 +221,15 @@ gulp.task('copy:server-certs', () =>
     .pipe(gulpCopy('./dist/server', { prefix: 2 }))
 );
 
-gulp.task('copy:service-workers', (done) =>
+gulp.task('copy:service-workers', (done) => {
+  if (!appFuncs.isProd) {
+    const watchServiceWorkers = gulp // eslint-disable-line
+    .watch('./src/serviceworkers/*.js', ['copy:service-workers']);
+
+    watchServiceWorkers.on('change', (event) =>
+      console.log(`File ${event.path} was ${event.type$}, running tasks...`));
+  }
+
   glob('./src/serviceworkers/*.js', (err, files) => {
     if (err) done(err);
 
@@ -224,7 +257,8 @@ gulp.task('copy:service-workers', (done) =>
         .pipe(gulp.dest('./dist'))
     );
     es.merge(tasks).on('end', done);
-  }));
+  });
+});
 
 gulp.task('checkconnection', (cb) =>
   checkInternet((isConnected) => {
@@ -243,23 +277,29 @@ gulp.task('checkconnection', (cb) =>
   })
 );
 
+gulp.task('exit', () => process.exit(0));
+
 gulp.task("default", gulpSequence(
   'checkconnection',
   'stylelint',
   'eslint',
   'test',
+  "watch:client",
   'copy:server-certs',
   'copy:service-workers',
-  "watch:server",
-  "watch:client"
+  "bundle:server",
+  "watch:server"
 ));
 
-gulp.task("prod", gulpSequence(
-  'copy:server-certs',
-  'copy:service-workers',
-  'bundle:server',
-  'bundle:client'
-));
+gulp.task("prod",
+  gulpSequence(
+    'copy:server-certs',
+    'copy:service-workers',
+    'bundle:client',
+    'bundle:server',
+    'exit'
+  )
+);
 
 gulp.task('lint', gulpSequence(
   'stylelint',

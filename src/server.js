@@ -1,6 +1,7 @@
 require('./.globals');
 import { renderToString } from 'react-dom/server';
 import { RouterContext, match } from 'react-router';
+import compression from 'compression';
 import express from 'express';
 import fs from 'fs';
 import helmet from 'helmet';
@@ -45,7 +46,7 @@ function renderFullPage (html, preloadedState) {
         ${head.script}
       </head>
       <body>
-        <div id="root">${html}</div>
+        <article id="root">${html}</article>
         <script>
           window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)}
         </script>
@@ -57,6 +58,7 @@ function renderFullPage (html, preloadedState) {
 }
 
 const app = express();
+app.use(compression());
 app.use(helmet());
 app.use(express.static(`${__dirname}/public`));
 
@@ -66,7 +68,7 @@ const serviceWorkerFileOptions = {
     'x-sent': true,
     'x-timestamp': Date.now(),
   },
-  root: __dirname
+  root: __dirname,
 };
 
 app.get('/container.js', (req, res) => {
@@ -97,9 +99,8 @@ app.get("*", (req, res) => {
     if (!renderProps) return res.status(404).end('Not found.');
     // setup store based on data sent in
     const store = configure(Immutable({
-      msg: 'welcome to your application'
+      msg: 'welcome to your application',
     }));
-    const initialState = store.getState();
 
     const InitialComponent = ( // eslint-disable-line no-extra-parens
       <Provider store={store} >
@@ -108,7 +109,7 @@ app.get("*", (req, res) => {
     );
     const html = renderToString(InitialComponent);
 
-    return res.status(200).send(renderFullPage(html, initialState));
+    return res.status(200).send(renderFullPage(html, store.getState()));
   });
 
   return true;
@@ -122,5 +123,5 @@ spdy.createServer(options, app)
       return process.exit(1);
     }
 
-    appFuncs.console('info', true)(`Server running: ${!appConsts.isProd ? 'http://' : 'https://'}localhost:${port}`);
+    appFuncs.console('info', true)(`Server running: ${!appConsts.isProd ? 'http://127.0.0.1' : 'https://localhost'}:${port}`);
   });
