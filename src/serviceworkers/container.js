@@ -3,10 +3,11 @@
  * @author @noahedwardhall
  */
 
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator)
   navigator.serviceWorker.register('./rootworker.js', {
     scope: './'
   })
+    //.then(() => navigator.serviceWorker.ready)
   // registration was successful
     .then((reg) => {
       if (reg.installing) {
@@ -31,12 +32,4 @@ if ('serviceWorker' in navigator) {
     .catch((error) => {
       appFuncs.console('error')(`Registration failed: ${error}`);
     });
-
-  // the controlling service worker has changed
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    appFuncs.console()('controller has changed, reload');
-    // reload the page if the user has consented, if not ask for permission
-    // for some changes (e.g. minor, or security fixes) you may want to force changes to users
-    window.location.reload();
-  });
-} else appFuncs.console('info', true)('Your browser does not offline apps :( try switching to chrome, firefox, or opera');
+else appFuncs.console('info', true)('Your browser does not offline apps :( try switching to chrome, firefox, or opera');

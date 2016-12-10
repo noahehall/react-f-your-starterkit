@@ -1,3 +1,4 @@
+// require('../../.globals/');
 import Immutable from 'seamless-immutable';
 
 export function msg (state = Immutable({}), action) {

@@ -1,0 +1,365 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font-family: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
+  content: '';
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+html {
+  font-size: 16px;
+  font-family: Muli;
+}
+
+/** my resets */
+input {
+  appearance: none;
+  border-radius: 0;
+  box-shadow: none;
+  display: inline-block;
+  margin: 0;
+
+  & :focus {
+    outline: none;
+  }
+}
+
+button,
+input[type=button],
+input[type=submit] {
+  box-sizing: content-box;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  line-height: normal;
+  overflow: visible;
+  padding: 0;
+  -webkit-appearance: button; /* for input */
+  -webkit-user-select: none; /* for button */
+  -moz-user-select: none;
+  -ms-user-select: none;
+
+  &::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+  }
+}
+
+/* http://callmenick.com/post/various-css-input-text-styles */
+/* default style */
+input {
+  border: solid 1px #dcdcdc;
+  padding: 5px;
+  transition: box-shadow 0.3s, border 0.3s;
+
+  &:focus,
+  &:active,
+  &:hover {
+    border: solid 1px #707070;
+    box-shadow: 0 0 5px 1px #969696;
+  }
+}
+
+.input-thick {
+  border: solid 5px #c9c9c9;
+  padding: 5px;
+  transition: border 0.3s;
+
+  &:focus,
+  &:active,
+  &:hover {
+    border: solid 5px #969696;
+  }
+}
+
+.input-double {
+  border: solid 5px #c9c9c9;
+  box-shadow: inset 0 0 0 1px #707070;
+  padding: 5px;
+  transition: box-shadow 0.3s, border 0.3s;
+
+  &:focus,
+  &:active,
+  &:hover {
+    border: solid 5px #969696;
+  }
+}
+
+.input-underline {
+  border-bottom: solid 2px #c9c9c9;
+  border: none;
+  padding: 5px;
+  transition: border 0.3s;
+
+  &:focus,
+  &:active,
+  &:hover {
+    border-bottom: solid 2px #969696;
+  }
+}
+
+.input-inset {
+  border: solid 1px #fff;
+  box-shadow: inset 1px 1px 2px 0 #707070;
+  padding: 5px;
+  transition: box-shadow 0.3s;
+
+  &:focus {
+    box-shadow: inset 1px 1px 2px 0 #c9c9c9;
+  }
+}
+
+/* default style */
+/* http://tympanus.net/Development/CreativeButtons/ */
+button,
+input[type=button],
+input[type=submit] {
+  padding: 5px;
+  overflow: hidden;
+  background-color: #fcad26;
+  color: #fff;
+  border: none;
+  font-family: inherit;
+  font-size: 1rem;
+  display: inline-block;
+  margin: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  outline: none;
+  transition: all 0.3s;
+
+  &:active,
+  &:hover,
+  &:focus {
+    right: 0;
+    top: 0;
+    border-style: dashed;
+    border-width: 3px;
+    border-color: red;
+    transform-origin: 0 0;
+    transform: rotate(-2deg);
+    z-index: 1;
+  }
+}
+
+.app {
+  background-color: white;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+
+  & h1,
+  & h2,
+  & h3,
+  & h4,
+  & h5,
+  & h6 {
+    font-family: Varela Round;
+  }
+
+  & h1 {
+    font-size: 2.5rem;
+  }
+
+  & h2 {
+    font-size: 2.2rem;
+  }
+
+  & h3 {
+    font-size: 1.9rem;
+  }
+
+  & h4 {
+    font-size: 1.6rem;
+  }
+
+  & h4 {
+    font-size: 1.3rem;
+  }
+
+  & h5 {
+    font-size: 1rem;
+  }
+
+  & h6 {
+    font-size: 0.7rem;
+  }
+
+  & .navbar {
+    background-color: #3a3a3a;
+    color: white;
+    display: table;
+    font-family: Varela Round;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-transform: capitalize;
+    width: 100%;
+
+    & a {
+      text-decoration: none;
+
+      &:visited {
+        color: inherit;
+      }
+    }
+
+    & .navitem {
+      display: table-cell;
+
+      & .navlink {
+        display: block;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+
+        &:hover {
+          background-color: #111;
+          color: red;
+        }
+
+        &.active {
+          color: #fff;
+          background-color: #ef8d24;
+        }
+      }
+
+      &.ra {
+        text-align: center;
+        padding-top: 14px;
+        padding-right: 4px;
+      }
+    }
+  }
+}
