@@ -19,10 +19,10 @@ if you need [the following](https://medium.com/front-end-developers/handcrafting
 
 # Quick start
   - $ npm install #install all required npm modules
-  - $ npm run dev #start app on localhost:3000
+  - $ npm run dev #start app on http://127.0.0.1:3000
+  - $ npm run prod #production build with app running on https://localhost:3000
   - $ npm run test #test all test.js files within src/*
-  - $ npm run eslint-unused #see all eslint rules not defined in .eslintrc
-  - $ npm run eslint #run eslint on all .js files within /src*
+  - $ npm run lint #run lint on all .js files within /src* and styleint all .css files within /src*
 
 # opinions
 - immutability: [seamless-immutable](https://github.com/rtfeldman/seamless-immutable)
