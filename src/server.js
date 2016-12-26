@@ -14,6 +14,7 @@ import spdy from 'spdy';
 import FileStreamRotator from 'file-stream-rotator';
 import path from 'path';
 import defaultHtml from './components/defaulthtml.js';
+
 // store
 import { Provider } from 'react-redux';
 import configure from './store/configure';
@@ -21,8 +22,8 @@ import initialState from './store/initialstate.js';
 import NotFoundComponent from './containers/notfound';
 
 // cluster
-import cluster from 'cluster'; // http://apidocs.strongloop.com/strong-cluster-control/ eslintignore
-import control from 'strong-cluster-control';
+import cluster from 'cluster';
+import control from 'strong-cluster-control'; // http://apidocs.strongloop.com/strong-cluster-control/ eslintignore
 
 control.start({
   shutdownTimeout: 5000,
