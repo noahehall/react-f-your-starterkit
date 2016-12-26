@@ -227,7 +227,7 @@ gulp.task('copy:service-workers', (done) => {
     .watch('./src/serviceworkers/*.js', ['copy:service-workers']);
 
     watchServiceWorkers.on('change', (event) =>
-      console.log(`File ${event.path} was ${event.type$}, running tasks...`));
+      appFuncs.console()(`File ${event.path} was ${event.type$}, running tasks...`));
   }
 
   glob('./src/serviceworkers/*.js', (err, files) => {
@@ -260,6 +260,20 @@ gulp.task('copy:service-workers', (done) => {
   });
 });
 
+gulp.task('copy:public', () => {
+  if (!appFuncs.isProd) {
+    const watchPublic = gulp // eslint-disable-line
+    .watch('./src/public/**/*', ['copy:public']);
+
+    watchPublic.on('change', (event) =>
+      appFuncs.console()(`File ${event.path} was ${event.type$}, running tasks...`));
+  }
+
+  gulp
+    .src('./src/public/**/*')
+    .pipe(gulpCopy('./dist/public', { prefix: 2 }));
+});
+
 gulp.task('checkconnection', (cb) =>
   checkInternet((isConnected) => {
     if (isConnected) {
@@ -287,6 +301,7 @@ gulp.task("default", gulpSequence(
   "watch:client",
   'copy:server-certs',
   'copy:service-workers',
+  'copy:public',
   "bundle:server",
   "watch:server"
 ));
@@ -295,6 +310,7 @@ gulp.task("prod",
   gulpSequence(
     'copy:server-certs',
     'copy:service-workers',
+    'copy:public',
     'bundle:client',
     'bundle:server',
     'exit'
