@@ -20,37 +20,27 @@ import configure from './store/configure';
 import initialState from './store/initialstate.js';
 import NotFoundComponent from './containers/notfound';
 
-import cluster from 'cluster';
-// clustering adapted from: https://github.com/rowanmanning/learning-express-cluster/blob/master/app.js\
-// Code to run if we're in the master process
-if (cluster.isMaster) {
-  let cpuCount;
-  const totalCpus = require('os').cpus().length;
+// cluster
+import cluster from 'cluster'; // http://apidocs.strongloop.com/strong-cluster-control/ eslintignore
+import control from 'strong-cluster-control';
 
-  // only use two cpus, i need to surf reddit
-  if (!appConsts.isProd)
-    cpuCount = totalCpus > 1
-      ? 2
-      : 1;
-  else cpuCount = totalCpus;
-
-  // Create a worker for each CPU
-  for (let i = 0; i < cpuCount; i += 1) cluster.fork();
-
-  // Listen for dying workers
-  cluster.on('exit', (worker) => {
-    // log error
-    appFuncs.logError({
-      data: worker,
-      loc: __filename,
-      msg: `Worker ${worker.id} died :(`,
-    });
-    // Replace the dead worker, we're not sentimental
-    cluster.fork();
-  });
+control.start({
+  shutdownTimeout: 5000,
+  size: control.CPUS > 1 && !appConsts.isProd
+    ? 2
+    : control.CPUS,
+  terminateTimeout: 5000,
+  throttleDelay: 5000
+}).on('error', (error) =>
+  appFuncs.logError({
+    data: error,
+    loc: __filename,
+    msg: `error.message :(`,
+  })
+);
 
 // Code to run if we're in a worker process
-} else {
+if (cluster.isWorker) {
   // https: only in production
   const options = {
     cert: fs.readFileSync(`${__dirname}/server/localhost-cert.pem`),
