@@ -25,9 +25,12 @@ import cluster from 'cluster'; // http://apidocs.strongloop.com/strong-cluster-c
 import control from 'strong-cluster-control';
 
 control.start({
+  shutdownTimeout: 5000,
   size: control.CPUS > 1 && !appConsts.isProd
     ? 2
-    : control.CPUS
+    : control.CPUS,
+  terminateTimeout: 5000,
+  throttleDelay: 5000
 }).on('error', (error) =>
   appFuncs.logError({
     data: error,
@@ -35,34 +38,7 @@ control.start({
     msg: `error.message :(`,
   })
 );
-/*
-if (cluster.isMaster) {
-  let cpuCount;
-  const totalCpus = require('os').cpus().length;
 
-  // only use two cpus, i need to surf reddit
-  if (!appConsts.isProd)
-    cpuCount = totalCpus > 1
-      ? 2
-      : 1;
-  else cpuCount = totalCpus;
-
-  // Create a worker for each CPU
-  for (let i = 0; i < cpuCount; i += 1) cluster.fork();
-
-  // Listen for dying workers
-  cluster.on('exit', (worker) => {
-    // log error
-    appFuncs.logError({
-      data: worker,
-      loc: __filename,
-      msg: `Worker ${worker.id} died :(`,
-    });
-    // Replace the dead worker, we're not sentimental
-    cluster.fork();
-  });
-}
-*/
 // Code to run if we're in a worker process
 if (cluster.isWorker) {
   // https: only in production
