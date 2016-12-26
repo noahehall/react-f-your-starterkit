@@ -82,6 +82,7 @@
     "spdy": "^3.4.4",
     "spotlight": "^1.2.0",
     "st-input-moment": "^0.3.3",
+    "strong-cluster-control": "^2.2.3",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {

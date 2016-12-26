@@ -20,9 +20,22 @@ import configure from './store/configure';
 import initialState from './store/initialstate.js';
 import NotFoundComponent from './containers/notfound';
 
-import cluster from 'cluster';
-// clustering adapted from: https://github.com/rowanmanning/learning-express-cluster/blob/master/app.js\
-// Code to run if we're in the master process
+// cluster
+import cluster from 'cluster'; // http://apidocs.strongloop.com/strong-cluster-control/ eslintignore
+import control from 'strong-cluster-control';
+
+control.start({
+  size: control.CPUS > 1 && !appConsts.isProd
+    ? 2
+    : control.CPUS
+}).on('error', (error) =>
+  appFuncs.logError({
+    data: error,
+    loc: __filename,
+    msg: `error.message :(`,
+  })
+);
+/*
 if (cluster.isMaster) {
   let cpuCount;
   const totalCpus = require('os').cpus().length;
@@ -48,9 +61,10 @@ if (cluster.isMaster) {
     // Replace the dead worker, we're not sentimental
     cluster.fork();
   });
-
+}
+*/
 // Code to run if we're in a worker process
-} else {
+if (cluster.isWorker) {
   // https: only in production
   const options = {
     cert: fs.readFileSync(`${__dirname}/server/localhost-cert.pem`),
