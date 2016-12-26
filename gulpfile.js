@@ -291,33 +291,39 @@ gulp.task('checkconnection', (cb) =>
   })
 );
 
+gulp.task('lint', gulpSequence(
+  'stylelint',
+  'eslint'
+));
+
 gulp.task('exit', () => process.exit(0));
 
 gulp.task("default", gulpSequence(
-  'checkconnection',
-  'stylelint',
-  'eslint',
-  'test',
-  "watch:client",
-  'copy:server-certs',
-  'copy:service-workers',
-  'copy:public',
+  [
+    'checkconnection',
+    'stylelint',
+    'eslint',
+    'test',
+    'copy:server-certs',
+    'copy:service-workers',
+    'copy:public',
+    "watch:client",
+  ],
   "bundle:server",
   "watch:server"
 ));
 
 gulp.task("prod",
   gulpSequence(
-    'copy:server-certs',
-    'copy:service-workers',
-    'copy:public',
-    'bundle:client',
-    'bundle:server',
+    [
+      'copy:server-certs',
+      'copy:service-workers',
+      'copy:public',
+    ],
+    [
+      'bundle:client',
+      'bundle:server',
+    ],
     'exit'
   )
 );
-
-gulp.task('lint', gulpSequence(
-  'stylelint',
-  'eslint'
-));
