@@ -96,7 +96,7 @@ self.addEventListener('fetch', (event) => {
 
         return fetch(event.request.clone())
           .then((response) => {
-            if (!response || (response.type !== 'opaque' && !response.ok)) {
+            if (!response || response.type !== 'opaque' && !response.ok) {
               appFuncs.console()(`received invalid response from fetch: ${response}`);
               appFuncs.console('dir')(response);
 
@@ -119,7 +119,8 @@ self.addEventListener('fetch', (event) => {
                 }
 
                 // never insert blobs with 0 bytes
-                appFuncs.console('error')(`blob size 0: ${blob}, ${event.request.url}`);
+                appFuncs.console('dir')(blob);
+                appFuncs.console('error')(`blob size 0: ${event.request.url}`);
 
                 return false;
               },
