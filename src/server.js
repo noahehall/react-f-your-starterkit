@@ -39,7 +39,7 @@ app.use(express.static(`${__dirname}/public`));
 app.use(favicon(`${__dirname}/public/images/favicon.ico`));
 
 // log rotation only in production
-if (appFuncs.isProd) {
+if (appConsts.isProd) {
   const logDirectory = path.join(__dirname, 'log');
   // ensure log directory exists
   fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory); // eslint-disable-line
