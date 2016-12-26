@@ -3,15 +3,17 @@ import { renderToString } from 'react-dom/server';
 import { RouterContext, match } from 'react-router';
 import compression from 'compression';
 import express from 'express';
+import favicon from 'serve-favicon';
 import fs from 'fs';
 import helmet from 'helmet';
-import Helmet from 'react-helmet';
 import Immutable from 'seamless-immutable';
-// import path from 'path';
+import morgan from 'morgan';
 import React from 'react';
 import routes from './routes';
 import spdy from 'spdy';
-
+import FileStreamRotator from 'file-stream-rotator';
+import path from 'path';
+import defaultHtml from './components/defaulthtml.js';
 // store
 import { Provider } from 'react-redux';
 import configure from './store/configure';
@@ -31,37 +33,44 @@ const options = {
   }
 };
 
-function renderFullPage (html, preloadedState) {
-  const head = Helmet.rewind();
-
-  return `
-    <!doctype html>
-      <html ${head.htmlAttributes.toString()}>
-      <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        ${head.title}
-        ${head.meta}
-        ${head.link}
-        ${head.script}
-      </head>
-      <body>
-        <article id="root">${html}</article>
-        <script>
-          window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)}
-        </script>
-        <script src='/js/bundle.js' type='text/javascript'></script>
-        <script src='/container.js' type='text/javascript'></script>
-      </body>
-    </html>
-    `;
-}
-
 const app = express();
 app.use(compression());
 app.use(helmet());
 app.use(express.static(`${__dirname}/public`));
+app.use(favicon(`${__dirname}/public/images/favicon.ico`));
+
+// logging
+const logDirectory = path.join(__dirname, 'log');
+// ensure log directory exists
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory); // eslint-disable-line
+// create rotating stream
+const accessLogStream = FileStreamRotator.getStream({
+  date_format: 'YYYYMMDD',
+  filename: path.join(logDirectory, 'access-%DATE%.log'),
+  frequency: 'daily',
+  verbose: false,
+});
+// setup the logger
+app.use(morgan('combined', {stream: accessLogStream}));
+
+/*
+  setup your api as below
+  // move this to top of file
+  import bodyParser from 'body-parser';
+  // POST /login gets urlencoded bodies
+  const urlencodedParser = bodyParser.urlencoded({ extended: false })
+  app.post('/login', urlencodedParser, function (req, res) {
+    if (!req.body) return res.sendStatus(400)
+    res.send('welcome, ' + req.body.username)
+  })
+
+  // POST /api/users gets JSON bodies
+  const jsonParser = bodyParser.json({ type: 'application/*+json' })
+  app.post('/api/users', jsonParser, function (req, res) {
+    if (!req.body) return res.sendStatus(400)
+    // create user in req.body
+  })
+ */
 
 const serviceWorkerFileOptions = {
   dotfiles: 'deny',
@@ -106,9 +115,13 @@ app.get("*", (req, res) => {
         <RouterContext {...renderProps} />
       </Provider>
     );
-    const html = renderToString(InitialComponent);
 
-    return res.status(200).send(renderFullPage(html, store.getState()));
+    return res.status(200).send(
+      defaultHtml(
+        renderToString(InitialComponent),
+        store.getState()
+      )
+    );
   });
 
   return true;
