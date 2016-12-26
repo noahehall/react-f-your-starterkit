@@ -114,24 +114,27 @@ if (cluster.isMaster) {
   };
 
   app.get('/container.js', (req, res) => {
+    // TODO: console ${cluster.worker.id} to each branch
     res.sendFile('./container.js', serviceWorkerFileOptions, (err) => {
       if (err) {
         appFuncs.console('error')(err);
         res.status(err.status).end();
-      } else appFuncs.console()('Sent: container.js');
+      } else appFuncs.console()(`${cluster.worker.id} Sent: container.js`);
     });
   });
 
   app.get('/rootworker.js', (req, res) => {
+    // TODO: console ${cluster.worker.id} to each branch
     res.sendFile('./rootworker.js', serviceWorkerFileOptions, (err) => {
       if (err) {
         appFuncs.console('error')(err);
         res.status(err.status).end();
-      } else appFuncs.console()('Sent: rootworker.js');
+      } else appFuncs.console()(`${cluster.worker.id} Sent: rootworker.js`);
     });
   });
 
   app.get("*", (req, res) => {
+    // TODO: console ${cluster.worker.id} to each branch
     match({ location: req.url, routes }, (err, redirectLocation, renderProps) => {
       if (err) {
         appFuncs.logError({
@@ -153,7 +156,7 @@ if (cluster.isMaster) {
           appFuncs.logError({
             data: [ error, renderProps ],
             loc: __filename,
-            msg: 'Unable to check for 404 route, please check how you have defined your routes'
+            msg: `${cluster.worker.id}: Unable to check for 404 route, please check how you have defined your routes`,
           });
         }
 
@@ -175,7 +178,7 @@ if (cluster.isMaster) {
       }
 
       // if none of the above worked, send 500
-      return res.status(500).end('Something happened! Please try again.');
+      return res.status(500).end(`${cluster.worker.id}: Something happened! Please try again.`);
     });
 
     return true;
@@ -183,14 +186,19 @@ if (cluster.isMaster) {
 
   // initialize server
   const port = process.env.PORT || 3000;
+  // TODO: console ${cluster.worker.id} to each branch
   spdy.createServer(options, app)
     .listen(port, (error) => { // eslint-disable-line consistent-return
       if (error) {
-        appFuncs.console('error')(`error occured starting server: ${error}`);
+        appFuncs.logError({
+          data: error,
+          loc: __filename,
+          msg: `${cluster.worker.id}: error occured starting server: ${error.message}`,
+        });
 
         return process.exit(1);
       }
 
-      appFuncs.console('info', true)(`Server running: ${!appConsts.isProd ? 'http://127.0.0.1' : 'https://localhost'}:${port}`);
+      appFuncs.console('info', true)(`${cluster.worker.id} Server running: ${!appConsts.isProd ? 'http://127.0.0.1' : 'https://localhost'}:${port}`);
     });
 }
