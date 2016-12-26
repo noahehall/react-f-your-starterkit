@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import * as actionCreators from 'store/actions/index.js';
 import Helmet from 'react-helmet';
+import Idbstore from 'serviceworkers/idb/idb';
 import React from 'react';
 import styles from './index.css';
 
@@ -10,6 +11,14 @@ class App extends React.Component {
   static propTypes = {
     children: React.PropTypes.node,
     msg: React.PropTypes.string,
+  }
+
+  componentDidMount () {
+    if (Idbstore) {
+      const db = new Idbstore();
+      appFuncs.console()('Idbstore is true!');
+      appFuncs.console('dir')(db);
+    } else appFuncs.console()('Idb store is false :(');
   }
 
   /**
@@ -22,16 +31,16 @@ class App extends React.Component {
 
     // only include scripts if able to connect to internet
     // update this to include scripts to serve both online and offline
-    return appConsts.nodeOnline || (nav && nav.onLine) ?
-      [
+    return appConsts.nodeOnline || nav && nav.onLine ?
+    [
         { src: 'https://cdn.logrocket.com/LogRocket.min.js', type: 'text/javascript' },
         // to log session urls in production console.log(LogRocket.recordingURL);
         // add the github integration https://github.com/integration/logrocket
-        {
-          innerHTML: `if (typeof LogRocket !== 'undefined') { LogRocket.init('noahedwardhall/trainschedule', { shouldShowReportingButton: ${!appConsts.isProd && true} }); }`,
-          type: 'text/javascript',
-        }
-      ] :
+      {
+        innerHTML: `if (typeof LogRocket !== 'undefined') { LogRocket.init('noahedwardhall/trainschedule', { shouldShowReportingButton: ${!appConsts.isProd && true} }); }`,
+        type: 'text/javascript',
+      }
+    ] :
       [{}];
   }
 
@@ -42,7 +51,7 @@ class App extends React.Component {
           htmlAttributes={{ lang: 'en' }}
           link={[
             {
-              'href': `${appConsts.isProd ? 'https' : 'http'}://fonts.googleapis.com/css?family=Muli|Varela%20Round`,
+              'href': 'https://fonts.googleapis.com/css?family=Muli|Varela%20Round',
               'rel': 'stylesheet',
               type:'text/css',
             },

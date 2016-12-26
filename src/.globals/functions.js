@@ -12,9 +12,11 @@ import math from './lib/math.js';
 import serviceWorkers from './lib/serviceworkers.js';
 import time from './lib/time.js';
 import utility from './lib/utility.js';
+import errors from './lib/errors.js';
 
 const appFuncs = {
   ...dom,
+  ...errors,
   ...integrations,
   ...math,
   ...serviceWorkers,
