@@ -8,7 +8,7 @@ import Start from 'containers/start';
 export default (
   <Route component={App} name='app' path='/'>
     <IndexRoute component={Landing} />
-    <Route component={Start} name='Start' path='start' />
+    <Route component={Start} name='start' path='start' />
     <Route component={NotFound} name='404' path='*' />
   </Route>
 );

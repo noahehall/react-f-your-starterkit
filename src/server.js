@@ -9,7 +9,7 @@ import helmet from 'helmet';
 import Immutable from 'seamless-immutable';
 import morgan from 'morgan';
 import React from 'react';
-import routes from './routes';
+import routes from './routes.js';
 import spdy from 'spdy';
 import FileStreamRotator from 'file-stream-rotator';
 import path from 'path';
@@ -18,8 +18,7 @@ import defaultHtml from './components/defaulthtml.js';
 import { Provider } from 'react-redux';
 import configure from './store/configure';
 import initialState from './store/initialstate.js';
-
-const port = 3000;
+import NotFoundComponent from './containers/notfound';
 
 // https: only in production
 const options = {
@@ -39,19 +38,21 @@ app.use(helmet());
 app.use(express.static(`${__dirname}/public`));
 app.use(favicon(`${__dirname}/public/images/favicon.ico`));
 
-// logging
-const logDirectory = path.join(__dirname, 'log');
-// ensure log directory exists
-fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory); // eslint-disable-line
-// create rotating stream
-const accessLogStream = FileStreamRotator.getStream({
-  date_format: 'YYYYMMDD',
-  filename: path.join(logDirectory, 'access-%DATE%.log'),
-  frequency: 'daily',
-  verbose: false,
-});
-// setup the logger
-app.use(morgan('combined', {stream: accessLogStream}));
+// log rotation only in production
+if (appFuncs.isProd) {
+  const logDirectory = path.join(__dirname, 'log');
+  // ensure log directory exists
+  fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory); // eslint-disable-line
+  // create rotating stream
+  const accessLogStream = FileStreamRotator.getStream({
+    date_format: 'YYYYMMDD',
+    filename: path.join(logDirectory, 'access-%DATE%.log'),
+    frequency: 'daily',
+    verbose: false,
+  });
+  // setup the logger
+  app.use(morgan('combined', {stream: accessLogStream}));
+} else app.use(morgan('combined'));
 
 /*
   setup your api as below
@@ -102,31 +103,55 @@ app.get('/rootworker.js', (req, res) => {
 app.get("*", (req, res) => {
   match({ location: req.url, routes }, (err, redirectLocation, renderProps) => {
     if (err) {
-      appFuncs.console('error')(err);
+      appFuncs.logError({
+        data: [ err, req, routes ],
+        loc: __filename,
+        msg: err.message,
+      });
 
-      return res.status(500).end('Internal server error');
+      return res.status(500).end(err.message);
     }
-    if (!renderProps) return res.status(404).end('Not found.');
-    // setup store based on data sent in
-    const store = configure(Immutable(initialState));
+    else if (redirectLocation) // eslint-disable-line brace-style
+      return res.status(302).redirect(`${redirectLocation.pathname}${redirectLocation.search}`);
+    else if (renderProps) {
+      let status = 200;
+      try { // to see if not found route is being rendered eslintignore
+        if (renderProps.components.indexOf(NotFoundComponent) !== -1)
+          status = 404;
+      } catch (error) { // did you change something in src/routes.js? eslintignore
+        appFuncs.logError({
+          data: [ error, renderProps ],
+          loc: __filename,
+          msg: 'Unable to check for 404 route, please check how you have defined your routes'
+        });
+      }
 
-    const InitialComponent = ( // eslint-disable-line no-extra-parens
-      <Provider store={store} >
-        <RouterContext {...renderProps} />
-      </Provider>
-    );
+      // setup store based on data sent in
+      const store = configure(Immutable(initialState));
 
-    return res.status(200).send(
-      defaultHtml(
-        renderToString(InitialComponent),
-        store.getState()
-      )
-    );
+      const InitialComponent = ( // eslint-disable-line no-extra-parens
+        <Provider store={store} >
+          <RouterContext {...renderProps} />
+        </Provider>
+      );
+
+      return res.status(status).send(
+        defaultHtml(
+          renderToString(InitialComponent),
+          store.getState()
+        )
+      );
+    }
+
+    // if none of the above worked, send 500
+    return res.status(500).end('Something happened! Please try again.');
   });
 
   return true;
 });
 
+// initialize server
+const port = process.env.PORT || 3000;
 spdy.createServer(options, app)
   .listen(port, (error) => { // eslint-disable-line consistent-return
     if (error) {
