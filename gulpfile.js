@@ -1,6 +1,6 @@
 require('babel-core/register');
-const setGlobals = require('./src/.globals').default;
-setGlobals({});
+const setGlobals = require('node-globals').default;
+const appConfig = require('node-application-config').ApplicationConfig.config;
 
 // TODO: check https://github.com/ben-ng/minifyify
 
@@ -272,21 +272,23 @@ gulp.task('copy:public', () => {
 gulp.task('checkconnection', (cb) =>
   checkInternet((isConnected) => {
     if (isConnected) {
-      appFuncs.console()(`is connected: ${isConnected}`);
+      // appFuncs.console()(`is connected: ${isConnected}`);
       env.set({
         NODE_ONLINE: 'true'
       });
-
+      console.log('set node true');
       return cb(null);
     }
 
-    appFuncs.console()(`is not connected: ${isConnected}`);
+    // appFuncs.console()(`is not connected: ${isConnected}`);
 
     return cb(null);
   })
 );
 
-gulp.task('set:env', (cb) => {
+gulp.task('set:env', ['checkconnection'], (cb) => {
+  //console.dir(appConfig.yourConstants);
+  /*
   env.set({
     // non 0 integer, incremented by 1
     APP_VERSION: 1,
@@ -294,6 +296,25 @@ gulp.task('set:env', (cb) => {
     INITIAL_IDB_STORE: 'cache',
     ROLLBAR_CLIENT_KEY: 'c62bfbd097b041b59b1f929d7b58abcc',
     ROLLBAR_SERVER_KEY: '7cd7059f43ee40fe857f6ad9862a0304',
+  });
+  */
+  /*
+  yourConstants: {
+    appVersion: Number(process.env.APP_VERSION),
+    dbName: process.env.IDB_NAME || null,
+    idb: Number(process.env.APP_VERSION) && process.env.IDB_NAME && process.env.INITIAL_IDB_STORE,
+    initialStore: process.env.INITIAL_IDB_STORE || null,
+    isProd: process.env.NODE_ENV === 'production',
+    nodeOnline: process.env.NODE_ONLINE === 'true',
+    rollbarKeyClient: process.env.ROLLBAR_CLIENT_KEY || null,
+    rollbarKeyServer: process.env.ROLLBAR_SERVER_KEY || null,
+  }
+   */
+
+  setGlobals({
+    yourConstants: Object.assign(
+      { nodeOnline: process.env.NODE_ONLINE === 'true' }, appConfig.yourConstants
+    )
   });
 
   return cb(null);
