@@ -1,5 +1,5 @@
 module.exports = {
-  yourConstants: {
+  constants: {
     appVersion: 1,
     dbName: 'starterkit',
     idb: true,

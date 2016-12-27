@@ -1,15 +1,7 @@
-const setGlobals = require('node-globals').default;
-setGlobals({
-  yourConstants: {
-    appVersion: Number(process.env.APP_VERSION),
-    dbName: process.env.IDB_NAME || null,
-    idb: Number(process.env.APP_VERSION) && process.env.IDB_NAME && process.env.INITIAL_IDB_STORE,
-    initialStore: process.env.INITIAL_IDB_STORE || null,
-    isProd: process.env.NODE_ENV === 'production',
-    nodeOnline: process.env.NODE_ONLINE === 'true',
-    rollbarKeyClient: process.env.ROLLBAR_CLIENT_KEY || null,
-    rollbarKeyServer: process.env.ROLLBAR_SERVER_KEY || null,
-  }
+require('node-globals').default({
+  yourConstants: Object.assign(
+    { nodeOnline: process.env.NODE_ONLINE === 'true' }, require('./config.js').constants
+  )
 });
 
 import { renderToString } from 'react-dom/server';
@@ -111,15 +103,16 @@ if (cluster.isWorker) {
   const serviceWorkerFileOptions = {
     dotfiles: 'deny',
     headers: {
+      'Service-Worker-Allowed': '/',
       'x-sent': true,
       'x-timestamp': Date.now(),
     },
     root: __dirname,
   };
 
-  app.get('/container.js', (req, res) => {
+  app.get('/public/container.js', (req, res) => {
     // TODO: console ${cluster.worker.id} to each branch
-    res.sendFile('./container.js', serviceWorkerFileOptions, (err) => {
+    res.sendFile('./public/container.js', serviceWorkerFileOptions, (err) => {
       if (err) {
         appFuncs.console('error')(err);
         res.status(err.status).end();
@@ -127,9 +120,9 @@ if (cluster.isWorker) {
     });
   });
 
-  app.get('/rootworker.js', (req, res) => {
+  app.get('/public/rootworker.js', (req, res) => {
     // TODO: console ${cluster.worker.id} to each branch
-    res.sendFile('./rootworker.js', serviceWorkerFileOptions, (err) => {
+    res.sendFile('./public/rootworker.js', serviceWorkerFileOptions, (err) => {
       if (err) {
         appFuncs.console('error')(err);
         res.status(err.status).end();

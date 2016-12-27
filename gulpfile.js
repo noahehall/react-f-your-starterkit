@@ -1,9 +1,7 @@
 require('babel-core/register');
 const setGlobals = require('node-globals').default;
-const appConfig = require('node-application-config').ApplicationConfig.config;
-
+const constants = require('./src/config.js').constants;
 // TODO: check https://github.com/ben-ng/minifyify
-
 const
   babelify = require("babelify"),
   browserify = require("browserify"),
@@ -34,6 +32,13 @@ const
   watchify = require("watchify");
 
 function createBundler (useWatchify, server) {
+  if (typeof appConsts === 'undefined') // needs to be reset when process restarts eslintignore
+    setGlobals({
+      yourConstants: Object.assign(
+        { nodeOnline: process.env.NODE_ONLINE === 'true' }, constants
+      )
+    });
+
   return browserify({
     browserField : !server && true,
     builtins : !server && true,
@@ -216,13 +221,19 @@ gulp.task('copy:server-certs', () =>
     .pipe(gulpCopy('./dist/server', { prefix: 2 }))
 );
 
+gulp.task('copy:config', () =>
+  gulp
+    .src('./src/config.js')
+    .pipe(gulpCopy('./dist', { prefix: 2 }))
+);
+
 gulp.task('copy:service-workers', (done) => {
   if (!appFuncs.isProd) {
     const watchServiceWorkers = gulp // eslint-disable-line
     .watch('./src/serviceworkers/*.js', ['copy:service-workers']);
 
     watchServiceWorkers.on('change', (event) =>
-      appFuncs.console()(`File ${event.path} was ${event.type$}, running tasks...`));
+      appFuncs.console()(`File ${event.path} was ${event.type}, running tasks...`));
   }
 
   glob('./src/serviceworkers/*.js', (err, files) => {
@@ -249,7 +260,7 @@ gulp.task('copy:service-workers', (done) => {
         .pipe(buffer())
         .pipe(gulpif(appConsts.isProd, uglify()))
         .pipe(rename({ dirname: '' }))
-        .pipe(gulp.dest('./dist'))
+        .pipe(gulp.dest('./dist/public'))
     );
     es.merge(tasks).on('end', done);
   });
@@ -271,49 +282,19 @@ gulp.task('copy:public', () => {
 
 gulp.task('checkconnection', (cb) =>
   checkInternet((isConnected) => {
-    if (isConnected) {
-      // appFuncs.console()(`is connected: ${isConnected}`);
+    if (isConnected)
       env.set({
         NODE_ONLINE: 'true'
       });
-      console.log('set node true');
-      return cb(null);
-    }
-
-    // appFuncs.console()(`is not connected: ${isConnected}`);
 
     return cb(null);
   })
 );
 
 gulp.task('set:env', ['checkconnection'], (cb) => {
-  //console.dir(appConfig.yourConstants);
-  /*
-  env.set({
-    // non 0 integer, incremented by 1
-    APP_VERSION: 1,
-    IDB_NAME: 'starterkit',
-    INITIAL_IDB_STORE: 'cache',
-    ROLLBAR_CLIENT_KEY: 'c62bfbd097b041b59b1f929d7b58abcc',
-    ROLLBAR_SERVER_KEY: '7cd7059f43ee40fe857f6ad9862a0304',
-  });
-  */
-  /*
-  yourConstants: {
-    appVersion: Number(process.env.APP_VERSION),
-    dbName: process.env.IDB_NAME || null,
-    idb: Number(process.env.APP_VERSION) && process.env.IDB_NAME && process.env.INITIAL_IDB_STORE,
-    initialStore: process.env.INITIAL_IDB_STORE || null,
-    isProd: process.env.NODE_ENV === 'production',
-    nodeOnline: process.env.NODE_ONLINE === 'true',
-    rollbarKeyClient: process.env.ROLLBAR_CLIENT_KEY || null,
-    rollbarKeyServer: process.env.ROLLBAR_SERVER_KEY || null,
-  }
-   */
-
   setGlobals({
     yourConstants: Object.assign(
-      { nodeOnline: process.env.NODE_ONLINE === 'true' }, appConfig.yourConstants
+      { nodeOnline: process.env.NODE_ONLINE === 'true' }, constants
     )
   });
 
@@ -335,12 +316,12 @@ gulp.task('clean', (fn) => {
 gulp.task('exit', () => process.exit(0));
 
 gulp.task("default", gulpSequence(
+  'set:env',
   [
-    'checkconnection',
-    'set:env',
     'stylelint',
     'eslint',
     'test',
+    'copy:config',
     'copy:server-certs',
     'copy:service-workers',
     'copy:public',
@@ -352,8 +333,9 @@ gulp.task("default", gulpSequence(
 
 gulp.task("prod",
   gulpSequence(
+    'set:env',
     [
-      'set:env',
+      'copy:config',
       'copy:server-certs',
       'copy:service-workers',
       'copy:public',
