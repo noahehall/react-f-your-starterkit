@@ -4,7 +4,9 @@
  */
 
 /* eslint-disable indent */
-require('../.globals');
+const setGlobals = require('../.globals').default;
+setGlobals({});
+
 import Promised from 'bluebird';
 import Idbstore from 'serviceworkers/idb/idb';
 const protocol = self.location.protocol;
