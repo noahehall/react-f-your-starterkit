@@ -6,13 +6,14 @@
  */
 
 const appConsts = {
-  appVersion: 1, // non 0 integer, incremented by 1
-  dbName: 'starterkit',
-  initialStore: 'cache',
+  appVersion: Number(process.env.APP_VERSION) || null,
+  dbName: process.env.IDB_NAME || null,
+  initialStore: process.env.INITIAL_IDB_STORE || null,
+  idb: Number(process.env.APP_VERSION) && process.env.IDB_NAME && process.env.INITIAL_IDB_STORE,
   isProd: process.env.NODE_ENV === 'production',
   nodeOnline: process.env.NODE_ONLINE === 'true',
-  rollbarKeyClient: 'c62bfbd097b041b59b1f929d7b58abcc',
-  rollbarKeyServer: '7cd7059f43ee40fe857f6ad9862a0304',
+  rollbarKeyClient: process.env.ROLLBAR_CLIENT_KEY || null,
+  rollbarKeyServer: process.env.ROLLBAR_SERVER_KEY || null,
 }
 
 /**

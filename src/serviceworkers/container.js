@@ -3,7 +3,7 @@
  * @author @noahedwardhall
  */
 
-if ('serviceWorker' in navigator)
+if (appConsts.idb && 'serviceWorker' in navigator)
   navigator.serviceWorker.register('./rootworker.js', {
     scope: './'
   })

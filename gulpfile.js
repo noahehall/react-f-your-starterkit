@@ -32,12 +32,6 @@ const
   uglify = require('gulp-uglify'),
   watchify = require("watchify");
 
-gulp.task('clean', (fn) => {
-  del([
-    'dist',
-  ], fn);
-});
-
 function createBundler (useWatchify, server) {
   return browserify({
     browserField : !server && true,
@@ -291,16 +285,37 @@ gulp.task('checkconnection', (cb) =>
   })
 );
 
+gulp.task('set:env', (cb) => {
+  env.set({
+    // non 0 integer, incremented by 1
+    APP_VERSION: 1,
+    IDB_NAME: 'starterkit',
+    INITIAL_IDB_STORE: 'cache',
+    ROLLBAR_CLIENT_KEY: 'c62bfbd097b041b59b1f929d7b58abcc',
+    ROLLBAR_SERVER_KEY: '7cd7059f43ee40fe857f6ad9862a0304',
+  });
+
+  return cb(null);
+});
+
 gulp.task('lint', gulpSequence(
   'stylelint',
   'eslint'
 ));
+
+// not currenttly using this
+gulp.task('clean', (fn) => {
+  del([
+    'dist',
+  ], fn);
+});
 
 gulp.task('exit', () => process.exit(0));
 
 gulp.task("default", gulpSequence(
   [
     'checkconnection',
+    'set:env',
     'stylelint',
     'eslint',
     'test',
@@ -316,6 +331,7 @@ gulp.task("default", gulpSequence(
 gulp.task("prod",
   gulpSequence(
     [
+      'set:env',
       'copy:server-certs',
       'copy:service-workers',
       'copy:public',
