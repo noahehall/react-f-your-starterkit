@@ -21,7 +21,7 @@ export const defaultHtml = (html, preloadedState) => {
           window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)}
         </script>
         <script src='/js/bundle.js' type='text/javascript'></script>
-        <script src='/container.js' type='text/javascript'></script>
+        ${appConsts.idb ? "<script src='/container.js' type='text/javascript'></script>" : "<div></div>"}
       </body>
     </html>
     `;

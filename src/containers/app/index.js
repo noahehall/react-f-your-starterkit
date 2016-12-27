@@ -14,7 +14,7 @@ class App extends React.Component {
   }
 
   componentDidMount () {
-    if (Idbstore) {
+    if (appConsts.idb && Idbstore) {
       const db = new Idbstore();
       appFuncs.console()('Idbstore is true!');
       appFuncs.console('dir')(db);
