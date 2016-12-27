@@ -11,9 +11,13 @@
   + in node: global.appFuncs.someFunc (or just appFuncs)
 
 ## Including globals
- - at the top of the appropriate file: `require('./.globals');`
-  + this will include the functions.js file, which automatically includes the constants.js file
-  + your constants.js file should not depend on functions, as they are indeed, constants
-  + the location of .globals dir may change depending upon current file
+ - at the top of the appropriate file:
+ ```
+   const setGlobals = require('../.globals').default;
+   setGlobals({});
+   // or setGlobals({ yourConstants: {...} }) // add or override default constants
+   // or setGlobals({ yourFunctions: {...} }) // add or override default functions
+   // or setGlobals({ yourConsts: {...}, yourFunctions: {...} })
+ ```
 
 thank me later...
