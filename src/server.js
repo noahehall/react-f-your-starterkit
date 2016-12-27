@@ -1,5 +1,8 @@
-const setGlobals = require('./.globals').default;
-setGlobals({});
+require('node-globals').default({
+  yourConstants: Object.assign(
+    { nodeOnline: process.env.NODE_ONLINE === 'true' }, require('./config.js').constants
+  )
+});
 
 import { renderToString } from 'react-dom/server';
 import { RouterContext, match } from 'react-router';
@@ -100,15 +103,16 @@ if (cluster.isWorker) {
   const serviceWorkerFileOptions = {
     dotfiles: 'deny',
     headers: {
+      'Service-Worker-Allowed': '/',
       'x-sent': true,
       'x-timestamp': Date.now(),
     },
     root: __dirname,
   };
 
-  app.get('/container.js', (req, res) => {
+  app.get('/public/container.js', (req, res) => {
     // TODO: console ${cluster.worker.id} to each branch
-    res.sendFile('./container.js', serviceWorkerFileOptions, (err) => {
+    res.sendFile('./public/container.js', serviceWorkerFileOptions, (err) => {
       if (err) {
         appFuncs.console('error')(err);
         res.status(err.status).end();
@@ -116,9 +120,9 @@ if (cluster.isWorker) {
     });
   });
 
-  app.get('/rootworker.js', (req, res) => {
+  app.get('/public/rootworker.js', (req, res) => {
     // TODO: console ${cluster.worker.id} to each branch
-    res.sendFile('./rootworker.js', serviceWorkerFileOptions, (err) => {
+    res.sendFile('./public/rootworker.js', serviceWorkerFileOptions, (err) => {
       if (err) {
         appFuncs.console('error')(err);
         res.status(err.status).end();

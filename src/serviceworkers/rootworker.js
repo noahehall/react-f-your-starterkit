@@ -2,10 +2,11 @@
  * @file service worker for root
  * @author @noahedwardhall
  */
-
-/* eslint-disable indent */
-const setGlobals = require('../.globals').default;
-setGlobals({});
+require('node-globals').default({
+  yourConstants: Object.assign(
+    { nodeOnline: process.env.NODE_ONLINE === 'true' }, require('../config.js').constants
+  )
+});
 
 import Promised from 'bluebird';
 import Idbstore from 'serviceworkers/idb/idb';

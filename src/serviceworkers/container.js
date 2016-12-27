@@ -2,10 +2,9 @@
  * @file manages all service workers in the client
  * @author @noahedwardhall
  */
-
 if (appConsts.idb && 'serviceWorker' in navigator)
-  navigator.serviceWorker.register('./rootworker.js', {
-    scope: './'
+  navigator.serviceWorker.register('./public/rootworker.js', {
+    scope: '/'
   })
     //.then(() => navigator.serviceWorker.ready)
   // registration was successful

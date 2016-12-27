@@ -1,5 +1,8 @@
-const setGlobals = require('./.globals').default;
-setGlobals({});
+require('node-globals').default({
+  yourConstants: Object.assign(
+    { nodeOnline: process.env.NODE_ONLINE === 'true' }, require('./config.js').constants
+  )
+});
 
 import { browserHistory, Router } from 'react-router';
 import { Provider } from 'react-redux';
