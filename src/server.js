@@ -1,4 +1,6 @@
-require('./.globals');
+const setGlobals = require('./.globals').default;
+setGlobals({});
+
 import { renderToString } from 'react-dom/server';
 import { RouterContext, match } from 'react-router';
 import compression from 'compression';

@@ -4,6 +4,8 @@
  * @author @noahehall
  * @type {Object}
  */
+import _ from 'lodash';
+import Immutable from 'seamless-immutable';
 
 const appConsts = {
   appVersion: Number(process.env.APP_VERSION) || null,
@@ -19,7 +21,25 @@ const appConsts = {
 /**
  * Set global variables on worker & main threads, else node
  * @type {[type]}
- */
-const self = self || null;
-if (!self) global.appConsts = appConsts;
-else self.appConsts = appConsts;
+*/
+const setAppConsts = (mergedConstants = Immutable(appConsts)) => {
+  const self = self || null;
+  // set node app consts
+  if (!self && global && !global.appConsts) global.appConsts = mergedConstants;
+  // set main & worker threads
+  else if (self && !self.appConsts) self.appConsts = mergedConstants;
+
+  return self && self.appConsts || global && global.appConsts
+    ? true
+    : false;
+}
+
+export default function setConstants({ yourConstants = {} }) {
+  setAppConsts(Immutable(_.merge(
+    appConsts,
+    !_.isEmpty(yourConstants)
+      ? yourConstants
+      : {}
+    )
+  ));
+}

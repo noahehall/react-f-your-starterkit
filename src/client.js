@@ -1,4 +1,6 @@
-require('./.globals');
+const setGlobals = require('./.globals').default;
+setGlobals({});
+
 import { browserHistory, Router } from 'react-router';
 import { Provider } from 'react-redux';
 import { render } from 'react-dom';

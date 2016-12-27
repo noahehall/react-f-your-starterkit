@@ -1,5 +1,6 @@
 require('babel-core/register');
-require('./src/.globals');
+const setGlobals = require('./src/.globals').default;
+setGlobals({});
 
 // TODO: check https://github.com/ben-ng/minifyify
 
