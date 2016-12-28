@@ -3,7 +3,7 @@
  * @author @noahedwardhall
  */
 require('node-globals').default({
-  yourConstants: Object.assign(
+  constants: Object.assign(
     { nodeOnline: process.env.NODE_ONLINE === 'true' }, require('../config.js').constants
   )
 });
@@ -99,11 +99,16 @@ self.addEventListener('fetch', (event) => {
 
         return fetch(event.request.clone())
           .then((response) => {
-            if (!response || response.type !== 'opaque' && !response.ok) {
-              appFuncs.console()(`received invalid response from fetch: ${response}`);
-              appFuncs.console('dir')(response);
+            if (!response) {
+              //  in if statement: response.type !== 'opaque && !response.ok does not allow 404 to be returned
+              appFuncs.logError({
+                data: response,
+                loc: __filename,
+                msg: 'received invalid response from fetch',
+              });
 
-              return appFuncs.fakeResponse();
+
+              return resolve(appFuncs.fakeResponse());
             }
 
             // insert response body in db

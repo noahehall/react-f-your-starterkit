@@ -1,5 +1,5 @@
 require('node-globals').default({
-  yourConstants: Object.assign(
+  constants: Object.assign(
     { nodeOnline: process.env.NODE_ONLINE === 'true' }, require('./config.js').constants
   )
 });

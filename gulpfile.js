@@ -34,7 +34,7 @@ const
 function createBundler (useWatchify, server) {
   if (typeof appConsts === 'undefined') // needs to be reset when process restarts eslintignore
     setGlobals({
-      yourConstants: Object.assign(
+      constants: Object.assign(
         { nodeOnline: process.env.NODE_ONLINE === 'true' }, constants
       )
     });
@@ -293,7 +293,7 @@ gulp.task('checkconnection', (cb) =>
 
 gulp.task('set:env', ['checkconnection'], (cb) => {
   setGlobals({
-    yourConstants: Object.assign(
+    constants: Object.assign(
       { nodeOnline: process.env.NODE_ONLINE === 'true' }, constants
     )
   });
