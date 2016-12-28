@@ -107,7 +107,7 @@ self.addEventListener('fetch', (event) => {
                 msg: 'received invalid response from fetch',
               });
 
-
+              // update this to specify the status code of fake response and respond with some templates
               return resolve(appFuncs.fakeResponse());
             }
 
