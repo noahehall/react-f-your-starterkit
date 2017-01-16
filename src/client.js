@@ -11,8 +11,9 @@ import configure from './store/configure';
 import Immutable from 'seamless-immutable';
 import React from 'react';
 import routes from './routes';
+import lz from 'lz-string';
 
-const preloadedState = Immutable(window.__PRELOADED_STATE__);
+const preloadedState = Immutable(JSON.parse(lz.decompress(window.__PRELOADED_STATE__)));
 
 render(
   <Provider store={configure(preloadedState)} >

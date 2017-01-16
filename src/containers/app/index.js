@@ -32,15 +32,15 @@ class App extends React.Component {
     // only include scripts if able to connect to internet
     // update this to include scripts to serve both online and offline
     return appConsts.nodeOnline || nav && nav.onLine ?
-    [
+      [
         { src: 'https://cdn.logrocket.com/LogRocket.min.js', type: 'text/javascript' },
         // to log session urls in production console.log(LogRocket.recordingURL);
         // add the github integration https://github.com/integration/logrocket
-      {
-        innerHTML: `if (typeof LogRocket !== 'undefined') { LogRocket.init('noahedwardhall/trainschedule', { shouldShowReportingButton: ${!appConsts.isProd && true} }); }`,
-        type: 'text/javascript',
-      }
-    ] :
+        {
+          innerHTML: `if (typeof LogRocket !== 'undefined') { LogRocket.init('noahedwardhall/trainschedule', { shouldShowReportingButton: ${!appConsts.isProd && true} }); }`,
+          type: 'text/javascript',
+        }
+      ] :
       [{}];
   }
 
