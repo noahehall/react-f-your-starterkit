@@ -11,9 +11,9 @@ import configure from './store/configure';
 import Immutable from 'seamless-immutable';
 import React from 'react';
 import routes from './routes';
-import lzutf8 from 'lzutf8'; // eslint-disable-line
+import lz from 'lz-string';
 
-const preloadedState = Immutable(JSON.parse(lzutf8.decompress(window.__PRELOADED_STATE__, {inputEncoding: 'Base64'})));
+const preloadedState = Immutable(JSON.parse(lz.decompress(window.__PRELOADED_STATE__)));
 
 render(
   <Provider store={configure(preloadedState)} >
