@@ -1,4 +1,5 @@
 import Helmet from 'react-helmet';
+import lzutf8 from 'lzutf8'; // eslint-disable-line
 
 export const defaultHtml = (html, preloadedState) => {
   const head = Helmet.rewind();
@@ -18,7 +19,8 @@ export const defaultHtml = (html, preloadedState) => {
       <body>
         <article id="root">${html}</article>
         <script>
-          window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)}
+          window.__PRELOADED_STATE__ = ${JSON.stringify(lzutf8.compress(JSON.stringify(preloadedState), {outputEncoding: 'Base64'}))}
+
         </script>
         <script src='/js/bundle.js' type='text/javascript'></script>
         ${appConsts.idb ? "<script src='/public/container.js' type='text/javascript'></script>" : "<div></div>"}

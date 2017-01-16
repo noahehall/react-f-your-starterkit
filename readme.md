@@ -1,5 +1,4 @@
-# CI
-  - [![Build Status](https://api.travis-ci.org/noahehall/react-f-your-starterkit.svg?branch=master)
+# ![Build Status](https://api.travis-ci.org/noahehall/react-f-your-starterkit.svg?branch=master) [![GitHub stars](https://img.shields.io/github/stars/noahehall/react-f-your-starterkit.svg)](https://github.com/noahehall/react-f-your-starterkit/stargazers) [![GitHub license](https://img.shields.io/badge/license-AGPLv3-blue.svg?style=flat-square)](https://raw.githubusercontent.com/noahehall/react-f-your-starterkit/master/license.md) [![GitHub forks](https://img.shields.io/github/forks/noahehall/react-f-your-starterkit.svg?style=flat-square)](https://github.com/noahehall/react-f-your-starterkit/network)
 
 # Why are we here?
 if you need [the following](https://medium.com/front-end-developers/handcrafting-an-isomorphic-redux-application-with-love-40ada4468af4#.vfm0r9hd8):
