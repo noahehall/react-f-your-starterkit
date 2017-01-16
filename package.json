@@ -58,7 +58,6 @@
     "helmet": "^3",
     "idb": "github:noahehall/idb#isomorphic-imports-2",
     "ionicons": "^3.0.0",
-    "jsonc": "^0.1.0",
     "lodash": "^4.17.2",
     "lzutf8": "^0.3.5",
     "moment": "^2.15.1",
