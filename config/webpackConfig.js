@@ -19,6 +19,6 @@ export default function create(options){
         config,
         configCreator(options)
       ),
-      {},
-    )
+    {},
+  )
 }

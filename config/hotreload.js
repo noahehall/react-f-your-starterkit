@@ -4,17 +4,19 @@ export default function hotreload(options) {
   return options.isDev
     ? {
       devServer: {
-        contentBase: options.contentBase,
-        historyApiFallback: true,
-        port: options.port,
-        hotOnly: true,
-        hot: true,
-        inline: true,
+        //hot: true,
         clientLogLevel: 'info',
         compress: false,
-        headers: {
-            'Access-Control-Allow-Origin': '*'
-        }
+        contentBase: options.distDir,
+        headers: {'Access-Control-Allow-Origin': '*'},
+        historyApiFallback: true,
+        hotOnly: true,
+        inline: true,
+        noInfo: false,
+        overlay: true,
+        port: options.port,
+        quiet: false,
+        //hot: true,
       }
     }
     : {};

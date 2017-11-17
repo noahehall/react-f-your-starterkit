@@ -4,11 +4,11 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import StyleLintPlugin from 'stylelint-webpack-plugin';
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
 import webpack from 'webpack';
-import WebpackInfoPlugin from 'webpack-info-plugin';
 import WebpackPwaManifest from 'webpack-pwa-manifest';
 
 export default function plugins(options) {
   const config = {plugins: [] };
+
   switch (options.env) {
     case 'development': {
       config.plugins.push(
@@ -24,7 +24,7 @@ export default function plugins(options) {
       config.plugins.push(
         // remove dist directory on build
         new CleanWebpackPlugin(
-          [options.path],
+          [options.distDir],
           {
             verbose: true,
             root: options.context
@@ -50,9 +50,6 @@ export default function plugins(options) {
 
   // all environments
   config.plugins.push(
-    // new WebpackInfoPlugin({
-    //   ...options.webpackInfoPluginConfig,
-    // }),
 
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(options.env)
@@ -71,16 +68,16 @@ export default function plugins(options) {
     }),
 
     // splitout options.dependencies
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks(module) {
-        // This prevents stylesheet resources with the .css or .scss extension
-        // from being moved from their original chunk to the vendor chunk
-        return (module.resource && (/^.*\.(css|scss)$/).test(module.resource))
-          ? false
-          : true
-      }
-    }),
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: 'vendor',
+    //   minChunks(module) {
+    //     // This prevents stylesheet resources with the .css or .scss extension
+    //     // from being moved from their original chunk to the vendor chunk
+    //     return (module.resource && (/^.*\.(css|scss)$/).test(module.resource))
+    //       ? false
+    //       : true
+    //   }
+    // }),
     // splitout webpack boilerplate + manifest
     new webpack.optimize.CommonsChunkPlugin({
       name: 'runtime'

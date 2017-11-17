@@ -10,8 +10,8 @@ export class Home extends React.Component {
     console.log('blah is', this.props.blah)
     return (
       <div>
-        Home
-        <button onClick={this.handleBlah}>Click to do blah</button>
+        Homess
+        <button onClick={this.handleBlah}>Clicsk to do blasssssssh</button>
       </div>
     )
   }

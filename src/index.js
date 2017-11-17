@@ -6,10 +6,10 @@
 import Router from 'components/Router';
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import { AppContainer } from 'react-hot-loader';
 function render (Component) {
   ReactDOM.render(
-    <Component />,
+    <AppContainer><Component /></AppContainer>,
     document.getElementById('root')
   );
 }
@@ -17,7 +17,8 @@ function render (Component) {
 render(Router);
 
 if (module && module.hot) {
-  module.hot.accept("components/Router", function renderModuleHot() {
+  console.log('module hot')
+  module.hot.accept("components/Router", () =>
       render(require('components/Router').default)
-  });
+  );
 }
