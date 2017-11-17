@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import CleanWebpackPlugin from 'clean-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -34,6 +36,13 @@ export default function plugins(options) {
         new webpack.NoEmitOnErrorsPlugin(),
         new UglifyJSPlugin({
           sourceMap: options.sourceMap,
+          parallel: true,
+          extractComments: true,
+          uglifyOptions: {
+            mangle: false,
+            compress: true,
+            warnings: true,
+          },
         })
       );
     }

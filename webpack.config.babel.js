@@ -33,6 +33,7 @@ function mainOptions (type = 'web') {
     type,
     verbose: true,
     webpackBail: true,
+    webpackBail: true,
     webpackDir: path.resolve(__dirname, '.'), // loaders + entries are resovled relative to this
   };
 }

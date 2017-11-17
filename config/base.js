@@ -1,34 +1,43 @@
-
+/* eslint-disable */
 import path from 'path';
 import webpack from 'webpack';
 
 
 export default function base (options) {
+
+  // TODO: splitout vendor bundle //vendor: options.dependencies,
+  const getEntry = () => options.isDev
+    ? [
+      'react-hot-loader/patch',
+      'babel-polyfill',
+      options.mainEntry
+    ]
+    : [
+      'babel-polyfill',
+      options.mainEntry
+    ]
+
+  const getOutput = () => ({
+    path: options.publicDir,
+    chunkFilename: options.jsFilename,
+    publicPath: options.publicPath,
+    filename: options.jsFilename,
+  });
+
+  const getResolve = () => ({
+    extensions: ['*', '.js', '.jsx'],
+    modules: ['node_modules', options.contentBase]
+  });
+
   return {
-    recordsPath: options.recordsOutputPath,
+    bail: options.webpackBail,
+    context: options.context,
+    profile: options.webpackProfile,
     recordsInputPath: options.recordsOutputPath,
     recordsOutputPath: options.recordsOutputPath,
-    context: options.context,
-    entry: [
-        'webpack-dev-server/client?http://localhost:3000',
-        //'webpack/hot/only-dev-server',
-        'react-hot-loader/patch',
-        options.mainEntry
-      ],
-      //vendor: options.dependencies,
-
-    output: {
-      path: options.publicDir,
-      chunkFilename: options.jsFilename,
-      publicPath: options.publicPath,
-      filename: options.jsFilename,
-    },
-    resolve: {
-      extensions: ['*', '.js', '.jsx'],
-      modules: ['node_modules', options.contentBase]
-    },
-    profile: options.webpackProfile,
-    bail: options.webpackBail,
-
+    recordsPath: options.recordsOutputPath,
+    entry: getEntry(),
+    output: getOutput(),
+    resolve: getResolve(),
   };
 }
