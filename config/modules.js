@@ -115,7 +115,16 @@ export default function modules(options) {
 
   const htmlRules = {
     test: /\.html$/,
-    loader: 'html-loader'
+    use: [
+      {
+        loader: 'html-loader',
+        options: {
+          minimize: options.isProd,
+          removeComments: false,
+          collapseWhiteSpace: options.isProd,
+        }
+      }
+    ],
   };
 
   const imageRules = {
