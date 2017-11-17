@@ -1,4 +1,4 @@
-export default function htmlTemplate(params) {
+export default function htmlTemplate (params) {
   return `
     <!doctype html>
     <html lang="en">

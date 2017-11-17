@@ -34,3 +34,19 @@ module.exports = {
     }
   }
 }
+
+// from starter kit
+// "use strict";
+//
+// module.exports = {
+//   extends: [
+//     "eslint-config-ct-fletcher"
+//   ],
+//   rules: {
+//     // need to udate eslint-config-ct-fletcher
+//     'import/named': 0,
+//     'import/namespace': 0,
+//     'import/no-unresolved': 0,
+//     'import/default': 0
+//   }
+// }

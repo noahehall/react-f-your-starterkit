@@ -1,3 +1,4 @@
+/* eslint-disable */
 import path from 'path';
 
 function getCssLoaderConfig ({
@@ -138,11 +139,30 @@ function dynamicOptionsTwo ({
   }
 }
 
+function getExtractTextPluginConfig ({
+  isDev
+} = {}) {
+  return {
+    allChunks: true,
+    filename: isDev ? 'css/[name].css' : 'css/[name].[id].[contenthash].css',
+    ignoreOrder: true,
+  };
+}
+
+function getBabelTarget ({
+  isDev,
+} = {}) {
+  return isDev
+    ? { browsers: [ 'last 3 versions', '> 5%' ]}
+    : { node: 'current' }
+}
+
 function dynamicOptionsThree (options = {}) {
   return {
+    babelTarget: getBabelTarget(options),
     babelLoaderConfig: getBabelLoaderConfig(options),
     cssLoaderConfig: getCssLoaderConfig(options),
-    extractTextPluginConfig: { allChunks: true, ignoreOrder: true },
+    extractTextPluginConfig: getExtractTextPluginConfig(options),
     htmlWebpackPluginConfig: getHtmlWebpackPluginConfig(options),
     resolveUrlLoaderConfig: getResolveUrlLoaderConfig(options),
     styleLintPluginConfig: getStyleLintPluginConfig(options),

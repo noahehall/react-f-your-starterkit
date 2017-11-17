@@ -16,9 +16,7 @@ function render (Component) {
 
 render(Router);
 
-if (module && module.hot) {
-  console.log('module hot')
+if (module && module.hot)
   module.hot.accept("components/Router", () =>
-      render(require('components/Router').default)
+    render(require('components/Router').default)
   );
-}

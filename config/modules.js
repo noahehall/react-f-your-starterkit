@@ -1,5 +1,16 @@
-import webpack from 'webpack';
+/* eslint-disable */
+
+import cssMqpacker from 'css-mqpacker';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import postCssBrowserReporter from 'postcss-browser-reporter';
+import postcssCssnext from 'postcss-cssnext';
+import postCssCurrentSelector from 'postcss-current-selector';
+import postcssImport from 'postcss-import';
+import postcssNested from 'postcss-nested';
+import postCssNestedAncestor from 'postcss-nested-ancestors';
+import postcssRemoveRoot from 'postcss-remove-root';
+import postcssReporter from 'postcss-reporter';
+import webpack from 'webpack';
 
 // TODO: split this out to multiple files
 export default function modules(options) {
@@ -21,14 +32,40 @@ export default function modules(options) {
           }
         },
         // see https://github.com/postcss/postcss-loader
-        {loader: 'postcss-loader', options: {
-          ident: 'postcss',
-          sourceMap: options.sourceMap,
-          plugins: [
-            require('postcss-import')(),
-            require('postcss-cssnext')(),
-          ]
-        }},
+        {
+          loader: 'postcss-loader',
+          options: {
+            ident: 'postcss',
+            sourceMap: options.sourceMap,
+            syntax: 'postcss-scss',
+            plugins(loader) {
+              const pluginArray = [
+                postcssImport,
+
+                postcssCssnext({
+                  ...options.babelTarget,
+                }),
+                postCssNestedAncestor(),
+                postcssNested({
+                  preserveEmpty: true,
+                }),
+                postCssCurrentSelector(),
+                postcssRemoveRoot,
+                cssMqpacker({
+                  sort: false
+                })
+              ];
+
+              if (options.isDev)
+                pluginArray.push(
+                  postcssReporter({throwError: true}),
+                  postCssBrowserReporter()
+                )
+
+              return pluginArray; 
+            },
+          }
+        },
         {loader: 'resolve-url-loader', options: {
           ...options.resolveUrlLoaderConfig,
         }},
@@ -101,12 +138,25 @@ export default function modules(options) {
     ]
   };
 
+  const eslintRules = {
+    loader: 'eslint-loader',
+    options: {
+      fix: false, // causes compile endles loop
+      emitError: options.isDev,
+      emitWarning: options.isDev,
+      quiet: options.isProd,
+      failOnWarning: false,
+      failOnError: options.isDev,
+    }
+  };
+
   moduleConfig.module.rules.push(cssRules);
-  moduleConfig.module.rules.push(javascriptRules);
+  // moduleConfig.module.rules.push(eslintRules); // TODO: renable this
+  moduleConfig.module.rules.push(excelRules)
+  moduleConfig.module.rules.push(fontRules);
   moduleConfig.module.rules.push(htmlRules);
   moduleConfig.module.rules.push(imageRules);
-  moduleConfig.module.rules.push(fontRules);
-  moduleConfig.module.rules.push(excelRules)
+  moduleConfig.module.rules.push(javascriptRules);
   moduleConfig.module.rules.push(xmlRules);
 
   return moduleConfig;

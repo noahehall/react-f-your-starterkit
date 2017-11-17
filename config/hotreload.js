@@ -1,3 +1,4 @@
+/* eslint-disable */
 export default function hotreload(options) {
   const getHeaders = () => ({
     'Access-Control-Allow-Origin': '*',
