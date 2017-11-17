@@ -1,3 +1,4 @@
+/* eslint-disable */
 // require('../../.globals/');
 // import Immutable from 'seamless-immutable';
 

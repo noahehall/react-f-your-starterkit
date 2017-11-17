@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { ConnectedRouter, routerReducer as router, routerMiddleware } from 'react-router-redux';
 import { initialState } from './initialState';

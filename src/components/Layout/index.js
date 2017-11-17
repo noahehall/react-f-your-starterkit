@@ -1,3 +1,4 @@
+/* eslint-disable */
 // TODO: favicon not working
 import './assets/theme.css';
 import './images/favicon.ico';

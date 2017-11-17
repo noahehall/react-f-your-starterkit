@@ -7,21 +7,27 @@ import StyleLintPlugin from 'stylelint-webpack-plugin';
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
 import webpack from 'webpack';
 import WebpackPwaManifest from 'webpack-pwa-manifest';
+import ManifestPlugin from 'webpack-manifest-plugin';
 
 export default function plugins(options) {
-  const config = {plugins: [] };
+  const config = { plugins: [] };
+
+  const getHashedModulesIdsPluginConfig = () => ({
+    hashDigest: 'hex',
+    hashDigestLength: 20,
+    hashFunction: 'sha256',
+  });
 
   switch (options.env) {
     case 'development': {
       config.plugins.push(
-        new StyleLintPlugin({
-          ...options.styleLintPluginConfig,
-        }),
+        new StyleLintPlugin({ ...options.styleLintPluginConfig }),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NamedModulesPlugin(),
       )
       break;
     }
+
     case 'production': {
       config.plugins.push(
         // remove dist directory on build
@@ -32,7 +38,7 @@ export default function plugins(options) {
             root: options.context
           }
         ),
-        new webpack.HashedModuleIdsPlugin(),
+        new webpack.HashedModuleIdsPlugin(getHashedModulesIdsPluginConfig()),
         new webpack.NoEmitOnErrorsPlugin(),
         new UglifyJSPlugin({
           sourceMap: options.sourceMap,

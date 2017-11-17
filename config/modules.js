@@ -14,11 +14,6 @@ import webpack from 'webpack';
 
 // TODO: split this out to multiple files
 export default function modules(options) {
-  // const moduleConfig = { module: {rules: [] } };
-
-  const includePaths = options.cssIncludeGrommet
-    ? ['./node_modules', './node_modules/grommet/node_modules']
-    : [];
 
   const cssRules = {
     test:  /\.s?(a|c)ss$/,
@@ -69,12 +64,13 @@ export default function modules(options) {
         {loader: 'resolve-url-loader', options: {
           ...options.resolveUrlLoaderConfig,
         }},
-        {loader: 'sass-loader?sourceMap', options: {
-          includePaths,
-        }},
+        {loader: 'sass-loader?sourceMap', options: {}},
       ]
     })
   };
+  if (options.env === 'development') {
+    cssRules.use = ['css-hot-loader'].concat(cssRules.use);
+  }
 
   const cssFromNodeModules = { // dont process with post-css
     enforce: 'pre',
@@ -98,19 +94,30 @@ export default function modules(options) {
     })
   };
 
-  if (options.env === 'development') {
-    cssRules.use = ['css-hot-loader'].concat(cssRules.use);
-  }
-
   const javascriptRules = {
-    test: /\.jsx?$/,
+    // TODO: add babe;-preset to this config from starter/config/modules.js
+    enforce: 'pre',
     exclude: /node_modules/,
-    use: [{
-      loader: 'babel-loader',
-      options: {
-        ...options.babelLoaderConfig,
+    test: /\.jsx?$/,
+    use: [
+      {
+        loader: 'babel-loader',
+        options: {
+          ...options.babelLoaderConfig,
+        }
+      },
+      {
+        loader: 'eslint-loader',
+        options: {
+          fix: false, // causes compile endles loop
+          emitError: options.isDev,
+          emitWarning: options.isDev,
+          quiet: options.isProd,
+          failOnWarning: false,
+          failOnError: options.isDev,
+        }
       }
-    }]
+    ]
   };
 
   const htmlRules = {
@@ -142,14 +149,14 @@ export default function modules(options) {
   }
 
   const fontRules = {
-    test: /\.(woff|woff2|eot|ttf|otf)$/,
+    test: /\.(eot|ttf|woff|woff2|ttf|otf)$/,
     use: [
       {
         // TODO: review the limit setting
         loader: 'url-loader',
         options: {
           ...options.urlLoaderConfig,
-          outputPath: 'fonts/'
+          name: 'fonts/[name].[ext]',
         }
       }
     ]
@@ -169,18 +176,6 @@ export default function modules(options) {
     ]
   };
 
-  const eslintRules = {
-    loader: 'eslint-loader',
-    options: {
-      fix: false, // causes compile endles loop
-      emitError: options.isDev,
-      emitWarning: options.isDev,
-      quiet: options.isProd,
-      failOnWarning: false,
-      failOnError: options.isDev,
-    }
-  };
-
   const faviconRules = {
     test: /\.(ico)$/,
     use: [
@@ -194,19 +189,47 @@ export default function modules(options) {
     ]
   };
 
-  // moduleConfig.module.rules.push(eslintRules); // TODO: renable this
-  // moduleConfig.module.rules.push(cssFromNodeModules);
-  // moduleConfig.module.rules.push(cssRules);
-  // moduleConfig.module.rules.push(excelRules)
-  // moduleConfig.module.rules.push(fontRules);
-  // moduleConfig.module.rules.push(htmlRules);
-  // moduleConfig.module.rules.push(imageRules);
-  // moduleConfig.module.rules.push(javascriptRules);
-  // moduleConfig.module.rules.push(xmlRules);
+  const workerRules = {
+    test: /\.worker\.js$/,
+    use: {
+      loader: 'worker-loader',
+      options: {
+        name: 'js/worker.[hash].js',
+        fallback: false,
+        inline: false // set to true if assets arent loading due to same origin policy
+      },
+    },
+  };
+
+  const audioRules = {
+    test: /\.(mp4|ogg|mp3|wav)$/,
+    use: [
+      {
+        loader: 'file-loader',
+        options: {
+          limit: 8192,
+          name: 'audio/[name].[ext]',
+        }
+      }
+    ]
+  };
+
+  const txtRules = {
+    test: /\.txt$/,
+    use: 'raw-loader',
+  };
+
+  const jsonRules = {
+    test: /\.json$/,
+    use: 'json-loader',
+  };
 
   return {
     module: {
       rules: [
+        jsonRules,
+        txtRules,
+        audioRules,
         cssFromNodeModules,
         cssRules,
         excelRules,
@@ -215,6 +238,7 @@ export default function modules(options) {
         htmlRules,
         imageRules,
         javascriptRules,
+        workerRules,
         xmlRules,
       ]
     }

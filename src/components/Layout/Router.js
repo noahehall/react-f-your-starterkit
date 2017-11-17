@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ConnectedRouter } from 'react-router-redux'
 import { Provider } from 'react-redux'
 import { Route } from 'react-router-dom'
