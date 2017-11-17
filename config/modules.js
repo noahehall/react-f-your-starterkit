@@ -62,7 +62,7 @@ export default function modules(options) {
                   postCssBrowserReporter()
                 )
 
-              return pluginArray; 
+              return pluginArray;
             },
           }
         },
@@ -72,6 +72,28 @@ export default function modules(options) {
         {loader: 'sass-loader?sourceMap', options: {
           includePaths,
         }},
+      ]
+    })
+  };
+
+  const cssFromNodeModules = { // dont process with post-css
+    enforce: 'pre',
+    test:  /\.(s?)css$/,
+    include: /node_modules/,
+    use: ExtractTextPlugin.extract({
+      fallback: 'style-loader',
+      // resolve-url-loader may be chained before sass-loader if necessary
+      use: [
+        {
+          loader: 'css-loader',
+          options: {
+            importLoaders: 0,
+            modules: false,
+            minimize: options.isProd,
+            sourceMap: options.sourceMap,
+            localIdentName: '[local]'
+          },
+        },
       ]
     })
   };
@@ -150,8 +172,9 @@ export default function modules(options) {
     }
   };
 
-  moduleConfig.module.rules.push(cssRules);
   // moduleConfig.module.rules.push(eslintRules); // TODO: renable this
+  moduleConfig.module.rules.push(cssFromNodeModules);
+  moduleConfig.module.rules.push(cssRules);
   moduleConfig.module.rules.push(excelRules)
   moduleConfig.module.rules.push(fontRules);
   moduleConfig.module.rules.push(htmlRules);
