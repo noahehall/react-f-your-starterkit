@@ -135,7 +135,7 @@ export default function modules(options) {
         loader: 'url-loader',
         options: {
           ...options.urlLoaderConfig,
-          outputPath: 'images/'
+          name: 'images/[name].[ext]',
         }
       }
     ]

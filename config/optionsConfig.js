@@ -157,6 +157,15 @@ function getBabelTarget ({
     : { node: 'current' }
 }
 
+function getUrlLoaderConfig({
+
+} = {}) {
+  return {
+    fallback: 'file-loader',
+    limit: 8192,
+  };
+}
+
 function dynamicOptionsThree (options = {}) {
   return {
     babelTarget: getBabelTarget(options),
@@ -166,7 +175,7 @@ function dynamicOptionsThree (options = {}) {
     htmlWebpackPluginConfig: getHtmlWebpackPluginConfig(options),
     resolveUrlLoaderConfig: getResolveUrlLoaderConfig(options),
     styleLintPluginConfig: getStyleLintPluginConfig(options),
-    urlLoaderConfig: { fallback: 'file-loader', limit: 8192, name: '[name].[ext]' },
+    urlLoaderConfig: getUrlLoaderConfig(options),
     webpackPwaManifestConfig: getWebpackPwaManifestPluginConfig(options),
   }
 }
