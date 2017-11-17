@@ -14,7 +14,7 @@ import webpack from 'webpack';
 
 // TODO: split this out to multiple files
 export default function modules(options) {
-  const moduleConfig = { module: {rules: [] } };
+  // const moduleConfig = { module: {rules: [] } };
 
   const includePaths = options.cssIncludeGrommet
     ? ['./node_modules', './node_modules/grommet/node_modules']
@@ -181,15 +181,42 @@ export default function modules(options) {
     }
   };
 
-  // moduleConfig.module.rules.push(eslintRules); // TODO: renable this
-  moduleConfig.module.rules.push(cssFromNodeModules);
-  moduleConfig.module.rules.push(cssRules);
-  moduleConfig.module.rules.push(excelRules)
-  moduleConfig.module.rules.push(fontRules);
-  moduleConfig.module.rules.push(htmlRules);
-  moduleConfig.module.rules.push(imageRules);
-  moduleConfig.module.rules.push(javascriptRules);
-  moduleConfig.module.rules.push(xmlRules);
+  const faviconRules = {
+    test: /\.(ico)$/,
+    use: [
+      {
+        loader: 'url-loader',
+        options: {
+          limit: 1,
+          name: '[name].[ext]',
+        }
+      }
+    ]
+  };
 
-  return moduleConfig;
+  // moduleConfig.module.rules.push(eslintRules); // TODO: renable this
+  // moduleConfig.module.rules.push(cssFromNodeModules);
+  // moduleConfig.module.rules.push(cssRules);
+  // moduleConfig.module.rules.push(excelRules)
+  // moduleConfig.module.rules.push(fontRules);
+  // moduleConfig.module.rules.push(htmlRules);
+  // moduleConfig.module.rules.push(imageRules);
+  // moduleConfig.module.rules.push(javascriptRules);
+  // moduleConfig.module.rules.push(xmlRules);
+
+  return {
+    module: {
+      rules: [
+        cssFromNodeModules,
+        cssRules,
+        excelRules,
+        faviconRules,
+        fontRules,
+        htmlRules,
+        imageRules,
+        javascriptRules,
+        xmlRules,
+      ]
+    }
+  };
 };

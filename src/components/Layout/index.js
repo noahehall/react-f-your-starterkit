@@ -1,5 +1,7 @@
-import styles from './index.scss';
+// TODO: favicon not working
 import './assets/theme.css';
+import './images/favicon.ico';
+import styles from './index.scss';
 
 import {
   Redirect,
