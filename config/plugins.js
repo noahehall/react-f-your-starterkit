@@ -75,9 +75,7 @@ export default function plugins(options) {
   // all environments
   config.plugins.push(
 
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(options.env)
-    }),
+    new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify(options.env) }),
 
     new ExtractTextPlugin(getExtractTextPluginConfig()),
 

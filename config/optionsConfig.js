@@ -175,18 +175,71 @@ function getManifestPluginConfig ({
   }
 }
 
+function getStatsConfig ({
+
+} = {}) {
+  return {
+    assets: true,
+    assetsSort: 'field',
+    cached: false,
+    cachedAssets: false,
+    children: false,
+    chunkModules: false,
+    chunkOrigins: false,
+    chunks: false,
+    colors: true,
+    entrypoints: true,
+    env: true,
+    errorDetails: true,
+    errors: true,
+    hash: true,
+    maxModules: Infinity,
+    modules: false,
+    modulesSort: 'field',
+    optimizationBailout: true, // Display bailout reasons
+    source: false,
+  };
+}
+
+
+function getPerformanceConfig ({
+
+} = {}) {
+  return {
+    hints: 'warning',
+  };
+}
+
+function getWebpackConfig ({
+ type,
+ isNode,
+} = {}) {
+  return {
+    bail: true,
+    parallelism: 2,
+    profile: true,
+    target: type,
+    watch: isNode,
+  };
+}
+
 function dynamicOptionsThree (options = {}) {
   return {
     babelLoaderConfig: getBabelLoaderConfig(options),
     babelTarget: getBabelTarget(options),
+    cache: options.isDev,
     cssLoaderConfig: getCssLoaderConfig(options),
     extractTextPluginConfig: getExtractTextPluginConfig(options),
     htmlWebpackPluginConfig: getHtmlWebpackPluginConfig(options),
     manifestPluginConfig: getManifestPluginConfig(options),
+    nodeExternalsConfig: { whitelist: [] },
+    performanceConfig: getPerformanceConfig(options),
     resolveUrlLoaderConfig: getResolveUrlLoaderConfig(options),
+    statsConfig: getStatsConfig(options),
     styleLintPluginConfig: getStyleLintPluginConfig(options),
     urlLoaderConfig: getUrlLoaderConfig(options),
     webpackPwaManifestConfig: getWebpackPwaManifestPluginConfig(options),
+    webpackConfig: getWebpackConfig(options),
   }
 }
 
