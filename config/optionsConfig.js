@@ -75,14 +75,16 @@ function getBabelLoaderConfig ({
 function getStyleLintPluginConfig ({
   isDev,
   isProd,
-  styleLintConfigPath,
+  styleRulesConfig,
 } = {}) {
   return {
-    configFile: styleLintConfigPath,
+    config: styleRulesConfig,
     context: './',
-    emitErrors: true,
+    emitErrors: isDev,
     failOnError: isDev,
     files: ['**/*.s?(a|c)ss'],
+    fix: false, // breaks hot reloader: endless loop
+    ignoreDisables: true,
     quiet: isProd,
   };
 }
@@ -90,6 +92,7 @@ function getStyleLintPluginConfig ({
 function getWebpackPwaManifestPluginConfig ({
   appSlogan,
   appTitle,
+  publicPath,
 } = {}) {
   const getIcons = () => [
     path.resolve('src/components/Layout/images/laptop_icon.png'),
@@ -101,7 +104,10 @@ function getWebpackPwaManifestPluginConfig ({
     description: appSlogan,
     filename: 'manifest.json',
     icons: getIcons(),
+    inject: true,
     name: appTitle,
+    orientation: 'portrait',
+    publicPath,
     short_name: 'NE Tech',
     theme_color: '#ea3d94',
   };

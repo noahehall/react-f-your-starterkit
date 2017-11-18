@@ -2,7 +2,7 @@ import deps from './package.json';
 import optionsConfig from './config/optionsConfig';
 import path from 'path';
 import webpackConfig from './config/webpackConfig';
-import webpackNodeExternals from 'webpack-node-externals';
+import styleLintRules from './.stylelintrc.js';
 
 /**
  * TODO
@@ -29,8 +29,7 @@ function mainOptions (type = 'web') {
     port: 3000,
     publicPath: '/',
     sourceMap: true,
-    styleLintConfigPath: path.resolve(__dirname, '.stylelintrc'),
-    type,
+    styleRulesConfig: styleLintRules,
     verbose: true,
     webpackBail: true,
     webpackBail: true,

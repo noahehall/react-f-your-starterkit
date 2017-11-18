@@ -10,7 +10,6 @@ export default function hotreload(options) {
         clientLogLevel: 'info',
         compress: false,
         contentBase: options.distDir,
-        headers: {'Access-Control-Allow-Origin': '*'},
         headers: getHeaders(),
         historyApiFallback: true,
         hotOnly: true,
@@ -18,6 +17,7 @@ export default function hotreload(options) {
         noInfo: false,
         overlay: true,
         port: options.port,
+        publicPath: options.publicPath,
         quiet: false,
       }
     }
