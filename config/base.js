@@ -39,5 +39,6 @@ export default function base (options) {
     entry: getEntry(),
     output: getOutput(),
     resolve: getResolve(),
+    devtool: options.isDev ? 'eval-source-map' : 'source-map',
   };
 }

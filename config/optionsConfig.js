@@ -166,13 +166,23 @@ function getUrlLoaderConfig({
   };
 }
 
+function getManifestPluginConfig ({
+  type,
+} = {}) {
+  return {
+    writeFileEmit: false,
+    fileName: `js/${type}.manifest.json`,
+  }
+}
+
 function dynamicOptionsThree (options = {}) {
   return {
-    babelTarget: getBabelTarget(options),
     babelLoaderConfig: getBabelLoaderConfig(options),
+    babelTarget: getBabelTarget(options),
     cssLoaderConfig: getCssLoaderConfig(options),
     extractTextPluginConfig: getExtractTextPluginConfig(options),
     htmlWebpackPluginConfig: getHtmlWebpackPluginConfig(options),
+    manifestPluginConfig: getManifestPluginConfig(options),
     resolveUrlLoaderConfig: getResolveUrlLoaderConfig(options),
     styleLintPluginConfig: getStyleLintPluginConfig(options),
     urlLoaderConfig: getUrlLoaderConfig(options),

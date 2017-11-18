@@ -1,5 +1,6 @@
 /* eslint-disable */
 
+// TODO: get nodemonplugin for server setup from starter/config/pluginTansformObjectRestSpread
 import CleanWebpackPlugin from 'clean-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -16,6 +17,22 @@ export default function plugins(options) {
     hashDigest: 'hex',
     hashDigestLength: 20,
     hashFunction: 'sha256',
+  });
+
+  const getUglifyJsPluginConfig = () => ({
+    sourceMap: options.sourceMap,
+    parallel: true,
+    extractComments: true,
+    uglifyOptions: {
+      mangle: false,
+      compress: true,
+      warnings: true,
+    },
+  });
+
+  const getExtractTextPluginConfig = () => ({
+    filename: options.cssFilename,
+    ...options.extractTextPluginConfig,
   });
 
   switch (options.env) {
@@ -38,18 +55,10 @@ export default function plugins(options) {
             root: options.context
           }
         ),
+        new UglifyJSPlugin(getUglifyJsPluginConfig()),
         new webpack.HashedModuleIdsPlugin(getHashedModulesIdsPluginConfig()),
         new webpack.NoEmitOnErrorsPlugin(),
-        new UglifyJSPlugin({
-          sourceMap: options.sourceMap,
-          parallel: true,
-          extractComments: true,
-          uglifyOptions: {
-            mangle: false,
-            compress: true,
-            warnings: true,
-          },
-        })
+        new webpack.optimize.ModuleConcatenationPlugin(),
       );
     }
   }
@@ -70,10 +79,7 @@ export default function plugins(options) {
       'process.env.NODE_ENV': JSON.stringify(options.env)
     }),
 
-    new ExtractTextPlugin({
-      filename: options.cssFilename,
-      ...options.extractTextPluginConfig,
-    }),
+    new ExtractTextPlugin(getExtractTextPluginConfig()),
 
     new HtmlWebpackPlugin({
       filename: options.htmlFilename,
@@ -83,6 +89,7 @@ export default function plugins(options) {
     }),
 
     // splitout options.dependencies
+    // TODO: get from /starter/config/plugins
     // new webpack.optimize.CommonsChunkPlugin({
     //   name: 'vendor',
     //   minChunks(module) {
@@ -94,15 +101,14 @@ export default function plugins(options) {
     //   }
     // }),
     // splitout webpack boilerplate + manifest
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'runtime'
-    }),
+    new webpack.optimize.CommonsChunkPlugin({ name: 'runtime', minChunks: Infinity }),
 
     // create PWA manifest
     // https://developer.mozilla.org/en-US/docs/Web/Manifest
-    new WebpackPwaManifest({
-      ...options.webpackPwaManifestConfig,
-    })
+    new WebpackPwaManifest({ ...options.webpackPwaManifestConfig }),
+
+    // exports a json file
+    new ManifestPlugin({...options.manifestPluginConfig}),
   );
 
   return config;
