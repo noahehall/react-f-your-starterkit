@@ -3,7 +3,6 @@ import base from './base';
 import hotreload from './hotreload';
 import modules from './modules';
 import plugins from './plugins';
-import sourcemaps from './sourcemaps';
 
 export default function create(options){
   return [
@@ -11,7 +10,6 @@ export default function create(options){
     hotreload,
     modules,
     plugins,
-    sourcemaps,
   ].reduce(
     (config, configCreator) =>
       Object.assign(

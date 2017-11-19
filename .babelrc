@@ -7,6 +7,8 @@
   "plugins": [
     "transform-object-rest-spread",
     "import-glob",
+    "transform-function-bind",
+    "transform-async-generator-functions",
     "transform-runtime"
   ]
 }

@@ -14,61 +14,66 @@ import webpack from 'webpack';
 
 // TODO: split this out to multiple files
 export default function modules(options) {
+  const getCssLoaders = () => [
+    {
+      loader: 'css-loader',
+      options: {
+        ...options.cssLoaderConfig,
+      }
+    },
+    // see https://github.com/postcss/postcss-loader
+    {
+      loader: 'postcss-loader',
+      options: {
+        ident: 'postcss',
+        sourceMap: options.sourceMap,
+        syntax: 'postcss-scss',
+        plugins(loader) {
+          const pluginArray = [
+            postcssImport,
+
+            postcssCssnext({
+              ...options.babelTarget,
+            }),
+            postCssNestedAncestor(),
+            postcssNested({
+              preserveEmpty: true,
+            }),
+            postCssCurrentSelector(),
+            postcssRemoveRoot,
+            cssMqpacker({
+              sort: false
+            })
+          ];
+
+          if (options.isDev)
+            pluginArray.push(
+              postcssReporter({throwError: true}),
+              postCssBrowserReporter()
+            )
+
+          return pluginArray;
+        },
+      }
+    },
+    {loader: 'resolve-url-loader', options: {
+      ...options.resolveUrlLoaderConfig,
+    }},
+    {loader: 'sass-loader?sourceMap', options: {}},
+  ];
+  const getCssRulesUse = () => options.isNode
+    ? ExtractTextPlugin.extract({
+      fallback: 'style-loader',
+      use: getCssLoaders(),
+    })
+    : getCssLoaders();
 
   const cssRules = {
+    // enfore: 'pre',
     test:  /\.s?(a|c)ss$/,
-    use: ExtractTextPlugin.extract({
-      fallback: 'style-loader',
-      use: [
-        {
-          loader: 'css-loader',
-          options: {
-            ...options.cssLoaderConfig,
-          }
-        },
-        // see https://github.com/postcss/postcss-loader
-        {
-          loader: 'postcss-loader',
-          options: {
-            ident: 'postcss',
-            sourceMap: options.sourceMap,
-            syntax: 'postcss-scss',
-            plugins(loader) {
-              const pluginArray = [
-                postcssImport,
-
-                postcssCssnext({
-                  ...options.babelTarget,
-                }),
-                postCssNestedAncestor(),
-                postcssNested({
-                  preserveEmpty: true,
-                }),
-                postCssCurrentSelector(),
-                postcssRemoveRoot,
-                cssMqpacker({
-                  sort: false
-                })
-              ];
-
-              if (options.isDev)
-                pluginArray.push(
-                  postcssReporter({throwError: true}),
-                  postCssBrowserReporter()
-                )
-
-              return pluginArray;
-            },
-          }
-        },
-        {loader: 'resolve-url-loader', options: {
-          ...options.resolveUrlLoaderConfig,
-        }},
-        {loader: 'sass-loader?sourceMap', options: {}},
-      ]
-    })
+    use: getCssRulesUse(),
   };
-  if (options.env === 'development') {
+  if (options.env === 'development' && options.isWeb) {
     cssRules.use = ['css-hot-loader'].concat(cssRules.use);
   }
 

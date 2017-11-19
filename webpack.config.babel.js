@@ -1,3 +1,4 @@
+/* eslint-disable */
 import deps from './package.json';
 import optionsConfig from './config/optionsConfig';
 import path from 'path';
@@ -10,7 +11,13 @@ import styleLintRules from './.stylelintrc.js';
  delete webpack info plugin
  */
 
-function mainOptions (type = 'web') {
+function mainOptions ({
+  platform = 'web'
+} = {}) {
+  const getEntry = () => platform === 'web'
+    ? './src/index.js'
+    : './src/server.js';
+
   return {
     appSlogan: 'Creating the future, together',
     appTitle: 'Noah Edward Technologies Inc.',
@@ -21,20 +28,25 @@ function mainOptions (type = 'web') {
     distDir: path.resolve(__dirname, 'dist'), // target directory
     env: process.env.NODE_ENV || 'development',
     htmlFilename: 'index.html',
-    htmlTemplate: 'src/components/Layout/template.html.js',
+    htmlTemplate: 'src/components/App/template.html.js',
     http2Server: false,
-    isNode: type === 'node',
-    isWeb: type === 'web',
-    mainEntry: './src/index.js',
+    isNode: platform === 'node',
+    isWeb: platform === 'web',
+    mainEntry: getEntry(),
     port: 3000,
     publicPath: '/',
     sourceMap: true,
     styleRulesConfig: styleLintRules,
+    platform,
     verbose: true,
-    webpackBail: true,
     webpackBail: true,
     webpackDir: path.resolve(__dirname, '.'), // loaders + entries are resovled relative to this
   };
 }
 
-module.exports = () => webpackConfig(optionsConfig(mainOptions()));
+module.exports = (env, argv) => {
+  console.log(
+    'env is', env
+  )
+  return webpackConfig(optionsConfig(mainOptions(env)));
+}

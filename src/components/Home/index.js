@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React from 'react';
 import { connect } from 'react-redux'
-import blah from 'store/logic/blah/action.js';
+import blah from 'store/api/blah/action.js';
 
 export class Home extends React.Component {
   handleBlah = () => this.props.doBlah(Math.random())

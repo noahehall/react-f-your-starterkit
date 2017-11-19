@@ -1,22 +1,35 @@
 /**
  * TODO
  https://github.com/google/web-starter-kit
- https://github.com/jantimon/favicons-webpack-plugin
  */
-import Router from 'components/Router';
+
+import 'babel-polyfill';
+import { AppContainer } from 'react-hot-loader';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
+import App from 'components/App';
+
+import createHistory from 'history/createBrowserHistory';
+import storeCreator from 'store';
+
+const history = createHistory();
+const store = storeCreator(history);
+
+
 function render (Component) {
   ReactDOM.render(
-    <AppContainer><Component /></AppContainer>,
+    <AppContainer>
+      <Component history={history} store={store} />
+    </AppContainer>,
     document.getElementById('root')
   );
 }
 
-render(Router);
+render(App);
 
+// echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+// https://stackoverflow.com/questions/26708205/webpack-watch-isnt-compiling-changed-files
 if (module && module.hot)
-  module.hot.accept("components/Router", () =>
-    render(require('components/Router').default)
+  module.hot.accept('components/App', () =>
+    render(require('components/App').default)
   );

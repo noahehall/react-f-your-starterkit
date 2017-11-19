@@ -18,10 +18,12 @@ export default function base (options) {
     ]
 
   const getOutput = () => ({
-    path: options.publicDir,
     chunkFilename: options.jsFilename,
-    publicPath: options.publicPath,
     filename: options.jsFilename,
+    path: options.publicDir,
+    publicPath: options.publicPath,
+    library: options.isWeb ? 'var' : 'app',
+    libraryTarget: options.isWeb ? 'umd2' : 'commonjs2',
   });
 
   const getResolve = () => ({
@@ -30,7 +32,7 @@ export default function base (options) {
   });
 
   const getExternals = () => options.isNode
-    ? nodeExternals({ ...options.nodeExternalsConfig })
+    ? nodeExternals()
     : [];
 
   return {

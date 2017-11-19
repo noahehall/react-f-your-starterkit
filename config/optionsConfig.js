@@ -5,7 +5,7 @@ function getCssLoaderConfig ({
   isDev,
   isProd,
   sourceMap,
-} = {}) {
+}) {
   return {
     camelCase: true,
     importLoaders: 1,
@@ -20,7 +20,7 @@ function getHtmlWebpackPluginConfig ({
   appSlogan,
   appTitle,
   isDev,
-} = {}) {
+}) {
   const getMinifyConfig = () => (
     isDev
       ? false
@@ -43,7 +43,7 @@ function getResolveUrlLoaderConfig ({
   isDev,
   sourceMap,
   verbose,
-} = {}) {
+}) {
   return {
     debug: isDev ? verbose : false,
     fail: isDev,
@@ -53,14 +53,19 @@ function getResolveUrlLoaderConfig ({
 }
 
 function getBabelLoaderConfig ({
-  type,
-} = {}) {
+  platform,
+}) {
   return {
     plugins: [
       "react-hot-loader/babel",
+
       'transform-class-properties',
       'transform-object-rest-spread',
       "import-glob",
+      "transform-async-generator-functions",
+      "transform-function-bind",
+      "transform-object-rest-spread",
+      "transform-runtime",
     ],
     'presets': [
       ['env', {
@@ -68,6 +73,7 @@ function getBabelLoaderConfig ({
       }],
       'stage-1',
       'react',
+      'flow',
     ],
   };
 }
@@ -76,7 +82,7 @@ function getStyleLintPluginConfig ({
   isDev,
   isProd,
   styleRulesConfig,
-} = {}) {
+}) {
   return {
     config: styleRulesConfig,
     context: './',
@@ -93,10 +99,10 @@ function getWebpackPwaManifestPluginConfig ({
   appSlogan,
   appTitle,
   publicPath,
-} = {}) {
+}) {
   const getIcons = () => [
-    path.resolve('src/components/Layout/images/laptop_icon.png'),
-    path.resolve('src/components/Layout/images/web_icon.png'),
+    path.resolve('src/components/App/images/laptop_icon.png'),
+    path.resolve('src/components/App/images/web_icon.png'),
   ].map((src) => ({ sizes: [ 96, 128, 192, 256, 384, 512 ], src }));
 
   return {
@@ -118,7 +124,7 @@ function dynamicOptionsOne ({
   distDir,
   env,
   verbose,
-} = {}) {
+}) {
   return {
     contentBase: path.resolve(context, 'src'), // static file location
     isDev: env === 'development',
@@ -134,30 +140,33 @@ function dynamicOptionsTwo ({
   isDev,
   privateDir,
   publicDir,
-  type,
-} = {}) {
+  platform,
+}) {
   return {
     dataPath: path.resolve(distDir, publicDir, 'data'),
     fontsPath: path.resolve(distDir, publicDir, 'fonts'),
     imagePath: path.resolve(distDir, publicDir, 'images'),
-    jsFilename: `js/${type}.[name].${isDev ? '[hash].' : ''}js`, // filename template for entry chunks
+    jsFilename: `js/${platform}.[name].${isDev ? '[hash].' : ''}js`, // filename template for entry chunks
     recordsOutputPath: path.resolve(distDir, privateDir, 'webpack_records.js'),
   }
 }
 
 function getExtractTextPluginConfig ({
-  isDev
-} = {}) {
+  isDev,
+  isNode,
+}) {
   return {
     allChunks: true,
+    disable: isNode,
     filename: isDev ? 'css/[name].css' : 'css/[name].[id].[contenthash].css',
     ignoreOrder: true,
+
   };
 }
 
 function getBabelTarget ({
   isDev,
-} = {}) {
+}) {
   return isDev
     ? { browsers: [ 'last 3 versions', '> 5%' ]}
     : { node: 'current' }
@@ -165,7 +174,7 @@ function getBabelTarget ({
 
 function getUrlLoaderConfig({
 
-} = {}) {
+}) {
   return {
     fallback: 'file-loader',
     limit: 8192,
@@ -173,17 +182,17 @@ function getUrlLoaderConfig({
 }
 
 function getManifestPluginConfig ({
-  type,
-} = {}) {
+  platform,
+}) {
   return {
     writeFileEmit: false,
-    fileName: `js/${type}.manifest.json`,
+    fileName: `js/${platform}.manifest.json`,
   }
 }
 
 function getStatsConfig ({
 
-} = {}) {
+}) {
   return {
     assets: true,
     assetsSort: 'field',
@@ -210,26 +219,28 @@ function getStatsConfig ({
 
 function getPerformanceConfig ({
 
-} = {}) {
+}) {
   return {
     hints: 'warning',
   };
 }
 
 function getWebpackConfig ({
- type,
+ platform,
  isNode,
-} = {}) {
+}) {
   return {
     bail: true,
     parallelism: 2,
     profile: true,
-    target: type,
+    target: platform,
     watch: isNode,
   };
 }
 
-function dynamicOptionsThree (options = {}) {
+
+
+function dynamicOptionsThree (options) {
   return {
     babelLoaderConfig: getBabelLoaderConfig(options),
     babelTarget: getBabelTarget(options),
@@ -238,7 +249,6 @@ function dynamicOptionsThree (options = {}) {
     extractTextPluginConfig: getExtractTextPluginConfig(options),
     htmlWebpackPluginConfig: getHtmlWebpackPluginConfig(options),
     manifestPluginConfig: getManifestPluginConfig(options),
-    nodeExternalsConfig: { whitelist: [] },
     performanceConfig: getPerformanceConfig(options),
     resolveUrlLoaderConfig: getResolveUrlLoaderConfig(options),
     statsConfig: getStatsConfig(options),
@@ -255,11 +265,11 @@ export default function create (options) {
     dynamicOptionsTwo,
     dynamicOptionsThree,
   ].reduce(
-    (option, optionsCreator) =>
+    (optionConfig, optionsCreator) =>
       Object.assign(
         {},
-        option,
-        optionsCreator({ ...options, ...option })
+        optionConfig,
+        optionsCreator({ ...options, ...optionConfig })
       ),
     options,
   );
