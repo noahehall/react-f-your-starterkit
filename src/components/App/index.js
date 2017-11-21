@@ -2,9 +2,7 @@
 // TODO: rename dir to App
 //import './images/favicon.ico';
 //import './theme.css';
-import { ConnectedRouter } from 'react-router-redux';
 import { Layout } from 'antd';
-import { Provider } from 'react-redux';
 import Navigation from './Navigation';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -37,32 +35,27 @@ export class App extends React.Component {
   )
 
   render() {
-    console.log('prosssssps',this.props)
     return (
-      <Provider store={this.props.store}>
-        <ConnectedRouter history={this.props.history}>
-          <div className={styles.layout}>
-            hellodfadfasfd
-            <Layout>
-              <article>
-                <Header fixed size='small'>
-                  <small>
-                    Noah Edward Technologies
-                  </small>
-                  <Navigation />
-                </Header>
-                <Content>
-                  Thank you for supporting our opensource react starter kit!
-                  <Switch>{Routes.map((route) => this.routeWithSubRoutes(route))}</Switch>
-                </Content>
-                <Footer>
-                  Find bugs? Please create an issue
-                </Footer>
-              </article>
-            </Layout>
-          </div>
-        </ConnectedRouter>
-      </Provider>
+      <div className={styles.layout}>
+        hellodfadfasfd
+        <Layout>
+          <article>
+            <Header fixed size='small'>
+              <small>
+                Noah Edward Technologies
+              </small>
+              <Navigation />
+            </Header>
+            <Content>
+              Thank you for supporting our opensource react starter kit!
+              <Switch>{Routes.map((route) => this.routeWithSubRoutes(route))}</Switch>
+            </Content>
+            <Footer>
+              Find budgs? Please create an issue
+            </Footer>
+          </article>
+        </Layout>
+      </div>
     );
   }
 }

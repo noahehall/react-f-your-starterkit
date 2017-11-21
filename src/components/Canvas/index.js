@@ -8,7 +8,7 @@
 
 /* eslint-disable */
 
-import 'react-table/react-table.css';
+import 'node_modules/react-table/react-table.css';
 import { connect } from 'react-redux';
 import PopularQueries from './PopularQueries';
 import React from 'react';

@@ -3,7 +3,9 @@ import path from 'path';
 
 function getCssLoaderConfig ({
   isDev,
+  isNode,
   isProd,
+  isWeb,
   sourceMap,
 }) {
   return {
@@ -11,7 +13,7 @@ function getCssLoaderConfig ({
     importLoaders: 1,
     localIdentName: isDev ? '[path][name]__[local]' : 'css[hash:base64:5]',
     minimize: isProd,
-    modules: true,
+    modules: isWeb,
     sourceMap,
   };
 }
@@ -123,6 +125,7 @@ function dynamicOptionsOne ({
   context,
   distDir,
   env,
+  isNode,
   verbose,
 }) {
   return {
@@ -130,23 +133,24 @@ function dynamicOptionsOne ({
     isDev: env === 'development',
     isProd: env === 'production',
     privateDir: path.resolve(distDir, 'private'),
-    publicDir: path.resolve(distDir, 'public'), // use to be called path
+    publicDir:isNode ? distDir : path.resolve(distDir, 'public'), // use to be called path
     webpackProfile: verbose,
   };
 }
 
 function dynamicOptionsTwo ({
   distDir,
-  isDev,
+  isProd,
   privateDir,
   publicDir,
   platform,
+  isNode,
 }) {
   return {
     dataPath: path.resolve(distDir, publicDir, 'data'),
     fontsPath: path.resolve(distDir, publicDir, 'fonts'),
     imagePath: path.resolve(distDir, publicDir, 'images'),
-    jsFilename: `js/${platform}.[name].${isDev ? '[hash].' : ''}js`, // filename template for entry chunks
+    jsFilename: `${isNode ? '' : 'js/'}${platform}.[name]${isProd ? '.[hash]' : ''}.js`, // filename template for entry chunks
     recordsOutputPath: path.resolve(distDir, privateDir, 'webpack_records.js'),
   }
 }
@@ -182,11 +186,12 @@ function getUrlLoaderConfig({
 }
 
 function getManifestPluginConfig ({
+  isNode,
   platform,
 }) {
   return {
     writeFileEmit: false,
-    fileName: `js/${platform}.manifest.json`,
+    fileName: `${isNode ? '' : 'js/'}${platform}.manifest.json`,
   }
 }
 
@@ -234,7 +239,7 @@ function getWebpackConfig ({
     parallelism: 2,
     profile: true,
     target: platform,
-    watch: isNode,
+    watch: false, //isNode,
   };
 }
 

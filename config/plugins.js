@@ -104,11 +104,14 @@ export default function plugins(options) {
       // create PWA manifest
       // https://developer.mozilla.org/en-US/docs/Web/Manifest
       new WebpackPwaManifest({ ...options.webpackPwaManifestConfig }),
+
+      // splitout webpack boilerplate + manifest
+      new webpack.optimize.CommonsChunkPlugin({ name: 'runtime', minChunks: Infinity }),
     );
 
   config.plugins.push(
-
     new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify(options.env) }),
+    new webpack.DefinePlugin({ 'process.env.SSR': JSON.stringify(options.ssr) }),
 
 
     // splitout options.dependencies
@@ -123,8 +126,7 @@ export default function plugins(options) {
     //       : true
     //   }
     // }),
-    // splitout webpack boilerplate + manifest
-    new webpack.optimize.CommonsChunkPlugin({ name: 'runtime', minChunks: Infinity }),
+
 
 
 

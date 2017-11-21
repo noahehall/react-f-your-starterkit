@@ -54,7 +54,7 @@ export default [
     routes: [],
   },
   {
-    path: '/oops',
+    path: '*',
     exact: false,
     component: Oops,
     routes: [],

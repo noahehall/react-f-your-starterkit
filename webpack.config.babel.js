@@ -12,10 +12,10 @@ import styleLintRules from './.stylelintrc.js';
  */
 
 function mainOptions ({
-  platform = 'web',
-  ssr = true,
+  platform = 'node',
+  ssr = 'true',
 } = {}) {
-  console.log('platform is', platform)
+  const ssrMode = JSON.parse(ssr);
   const getEntry = () => platform === 'web'
     ? './src/index.js'
     : './src/server.js';
@@ -23,7 +23,7 @@ function mainOptions ({
   return {
     appSlogan: 'Creating the future, together',
     appTitle: 'Noah Edward Technologies Inc.',
-    context: path.resolve(__dirname, '.'), // was '.'
+    context: path.resolve(__dirname, '.'),
     cssFilename: 'css/[name].[id].css',
     cssIncludeGrommet: false, // delete this
     dependencies: Object.keys(deps.dependencies),
@@ -39,7 +39,7 @@ function mainOptions ({
     port: 3000,
     publicPath: '/',
     sourceMap: true,
-    ssr,
+    ssr: ssrMode,
     styleRulesConfig: styleLintRules,
     verbose: true,
     webpackBail: true,

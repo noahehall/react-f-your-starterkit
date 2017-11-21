@@ -74,8 +74,9 @@ export default function modules(options) {
     : getNodeCssLoaders();
 
   const cssRules = {
-    // enfore: 'pre',
+    enforce: 'pre',
     test:  /\.s?(a|c)ss$/,
+    exclude: /node_modules/,
     use: getCssRulesUse(),
   };
 
@@ -83,12 +84,12 @@ export default function modules(options) {
     cssRules.use = ['css-hot-loader'].concat(cssRules.use);
   }
 
-  const cssFromNodeModules = options.isWeb
-    ? { // dont process with post-css
-      enforce: 'pre',
-      test:  /\.(s?)css$/,
-      include: /node_modules/,
-      use: ExtractTextPlugin.extract({
+  const cssFromNodeModules = { // dont process with post-css
+    enforce: 'pre',
+    test: /\.s?(a|c)ss$/,
+    include: /node_modules/,
+    use: options.isWeb
+      ? ExtractTextPlugin.extract({
         fallback: 'style-loader',
         // resolve-url-loader may be chained before sass-loader if necessary
         use: [
@@ -104,8 +105,8 @@ export default function modules(options) {
           },
         ]
       })
-    }
-    : null;
+      : getNodeCssLoaders()
+  }
 
   const addEslintLoader = () => options.isNode
     ? {
@@ -123,7 +124,7 @@ export default function modules(options) {
 
   const javascriptRules = {
     // TODO: add babe;-preset to this config from starter/config/modules.js
-    enforce: 'pre',
+    //enforce: 'pre',
     exclude: /node_modules/,
     test: /\.jsx?$/,
     use: [
@@ -218,7 +219,7 @@ export default function modules(options) {
     use: {
       loader: 'worker-loader',
       options: {
-        name: 'js/worker.[hash].js',
+        name: `js/worker${options.isProd ?'.[hash]' : ''}.js`,
         fallback: false,
         inline: false // set to true if assets arent loading due to same origin policy
       },
@@ -251,8 +252,6 @@ export default function modules(options) {
   return {
     module: {
       rules: [
-        jsonRules,
-        txtRules,
         audioRules,
         cssFromNodeModules,
         cssRules,
@@ -262,6 +261,8 @@ export default function modules(options) {
         htmlRules,
         imageRules,
         javascriptRules,
+        jsonRules,
+        txtRules,
         workerRules,
         xmlRules,
       ].filter(rule => rule)

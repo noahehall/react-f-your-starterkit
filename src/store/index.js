@@ -43,6 +43,10 @@ export default function storeCreator(history) {
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ // eslint-disable-line no-underscore-dangle
     : compose;
 
+  const thisState = typeof window !== 'undefined' && window.__INIT_STATE__
+    ? window.__INIT_STATE__
+    : initialState;
+
   const updateReducerNames = (reducers) =>
     Object.values(reducers).map(reducer => ({
       [reducer.name]: reducer
@@ -59,7 +63,7 @@ export default function storeCreator(history) {
         ...updateReducerNames(reducers),
       )
     ),
-    initialState,
+    thisState,
     composeEnhancers(
       applyMiddleware(
         routerMiddleware(history),

@@ -23,26 +23,39 @@ export default function base (options) {
     filename: options.jsFilename,
     path: options.publicDir,
     publicPath: options.publicPath,
-    library: options.isWeb ? 'var' : 'app',
+    // library: options.isWeb ? 'var' : 'app',
     libraryTarget: options.isWeb ? 'umd2' : 'commonjs2',
   });
 
   const getResolve = () => ({
     extensions: ['*', '.js', '.jsx'],
-    modules: ['node_modules', options.contentBase]
+    modules: ['.', 'node_modules', options.contentBase]
   });
 
   const getExternals = () => options.isNode
     ? nodeExternals()
     : [];
 
+  const getNode = () => options.isNode
+    ? {
+      console: false,
+      global: false,
+      process: false,
+      Buffer: false,
+      __filename: false,
+      __dirname: false
+    }
+    : {};
+
   return {
+    ...options.webpackConfig,
     bail: options.webpackBail,
     cache: options.cache,
     context: options.context,
     devtool: options.isDev ? 'eval-source-map' : 'source-map',
     entry: getEntry(),
     externals: getExternals(),
+    node: getNode(),
     output: getOutput(),
     performance: { ...options.performanceConfig },
     profile: options.webpackProfile,
@@ -51,6 +64,5 @@ export default function base (options) {
     recordsPath: options.recordsOutputPath,
     resolve: getResolve(),
     stats: { ...options.statsConfig },
-    ...options.webpackConfig,
   };
 }
