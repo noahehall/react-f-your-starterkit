@@ -1,7 +1,7 @@
 /* eslint-disable */
 // TODO: rename dir to App
-import './images/favicon.ico';
-import './theme.css';
+//import './images/favicon.ico';
+//import './theme.css';
 import { ConnectedRouter } from 'react-router-redux';
 import { Layout } from 'antd';
 import { Provider } from 'react-redux';
@@ -37,12 +37,12 @@ export class App extends React.Component {
   )
 
   render() {
-    console.log(this.props)
+    console.log('prosssssps',this.props)
     return (
       <Provider store={this.props.store}>
         <ConnectedRouter history={this.props.history}>
           <div className={styles.layout}>
-            hello
+            hellodfadfasfd
             <Layout>
               <article>
                 <Header fixed size='small'>

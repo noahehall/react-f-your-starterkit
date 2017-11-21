@@ -6,12 +6,13 @@ import nodeExternals from 'webpack-node-externals';
 export default function base (options) {
 
   // TODO: splitout vendor bundle //vendor: options.dependencies,
-  const getEntry = () => options.isDev
+  const getEntry = () => options.isDev && options.isWeb
     ? [
       'react-hot-loader/patch',
+      options.ssr ? 'webpack-hot-middleware/client': '',
       'babel-polyfill',
       options.mainEntry
-    ]
+    ].filter(entry => entry)
     : [
       'babel-polyfill',
       options.mainEntry

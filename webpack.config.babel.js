@@ -12,8 +12,10 @@ import styleLintRules from './.stylelintrc.js';
  */
 
 function mainOptions ({
-  platform = 'web'
+  platform = 'web',
+  ssr = true,
 } = {}) {
+  console.log('platform is', platform)
   const getEntry = () => platform === 'web'
     ? './src/index.js'
     : './src/server.js';
@@ -33,11 +35,12 @@ function mainOptions ({
     isNode: platform === 'node',
     isWeb: platform === 'web',
     mainEntry: getEntry(),
+    platform,
     port: 3000,
     publicPath: '/',
     sourceMap: true,
+    ssr,
     styleRulesConfig: styleLintRules,
-    platform,
     verbose: true,
     webpackBail: true,
     webpackDir: path.resolve(__dirname, '.'), // loaders + entries are resovled relative to this

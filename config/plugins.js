@@ -37,8 +37,12 @@ export default function plugins(options) {
 
   switch (options.env) {
     case 'development': {
+      if ( options.isWeb)
+        config.plugins.push(
+          new StyleLintPlugin({ ...options.styleLintPluginConfig })
+        )
+
       config.plugins.push(
-        new StyleLintPlugin({ ...options.styleLintPluginConfig }),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NamedModulesPlugin(),
       )
@@ -46,15 +50,19 @@ export default function plugins(options) {
     }
 
     case 'production': {
+      if (options.isNode || (!options.ssr))
+        config.plugins.push(
+          // remove dist directory on build
+          new CleanWebpackPlugin(
+            [options.distDir],
+            {
+              verbose: true,
+              root: options.context
+            }
+          ),
+        )
       config.plugins.push(
-        // remove dist directory on build
-        new CleanWebpackPlugin(
-          [options.distDir],
-          {
-            verbose: true,
-            root: options.context
-          }
-        ),
+
         new UglifyJSPlugin(getUglifyJsPluginConfig()),
         new webpack.HashedModuleIdsPlugin(getHashedModulesIdsPluginConfig()),
         new webpack.NoEmitOnErrorsPlugin(),
@@ -73,18 +81,35 @@ export default function plugins(options) {
   }
 
   // all environments
+  // if (options.isNode)
+    // config.plugins.push(
+    //   new webpack.BannerPlugin({
+    //     banner: 'require("source-map-support").install();',
+    //     entryOnly: false,
+    //     raw: true,
+    //   })
+    // );
+
+  if ( options.isWeb )
+    config.plugins.push(
+      new ExtractTextPlugin(getExtractTextPluginConfig()),
+
+      new HtmlWebpackPlugin({
+        filename: options.htmlFilename,
+        template: options.htmlTemplate,
+        hash: false,
+        ...options.htmlWebpackPluginConfig,
+      }),
+
+      // create PWA manifest
+      // https://developer.mozilla.org/en-US/docs/Web/Manifest
+      new WebpackPwaManifest({ ...options.webpackPwaManifestConfig }),
+    );
+
   config.plugins.push(
 
     new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify(options.env) }),
 
-    new ExtractTextPlugin(getExtractTextPluginConfig()),
-
-    new HtmlWebpackPlugin({
-      filename: options.htmlFilename,
-      template: options.htmlTemplate,
-      hash: false,
-      ...options.htmlWebpackPluginConfig,
-    }),
 
     // splitout options.dependencies
     // TODO: get from /starter/config/plugins
@@ -101,9 +126,7 @@ export default function plugins(options) {
     // splitout webpack boilerplate + manifest
     new webpack.optimize.CommonsChunkPlugin({ name: 'runtime', minChunks: Infinity }),
 
-    // create PWA manifest
-    // https://developer.mozilla.org/en-US/docs/Web/Manifest
-    new WebpackPwaManifest({ ...options.webpackPwaManifestConfig }),
+
 
     // exports a json file
     new ManifestPlugin({...options.manifestPluginConfig}),

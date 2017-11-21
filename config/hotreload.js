@@ -4,7 +4,7 @@ export default function hotreload(options) {
     'Access-Control-Allow-Origin': '*',
   });
 
-  return options.isDev
+  return options.isDev && options.isWeb && !options.ssr
     ? { // TODO: this works but recompiles twice
       devServer: {
         clientLogLevel: 'info',

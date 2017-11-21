@@ -14,13 +14,17 @@ import webpack from 'webpack';
 
 // TODO: split this out to multiple files
 export default function modules(options) {
-  const getCssLoaders = () => [
+
+  const getNodeCssLoaders = () => [
     {
-      loader: 'css-loader',
+      loader: `css-loader${options.isNode ? '/locals' : ''}`,
       options: {
         ...options.cssLoaderConfig,
       }
     },
+  ];
+
+  const getWebLoaders = () => getNodeCssLoaders().concat([
     // see https://github.com/postcss/postcss-loader
     {
       loader: 'postcss-loader',
@@ -60,44 +64,62 @@ export default function modules(options) {
       ...options.resolveUrlLoaderConfig,
     }},
     {loader: 'sass-loader?sourceMap', options: {}},
-  ];
-  const getCssRulesUse = () => options.isNode
+  ])
+
+  const getCssRulesUse = () => options.isWeb
     ? ExtractTextPlugin.extract({
       fallback: 'style-loader',
-      use: getCssLoaders(),
+      use: getWebLoaders(),
     })
-    : getCssLoaders();
+    : getNodeCssLoaders();
 
   const cssRules = {
     // enfore: 'pre',
     test:  /\.s?(a|c)ss$/,
     use: getCssRulesUse(),
   };
+
   if (options.env === 'development' && options.isWeb) {
     cssRules.use = ['css-hot-loader'].concat(cssRules.use);
   }
 
-  const cssFromNodeModules = { // dont process with post-css
-    enforce: 'pre',
-    test:  /\.(s?)css$/,
-    include: /node_modules/,
-    use: ExtractTextPlugin.extract({
-      fallback: 'style-loader',
-      // resolve-url-loader may be chained before sass-loader if necessary
-      use: [
-        {
-          loader: 'css-loader',
-          options: {
-            importLoaders: 0,
-            modules: false,
-            minimize: options.isProd,
-            sourceMap: options.sourceMap,
-            localIdentName: '[local]'
+  const cssFromNodeModules = options.isWeb
+    ? { // dont process with post-css
+      enforce: 'pre',
+      test:  /\.(s?)css$/,
+      include: /node_modules/,
+      use: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        // resolve-url-loader may be chained before sass-loader if necessary
+        use: [
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 0,
+              modules: false,
+              minimize: options.isProd,
+              sourceMap: options.sourceMap,
+              localIdentName: '[local]'
+            },
           },
-        },
-      ]
-    })
-  };
+        ]
+      })
+    }
+    : null;
+
+  const addEslintLoader = () => options.isNode
+    ? {
+      loader: 'eslint-loader',
+      options: {
+        fix: false, // causes compile endles loop
+        emitError: options.isDev,
+        emitWarning: options.isDev,
+        quiet: options.isProd,
+        failOnWarning: false,
+        failOnError: options.isDev,
+      }
+    }
+    : null;
 
   const javascriptRules = {
     // TODO: add babe;-preset to this config from starter/config/modules.js
@@ -111,18 +133,8 @@ export default function modules(options) {
           ...options.babelLoaderConfig,
         }
       },
-      {
-        loader: 'eslint-loader',
-        options: {
-          fix: false, // causes compile endles loop
-          emitError: options.isDev,
-          emitWarning: options.isDev,
-          quiet: options.isProd,
-          failOnWarning: false,
-          failOnError: options.isDev,
-        }
-      }
-    ]
+      addEslintLoader(),
+    ].filter(rule => rule)
   };
 
   const htmlRules = {
@@ -139,12 +151,19 @@ export default function modules(options) {
     ],
   };
 
+  const processLoaderString = (text) => options.isWeb
+    ? text
+    : `${text}?emitFile=false`;
+
+  const urlLoaderString = processLoaderString('url-loader');
+  const fileLoaderString = processLoaderString('file-loader');
+
   const imageRules = {
     test: /\.(png|jpe?g|gif|svg)$/,
     use: [
       {
         // TODO: review image-webpack-loader
-        loader: 'url-loader',
+        loader: urlLoaderString,
         options: {
           ...options.urlLoaderConfig,
           name: 'images/[name].[ext]',
@@ -158,7 +177,7 @@ export default function modules(options) {
     use: [
       {
         // TODO: review the limit setting
-        loader: 'url-loader',
+        loader: urlLoaderString,
         options: {
           ...options.urlLoaderConfig,
           name: 'fonts/[name].[ext]',
@@ -185,7 +204,7 @@ export default function modules(options) {
     test: /\.(ico)$/,
     use: [
       {
-        loader: 'url-loader',
+        loader: urlLoaderString,
         options: {
           limit: 1,
           name: '[name].[ext]',
@@ -210,7 +229,7 @@ export default function modules(options) {
     test: /\.(mp4|ogg|mp3|wav)$/,
     use: [
       {
-        loader: 'file-loader',
+        loader: fileLoaderString,
         options: {
           limit: 8192,
           name: 'audio/[name].[ext]',
@@ -245,7 +264,7 @@ export default function modules(options) {
         javascriptRules,
         workerRules,
         xmlRules,
-      ]
+      ].filter(rule => rule)
     }
   };
 };

@@ -1,37 +1,40 @@
-const express = require('express');
-const webpack = require('webpack');
-const path = require('path');
-const requireFromString = require('require-from-string');
-const MemoryFS = require('memory-fs');
-const serverConfig = require('./server.webpack.babel.js');
-const fs = new MemoryFS();
-const outputErrors = (err, stats) => {
-    if (err) {
-         console.error(err.stack || err);
-         if (err.details) {
-              console.error(err.details);
-         }
-         return;
-    }
+/* eslint-disable */
+require("babel-register");
 
-    const info = stats.toJson();
-    if (stats.hasErrors()) {
-        console.error(info.errors);
-    }
-    if (stats.hasWarnings()) {
-        console.warn(info.warnings);
-    }
-};
-console.log('Initializing server application...');
+const express = require('express');
+const path = require('path');
+const webpack = require('webpack');
+const webpackConfig = require('./webpack.config.babel.js');
+const webpackMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
+const server = require('./src/server.js').default;
+
 const app = express();
-console.log('Compiling bundle...');
-const serverCompiler = webpack(serverConfig);
-serverCompiler.outputFileSystem = fs;
-serverCompiler.run((err, stats) => {
-    outputErrors(err, stats);
-    const contents = fs.readFileSync(path.resolve(serverConfig.output.path, serverConfig.output.filename), 'utf8');
-    const server = requireFromString(contents, serverConfig.output.filename);
-    app.get('*', server.default);
-    app.listen(3000);
-    console.log('Server listening on port 3000!');
-});
+const clientConfig = webpackConfig();
+const clientCompiler = webpack(clientConfig);
+
+
+app.use(server)
+
+const middleware = webpackMiddleware(clientCompiler, {
+    publicPath: clientConfig.output.publicPath,
+    contentBase: 'src',
+    stats: {
+      colors: true,
+      hash: false,
+      timings: true,
+      chunks: false,
+      chunkModules: false,
+      modules: false
+    }
+  });
+app.use(middleware);
+app.use(webpackHotMiddleware(clientCompiler));
+// app.get('*', function response(req, res) {
+//   const records = middleware.fileSystem.readFileSync(clientConfig.recordsOutputPath)
+//   console.log('client config',records)
+//   // console.log('helloo',middleware.fileSystem)
+//   res.write(middleware.fileSystem.readFileSync(path.join(__dirname, 'dist/public/index.html')));
+//   res.end();
+// });
+app.listen(3000);

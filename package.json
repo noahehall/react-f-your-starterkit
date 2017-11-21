@@ -24,12 +24,10 @@
   "scripts": {
     "ssr": "NODE_ENV=development node ./server.js",
     "prod": "NODE_ENV=production webpack --config webpack.config.babel.js",
-    "build": "NODE_ENV=production webpack --config webpack.config.babel.js",
-    "dev": "NODE_ENV=development webpack-dev-server --config webpack.config.babel.js --env.platform=web --debug --progress",
-    "start": "yarn build; yarn dev",
+    "build": "NODE_ENV=production webpack --config webpack.config.babel.js --progress",
+    "dev": "NODE_ENV=development webpack-dev-server --config webpack.config.babel.js --env.platform=web --env.ssr=false --debug --progress",
     "security": "./node_modules/.bin/nsp check",
-    "flow": "./node_modules/.bin/flow; test $? -eq 0 -o $? -eq 2",
-    "eslint-unused": "./node_modules/.bin/eslint-find-rules -u ./.eslintrc -n",
+    "eslint-unused": "./node_modules/.bin/eslint-find-rules -u ./.eslintrc.js -n",
     "eslint-fix": "./node_modules/.bin/eslint --fix \"./src/**/*.js\" --config ./.eslintrc.js",
     "stylefmt": "./node_modules/.bin/stylefmt -r src/**/*.css"
   },
@@ -65,8 +63,11 @@
     "react-table": "^6.6.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
+    "require-from-string": "^2.0.1",
     "reselect": "^2.5.4",
-    "store-npm": "npm:store"
+    "source-map-support": "^0.5.0",
+    "store-npm": "npm:store",
+    "webpack-to-memory": "^1.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
