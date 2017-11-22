@@ -239,6 +239,7 @@ function getWebpackConfig ({
     parallelism: 2,
     profile: true,
     target: platform,
+    name: platform,
     watch: false, //isNode,
   };
 }

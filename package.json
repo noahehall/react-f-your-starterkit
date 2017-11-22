@@ -22,7 +22,7 @@
     "url": "https://github.com/noahehall/react-f-your-starterkit.git"
   },
   "scripts": {
-    "ssr": "NODE_ENV=development babel-node -- ./server.js",
+    "ssr": "NODE_ENV=development babel-node -- ./ssr.js",
     "client": "NODE_ENV=development webpack-dev-server --config webpack.config.babel.js --env.platform=web --env.ssr=false --debug --progress",
     "prod": "NODE_ENV=production webpack --config webpack.config.babel.js",
     "build": "NODE_ENV=production webpack --config webpack.config.babel.js --progress",

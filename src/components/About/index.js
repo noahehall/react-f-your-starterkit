@@ -6,7 +6,7 @@ export class About extends React.Component {
   render() {
     return (
       <div className={styles.about}>
-        About Pagefdsfasfd
+        About Page
       </div>
     )
   }
