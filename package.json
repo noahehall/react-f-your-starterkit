@@ -66,6 +66,8 @@
     "redux-thunk": "^2.2.0",
     "require-from-string": "^2.0.1",
     "reselect": "^2.5.4",
+    "serve-index": "^1.9.1",
+    "serve-static": "^1.13.1",
     "source-map-support": "^0.5.0",
     "store-npm": "npm:store"
   },

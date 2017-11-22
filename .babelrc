@@ -5,10 +5,11 @@
     "react"
   ],
   "plugins": [
-    "transform-object-rest-spread",
     "import-glob",
-    "transform-function-bind",
     "transform-async-generator-functions",
-    "transform-runtime"
+    "transform-class-properties",
+    "transform-function-bind",
+    "transform-object-rest-spread",
+    "transform-runtime",
   ]
 }

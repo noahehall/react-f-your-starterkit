@@ -9,7 +9,7 @@ export default function base (options) {
   const getEntry = () => options.isDev && options.isWeb
     ? [
       'react-hot-loader/patch',
-      options.ssr ? 'webpack-hot-middleware/client': '',
+      options.ssr ? 'webpack-hot-middleware/client?name=web': false,
       'babel-polyfill',
       options.mainEntry
     ].filter(entry => entry)
@@ -23,7 +23,7 @@ export default function base (options) {
     filename: options.jsFilename,
     path: options.publicDir,
     publicPath: options.publicPath,
-    // library: options.isWeb ? 'var' : 'app',
+    library: options.isWeb ? 'var' : 'app',
     libraryTarget: options.isWeb ? 'umd2' : 'commonjs2',
   });
 
@@ -38,12 +38,12 @@ export default function base (options) {
 
   const getNode = () => options.isNode
     ? {
+      __dirname: false,
+      __filename: false,
+      Buffer: false,
       console: false,
       global: false,
       process: false,
-      Buffer: false,
-      __filename: false,
-      __dirname: false
     }
     : {};
 
@@ -59,9 +59,9 @@ export default function base (options) {
     output: getOutput(),
     performance: { ...options.performanceConfig },
     profile: options.webpackProfile,
-    recordsInputPath: options.recordsOutputPath,
-    recordsOutputPath: options.recordsOutputPath,
-    recordsPath: options.recordsOutputPath,
+    // recordsInputPath: options.recordsOutputPath,
+    // recordsOutputPath: options.recordsOutputPath,
+    // recordsPath: options.recordsOutputPath,
     resolve: getResolve(),
     stats: { ...options.statsConfig },
   };

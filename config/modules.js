@@ -108,7 +108,7 @@ export default function modules(options) {
       : getNodeCssLoaders()
   }
 
-  const addEslintLoader = () => options.isNode
+  const addEslintLoader = () => options.isDev
     ? {
       loader: 'eslint-loader',
       options: {
@@ -124,7 +124,7 @@ export default function modules(options) {
 
   const javascriptRules = {
     // TODO: add babe;-preset to this config from starter/config/modules.js
-    //enforce: 'pre',
+    enforce: 'pre',
     exclude: /node_modules/,
     test: /\.jsx?$/,
     use: [

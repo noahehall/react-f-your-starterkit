@@ -55,27 +55,27 @@ function getResolveUrlLoaderConfig ({
 }
 
 function getBabelLoaderConfig ({
-  platform,
+  isWeb,
+  isDev,
 }) {
   return {
     plugins: [
-      "react-hot-loader/babel",
+      isDev && isWeb ? "react-hot-loader/babel" : false,
 
-      'transform-class-properties',
-      'transform-object-rest-spread',
       "import-glob",
       "transform-async-generator-functions",
+      "transform-class-properties",
       "transform-function-bind",
       "transform-object-rest-spread",
       "transform-runtime",
-    ],
+    ].filter(plugin => plugin),
     'presets': [
       ['env', {
         modules: false,
       }],
       'stage-1',
       'react',
-      'flow',
+      //'flow',
     ],
   };
 }
@@ -151,7 +151,7 @@ function dynamicOptionsTwo ({
     fontsPath: path.resolve(distDir, publicDir, 'fonts'),
     imagePath: path.resolve(distDir, publicDir, 'images'),
     jsFilename: `${isNode ? '' : 'js/'}${platform}.[name]${isProd ? '.[hash]' : ''}.js`, // filename template for entry chunks
-    recordsOutputPath: path.resolve(distDir, privateDir, 'webpack_records.js'),
+    // recordsOutputPath: path.resolve(distDir, privateDir, `${platform}.webpack_records.js`),
   }
 }
 
@@ -170,8 +170,9 @@ function getExtractTextPluginConfig ({
 
 function getBabelTarget ({
   isDev,
+  isWeb,
 }) {
-  return isDev
+  return true
     ? { browsers: [ 'last 3 versions', '> 5%' ]}
     : { node: 'current' }
 }

@@ -37,7 +37,7 @@ export default function plugins(options) {
 
   switch (options.env) {
     case 'development': {
-      if ( options.isWeb)
+      if (options.isWeb)
         config.plugins.push(
           new StyleLintPlugin({ ...options.styleLintPluginConfig })
         )
@@ -50,19 +50,19 @@ export default function plugins(options) {
     }
 
     case 'production': {
-      if (options.isNode || (!options.ssr))
-        config.plugins.push(
-          // remove dist directory on build
-          new CleanWebpackPlugin(
-            [options.distDir],
-            {
-              verbose: true,
-              root: options.context
-            }
-          ),
-        )
+      // TODO: do this with npm script
+      // if (options.isNode || (!options.ssr))
+      //   config.plugins.push(
+      //     // remove dist directory on build
+      //     new CleanWebpackPlugin(
+      //       [options.distDir],
+      //       {
+      //         verbose: true,
+      //         root: options.context
+      //       }
+      //     ),
+      //   )
       config.plugins.push(
-
         new UglifyJSPlugin(getUglifyJsPluginConfig()),
         new webpack.HashedModuleIdsPlugin(getHashedModulesIdsPluginConfig()),
         new webpack.NoEmitOnErrorsPlugin(),
@@ -103,6 +103,7 @@ export default function plugins(options) {
 
       // create PWA manifest
       // https://developer.mozilla.org/en-US/docs/Web/Manifest
+      // exports json
       new WebpackPwaManifest({ ...options.webpackPwaManifestConfig }),
 
       // splitout webpack boilerplate + manifest
