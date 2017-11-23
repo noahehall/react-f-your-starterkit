@@ -59,9 +59,9 @@ export default function base (options) {
     output: getOutput(),
     performance: { ...options.performanceConfig },
     profile: options.webpackProfile,
-    // recordsInputPath: options.recordsOutputPath,
-    // recordsOutputPath: options.recordsOutputPath,
-    // recordsPath: options.recordsOutputPath,
+    recordsInputPath: options.recordsOutputPath,
+    recordsOutputPath: options.recordsOutputPath,
+    recordsPath: options.recordsOutputPath,
     resolve: getResolve(),
     stats: { ...options.statsConfig },
   };

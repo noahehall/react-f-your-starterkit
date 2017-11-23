@@ -8,7 +8,8 @@ import webpack from 'webpack';
 import webpackConfig from './webpack.config.babel.js';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackMiddleware from 'webpack-dev-middleware';
-import fs from './src/memoryFs';
+import fs from './src/bin/memoryFs';
+import _eval from 'eval';
 
 const app = express();
 
@@ -17,9 +18,14 @@ const nodeConfig = webpackConfig({ platform: 'node', ssr: true });
 
 const webCompiler = webpack(webConfig);
 const nodeCompiler = webpack(nodeConfig);
+const compilers = [webCompiler, nodeCompiler];
+compilers.forEach(compiler => {
+  compiler.apply(new webpack.ProgressPlugin({
+    profile: true
+  }));
 
-webCompiler.outputFileSystem = fs;
-nodeCompiler.outputFileSystem = fs;
+  compiler.outputFileSystem = fs;
+})
 
 const webMiddleware = webpackMiddleware(
   webCompiler,
@@ -59,38 +65,77 @@ function logStatsErrorsAndWarnings (stats, type) {
   }
 }
 
+let server = null;
+
 function runNodeCompiler () {
-  nodeCompiler.run((err, stats) => {
-    if (compilerHasErrors(err, 'node')) return;
-    logStatsErrorsAndWarnings(stats, 'node');
+  nodeCompiler.watch(
+    {
+      aggregateTimeout: 500, // milliseconds
+      ignored: path => {
+        return path.includes('components/server') || path.endsWith('src')
+          ? false
+          : !path.includes('server.js');
+        
+      }, // https://github.com/es128/anymatch
+      poll: true,
+    },
+    async (err, stats) => {
+      if (compilerHasErrors(err, 'node')) return;
+      logStatsErrorsAndWarnings(stats, 'node');
+      const statsJson = stats.toJson({
+        modules: true,
+        cached: false,
+        chunks: false,
+      })
+      if (statsJson.modules.length) {
+        console.log('node watch: stats json has built modules');
+        console.log('webpack: node compiler initiating');
+        console.log(stats.toString({
+          assets: false,
+          cached: false,
+          children: false,
+          chunks: false,
+          colors: true,
+          env: false,
+          errorDetails: true,
+          errors: true,
+          modules: true,
+          performance: true,
+          timings: false,
+          warnings: true,
+        }));
 
-    console.log('webpack: node compiler initiating');
-    console.log(stats.toString({
-      assets: false,
-      cached: false,
-      children: false,
-      chunks: false,
-      colors: true,
-      env: true,
-      errorDetails: true,
-      errors: true,
-      modules: true,
-      performance: true,
-      timings: true,
-      warnings: true,
-    }));
+        const startServer = (serverSource) => {
+          server = _eval(serverSource, 'node.main.js', {}, true).default;
+          server.on('error', (e) => {
+            if (e.code === 'EADDRINUSE') {
+              console.log('Address in use, retrying...');
+              setTimeout(() => {
+                server.close();
+                server.listen(PORT, HOST);
+              }, 1000);
+            }
+          })
+        }
 
-    // const content = nodeCompiler.outputFileSystem.readFileSync(nodeCompiler.outputPath + '/node.main.js','utf8');
-    // console.log('memory fs', fs.readdirSync(nodeCompiler.outputPath))
-
-    // console.log('assets', Object.keys(stats.compilation.assets))
-    const serv = stats.compilation.assets['node.main.js'].source();
-    requireFromString(serv, './src/server.js');
-  });
+        const serverSource = stats.compilation.assets['node.main.js'].source();
+        if (server) {
+          console.log('restarting server')
+          await server.close(() => startServer(serverSource));
+        } else startServer(serverSource);
+      }
+    }
+  );
 }
 
+let serverInitialized = false;
 webCompiler.plugin('done', (stats, callback = runNodeCompiler) => {
   logStatsErrorsAndWarnings(stats, 'web');
-  console.log('web compiler finished, running node compiler...');
-  callback();
+  console.log('web compiler finished');
+  if (serverInitialized) console.log('Node compiler already initialized')
+  else {
+    console.log('Initializing node compiler');
+    serverInitialized = true;
+    callback();
+  }
 });

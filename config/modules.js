@@ -52,7 +52,7 @@ export default function modules(options) {
 
           if (options.isDev)
             pluginArray.push(
-              postcssReporter({throwError: true}),
+              // postcssReporter({throwError: true}),
               postCssBrowserReporter()
             )
 

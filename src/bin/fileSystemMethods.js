@@ -11,26 +11,37 @@ export function getJsScriptString (path) {
   return `<script src="${path}"></script>`;
 }
 
-export function normalizeAssets (assets, filter = false) {
-  const thisAssets = Array.isArray(assets) ? assets : [assets];
+export function getManifestLinkString (path) {
+  return `<link rel="manifest" href="${path}" />`;
+}
 
-  switch (filter) {
-    case '.css': {
-      return thisAssets
-        .filter(path => path.endsWith('.css'))
-        .map(path => getCssLinkString(path))
-        .join('\n')
-    }
+export function normalizeAssets (assets) {
 
-    case '.js': {
-      return thisAssets
-        .filter(path => path.endsWith('.js'))
-        .map(path => getJsScriptString(path))
-        .join('\n')
-    }
-
-    default: return thisAssets;
+  const normalized = {
+    css: [],
+    json: [],
+    jsFirst: [],
+    jsSecond: [],
   }
+
+  assets.forEach(path => {
+    if (path.endsWith('.css'))
+      normalized.css.push(getCssLinkString(path));
+
+    else if (path.endsWith('.js')) {
+      if (path.includes('runtime'))
+        normalized.jsFirst.push(getJsScriptString(path));
+      else
+        normalized.jsSecond.push(getJsScriptString(path));
+    }
+
+    else if (path.endsWith('.json'))
+      normalized.json.push(getManifestLinkString(path));
+
+    else console.log(`Error in normializing asset: ${path} does not end in .js, .css, or .json`);
+  });
+
+  return normalized;
 }
 
 export function getManifest (path) {

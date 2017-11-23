@@ -12,7 +12,7 @@ export default function hotreload(options) {
       colors: true,
       hash: false,
       modules: false,
-      timings: true,
+      timings: false,
     });
 
   return options.isDev && options.isWeb //&& !options.ssr

@@ -34,11 +34,14 @@ function getHtmlWebpackPluginConfig ({
   );
 
   return {
+    cache: isDev,
+    favicon: path.resolve('src/components/App/images/favicon.ico'),
     inject: true,
     metaDescription: appSlogan,
     minify: getMinifyConfig(),
+    showErrors: isDev,
     title: appTitle,
-  };
+  }
 }
 
 function getResolveUrlLoaderConfig ({
@@ -47,7 +50,7 @@ function getResolveUrlLoaderConfig ({
   verbose,
 }) {
   return {
-    debug: isDev ? verbose : false,
+    debug: false, //isDev ? verbose : false,
     fail: isDev,
     silent: isDev ? verbose : true,
     sourceMap,
@@ -151,8 +154,8 @@ function dynamicOptionsTwo ({
     fontsPath: path.resolve(distDir, publicDir, 'fonts'),
     imagePath: path.resolve(distDir, publicDir, 'images'),
     jsFilename: `${isNode ? '' : 'js/'}${platform}.[name]${isProd ? '.[hash]' : ''}.js`, // filename template for entry chunks
-    // recordsOutputPath: path.resolve(distDir, privateDir, `${platform}.webpack_records.js`),
-  }
+    recordsOutputPath: path.resolve(distDir, privateDir, `${platform}.webpack_records.js`),
+  };
 }
 
 function getExtractTextPluginConfig ({
@@ -164,7 +167,6 @@ function getExtractTextPluginConfig ({
     disable: isNode,
     filename: isDev ? 'css/[name].css' : 'css/[name].[id].[contenthash].css',
     ignoreOrder: true,
-
   };
 }
 
@@ -174,11 +176,11 @@ function getBabelTarget ({
 }) {
   return true
     ? { browsers: [ 'last 3 versions', '> 5%' ]}
-    : { node: 'current' }
+    : { node: 'current' };
 }
 
 function getUrlLoaderConfig({
-
+  // include options here
 }) {
   return {
     fallback: 'file-loader',
@@ -193,11 +195,11 @@ function getManifestPluginConfig ({
   return {
     writeFileEmit: false,
     fileName: `${isNode ? '' : 'js/'}${platform}.manifest.json`,
-  }
+  };
 }
 
 function getStatsConfig ({
-
+  // include options here
 }) {
   return {
     assets: true,
@@ -210,7 +212,7 @@ function getStatsConfig ({
     chunks: false,
     colors: true,
     entrypoints: true,
-    env: true,
+    env: false,
     errorDetails: true,
     errors: true,
     hash: true,
@@ -224,7 +226,7 @@ function getStatsConfig ({
 
 
 function getPerformanceConfig ({
-
+  // include options here
 }) {
   return {
     hints: 'warning',
@@ -241,7 +243,7 @@ function getWebpackConfig ({
     profile: true,
     target: platform,
     name: platform,
-    watch: false, //isNode,
+    watch: isNode,
   };
 }
 
@@ -261,8 +263,8 @@ function dynamicOptionsThree (options) {
     statsConfig: getStatsConfig(options),
     styleLintPluginConfig: getStyleLintPluginConfig(options),
     urlLoaderConfig: getUrlLoaderConfig(options),
-    webpackPwaManifestConfig: getWebpackPwaManifestPluginConfig(options),
     webpackConfig: getWebpackConfig(options),
+    webpackPwaManifestConfig: getWebpackPwaManifestPluginConfig(options),
   }
 }
 

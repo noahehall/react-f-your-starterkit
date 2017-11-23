@@ -1,6 +1,7 @@
 var path = require('path');
 
 module.exports = {
+  parser: 'babel-eslint',
   "extends": [
     "eslint-config-ct-fletcher"
   ],

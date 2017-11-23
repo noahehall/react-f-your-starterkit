@@ -13,8 +13,10 @@ import createHistory from 'history/createMemoryHistory';
 import storeCreator from 'store';
 const history = createHistory();
 const store = storeCreator(history);
-// import * as fsMethods from './bin/fileSystemMethods';
+import * as fsMethods from './bin/fileSystemMethods';
 const server = express();
+
+import http from 'http';
 
 const publicPath = path.resolve(process.cwd(), 'dist');
 console.log('public path', publicPath)
@@ -23,19 +25,18 @@ console.log('public path', publicPath)
 // server.use('/js', express.static(publicPath + '/public/js'), serveIndex(publicPath + '/public/js'))
 
 server.use(function(req, res, next) {
-  // const { pwaManifestFileName, webManifest } = fsMethods.getManifest(publicPath + '/public');
-  //
+  const { pwaManifestFileName, webManifest } = fsMethods.getManifest(publicPath + '/public');
+
   // console.log('memory in ssr readdirsync', pwaManifestFileName, webManifest )
-  // const webAssets = Object.values(webManifest)
-  //   .map(file => file.includes('.css')
-  //     ? fsMethods.getCssLinkString(file)
-  //     : fsMethods.getJsScriptString(file)
-  //   );
-  //
-  // console.log('web assets', webAssets)
+
+  res.locals.webAssets = fsMethods.normalizeAssets([
+    pwaManifestFileName,
+    ...Object.values(webManifest),
+  ]);
 
   next();
-})
+});
+
 server.get('*', (req, res) => {
   console.log(
     'made it in',
@@ -66,9 +67,9 @@ server.get('*', (req, res) => {
   // Checking is page is 404
   const status = routerContext.status === '404' ? 404 : 200;
 
-  res.status(status).send(template);
+  res.status(status).end(template);
 
 });
 
-server.listen(3000);
-console.log('listening on 3000');
+console.log('Initiating listening on 3000');
+export default http.createServer(server).listen(3000);
