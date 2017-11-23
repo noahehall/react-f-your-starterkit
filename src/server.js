@@ -18,30 +18,44 @@ const server = express();
 
 import http from 'http';
 
-const publicPath = path.resolve(process.cwd(), 'dist');
+const distPath = path.resolve(process.cwd(), 'dist');
+const publicPath = path.join(distPath, 'public');
 console.log('public path', publicPath)
 // console.log('memory fs in server', fs)
-// server.use('/', express.static(publicPath), serveIndex(publicPath))
-// server.use('/js', express.static(publicPath + '/public/js'), serveIndex(publicPath + '/public/js'))
 
+// get build files in dev and prod envs
+// set to app.locals as they shouldnt change for every request
 server.use(function(req, res, next) {
-  const { pwaManifestFileName, webManifest } = fsMethods.getManifest(publicPath + '/public');
-
-  // console.log('memory in ssr readdirsync', pwaManifestFileName, webManifest )
+  const { pwaManifestFileName, webManifest } = fsMethods.getManifest(publicPath);
 
   res.locals.webAssets = fsMethods.normalizeAssets([
     pwaManifestFileName,
     ...Object.values(webManifest),
   ]);
 
+  res.locals.webManifest = webManifest;
+
   next();
 });
 
+
+if (process.env.NODE_ENV === 'development') {
+  server.use(['/js', '/css'], (req, res, next) => {
+    const file = fsMethods.readFileSync(path.join(publicPath, req.originalUrl))
+    if (file) res.status(200).end(file);
+    else next();
+  })
+} else {
+  console.log('not in dev', process.env.NODE_ENV);
+  // todo set this up for prod
+  // server.use('/', serveIndex(process.cwd()))
+  // server.use('/js', express.static(publicPath + '/public/js'), serveIndex(publicPath + '/public/js'))
+}
+
+
+
+
 server.get('*', (req, res) => {
-  console.log(
-    'made it in',
-    res.locals
-  )
   const routerContext = {};
 
   const html = ReactDOMServer.renderToString(
@@ -52,7 +66,7 @@ server.get('*', (req, res) => {
       location={req.url}
     />
   );
-  const template = templateFn(html);
+  const template = templateFn(html, res.locals.webAssets);
 
   // Check if the render result contains a redirect, if so we need to set
   // the specific status and redirect header and end the response
