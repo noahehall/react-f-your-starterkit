@@ -13,7 +13,7 @@ import createHistory from 'history/createMemoryHistory';
 import storeCreator from 'store';
 const history = createHistory();
 const store = storeCreator(history);
-import * as fsMethods from './bin/fileSystemMethods';
+// import * as fsMethods from './bin/fileSystemMethods';
 const server = express();
 
 const publicPath = path.resolve(process.cwd(), 'dist');
