@@ -9,15 +9,15 @@ export function readFileSync (file, options = 'utf8') {
 }
 
 export function getCssLinkString (path) {
-  return `<link rel="stylesheet" type="text/css" href="/${path}" />`;
+  return `<link rel="stylesheet" type="text/css" href="http://localhost:3001/${path}" />`;
 }
 
 export function getJsScriptString (path) {
-  return `<script src="/${path}"></script>`;
+  return `<script src="http://localhost:3001/${path}"></script>`;
 }
 
 export function getManifestLinkString (path) {
-  return `<link rel="manifest" href="/${path}" />`;
+  return `<link rel="manifest" href="http://localhost:3001/${path}" />`;
 }
 
 export function normalizeAssets (assets) {

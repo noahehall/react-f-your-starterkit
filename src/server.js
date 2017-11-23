@@ -40,6 +40,19 @@ server.use(function(req, res, next) {
 
 
 if (process.env.NODE_ENV === 'development') {
+  server.use((req, res, next) => {
+    if (req.url.includes('webpack_hmr')) {
+      console.log('redirecting hmr');
+      res.redirect('http://localhost:3001/__webpack_hmr')
+    }
+    if (req.url.includes('hot-update')) {
+      console.log('redirecting to hotupdate', req.url)
+      res.redirect(`http://localhost:3001/${req.url}`)
+    }
+    else {
+      next();
+    }
+  })
   server.use(['/js', '/css'], (req, res, next) => {
     const file = fsMethods.readFileSync(path.join(publicPath, req.originalUrl))
     if (file) res.status(200).end(file);
