@@ -83,5 +83,5 @@ server.get('*', (req, res) => {
 
 });
 
-console.log('Initiating listening on 3000');
-export default http.createServer(server).listen(3000);
+console.log(`Initiating node server on ${process.env.NODE_PORT}`);
+export default http.createServer(server).listen(process.env.NODE_PORT);

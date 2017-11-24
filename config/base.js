@@ -4,13 +4,16 @@ import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 
 export default function base (options) {
+  const getHotMiddlewareEntry = (port = options.port) => options.ssr
+    ? `webpack-hot-middleware/client?name=web&path=http://127.0.0.1:${port}/__webpack_hmr`
+    : false;
 
   // TODO: splitout vendor bundle //vendor: options.dependencies,
   const getEntry = () => options.isDev && options.isWeb
     ? [
       'babel-polyfill',
       'react-hot-loader/patch',
-      options.ssr ? 'webpack-hot-middleware/client?name=web&path=http://127.0.0.1:3001/__webpack_hmr': false,
+      getHotMiddlewareEntry(),
       options.mainEntry
     ].filter(entry => entry)
     : [
@@ -18,10 +21,10 @@ export default function base (options) {
       options.mainEntry
     ]
 
-  const getPublicPath = () => (
+  const getPublicPath = (port = options.port) => (
     options.isDev && options.ssr && options.isWeb
-  ) ? 'http://127.0.0.1:3001/' : options.publicPath;
-  
+  ) ? `http://127.0.0.1:${port}/` : options.publicPath;
+
   const getOutput = () => ({
     chunkFilename: options.jsFilename,
     filename: options.jsFilename,

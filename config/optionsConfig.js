@@ -136,7 +136,7 @@ function dynamicOptionsOne ({
     isDev: env === 'development',
     isProd: env === 'production',
     privateDir: path.resolve(distDir, 'private'),
-    publicDir:isNode ? distDir : path.resolve(distDir, 'public'), // use to be called path
+    publicDir:isNode ? distDir : path.resolve(distDir, 'public'),
     webpackProfile: verbose,
   };
 }

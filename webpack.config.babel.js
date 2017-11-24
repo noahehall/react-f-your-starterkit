@@ -13,6 +13,7 @@ import styleLintRules from './.stylelintrc.js';
 
 function mainOptions ({
   platform = 'node',
+  port = 3000,
   ssr = 'true',
 } = {}) {
   const ssrMode = JSON.parse(ssr);
@@ -36,7 +37,7 @@ function mainOptions ({
     isWeb: platform === 'web',
     mainEntry: getEntry(),
     platform,
-    port: 3000,
+    port,
     publicPath: '/',
     sourceMap: true,
     ssr: ssrMode,
@@ -48,8 +49,6 @@ function mainOptions ({
 }
 
 module.exports = (env, argv) => {
-  console.log(
-    'env is', env
-  )
+  console.log('env is', env);
   return webpackConfig(optionsConfig(mainOptions(env)));
 }

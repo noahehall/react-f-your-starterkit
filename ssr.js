@@ -13,15 +13,27 @@ import _eval from 'eval';
 
 const app = express();
 
-const webConfig = webpackConfig({ platform: 'web', ssr: true });
-const nodeConfig = webpackConfig({ platform: 'node', ssr: true });
+const NODE_IGNORE_CLIENT_HMR = false;
+const NODE_PORT = 3000;
+const NODE_SERVER_MAIN_FILE = 'node.main.js';
+const SSR = true;
+const WEB_PORT = 3001;
+
+function createConfig (type) {
+  return webpackConfig({
+    platform: type,
+    port: eval(`${type.toUpperCase()}_PORT`),
+    ssr: SSR,
+  });
+}
+const webConfig = createConfig('web');
+const nodeConfig = createConfig('node');
 
 const webCompiler = webpack(webConfig);
 const nodeCompiler = webpack(nodeConfig);
-const compilers = [webCompiler, nodeCompiler];
-compilers.forEach(compiler => {
+[webCompiler, nodeCompiler].forEach(compiler => {
   compiler.apply(new webpack.ProgressPlugin({
-    profile: true
+    profile: false,
   }));
 
   compiler.outputFileSystem = fs;
@@ -65,17 +77,28 @@ function logStatsErrorsAndWarnings (stats, type) {
 }
 
 let server = null;
-
-function runNodeCompiler () {
-  nodeCompiler.watch(
-    {
-      aggregateTimeout: 500, // milliseconds
+function getNodeCompilerIgnore() {
+  // comment this to only update server code
+  // however this will make the first request serve old code
+  // and then hmr kicks in and applies latest update
+  // https://github.com/es128/anymatch
+  return NODE_IGNORE_CLIENT_HMR
+    ? {
       ignored: path => {
         return path.includes('components/server') || path.endsWith('src')
           ? false
           : !path.includes('server.js');
 
-      }, // https://github.com/es128/anymatch
+      },
+    }
+    : {};
+}
+
+function runNodeCompiler () {
+  nodeCompiler.watch(
+    {
+      ...getNodeCompilerIgnore(),
+      aggregateTimeout: 500, // milliseconds
       poll: true,
     },
     async (err, stats) => {
@@ -87,7 +110,6 @@ function runNodeCompiler () {
         chunks: false,
       })
       if (statsJson.modules.length) {
-        console.log('node watch: stats json has built modules');
         console.log('webpack: node compiler initiating');
         console.log(stats.toString({
           assets: false,
@@ -99,13 +121,12 @@ function runNodeCompiler () {
           errorDetails: true,
           errors: true,
           modules: true,
-          performance: true,
+          performance: false,
           timings: false,
           warnings: true,
         }));
-
         const startServer = (serverSource) => {
-          server = _eval(serverSource, 'node.main.js', {}, true).default;
+          server = _eval(serverSource, NODE_SERVER_MAIN_FILE, {}, true).default;
           server.on('error', (e) => {
             if (e.code === 'EADDRINUSE') {
               console.log('Address in use, retrying...');
@@ -117,9 +138,9 @@ function runNodeCompiler () {
           })
         }
 
-        const serverSource = stats.compilation.assets['node.main.js'].source();
+        const serverSource = stats.compilation.assets[NODE_SERVER_MAIN_FILE].source();
         if (server) {
-          console.log('restarting server')
+          console.log(`restarting ${NODE_SERVER_MAIN_FILE}`)
           await server.close(() => startServer(serverSource));
         } else startServer(serverSource);
       }

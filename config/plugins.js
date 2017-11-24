@@ -80,16 +80,6 @@ export default function plugins(options) {
     )
   }
 
-  // all environments
-  // if (options.isNode)
-    // config.plugins.push(
-    //   new webpack.BannerPlugin({
-    //     banner: 'require("source-map-support").install();',
-    //     entryOnly: false,
-    //     raw: true,
-    //   })
-    // );
-
   if ( options.isWeb )
     config.plugins.push(
       new ExtractTextPlugin(getExtractTextPluginConfig()),
@@ -108,7 +98,13 @@ export default function plugins(options) {
 
       // splitout webpack boilerplate + manifest
       new webpack.optimize.CommonsChunkPlugin({ name: 'runtime', minChunks: Infinity }),
+
+      new webpack.DefinePlugin({ 'process.env.WEB_PORT': JSON.stringify(options.port) }),
     );
+  else
+    config.plugins.push(
+      new webpack.DefinePlugin({ 'process.env.NODE_PORT': JSON.stringify(options.port) }),
+    )
 
   config.plugins.push(
     new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify(options.env) }),
