@@ -1,5 +1,6 @@
 /* eslint-disable */
 
+
 const fs = process.env.NODE_ENV === 'development'
   ? global.FS
   : require('fs').default;
@@ -9,15 +10,15 @@ export function readFileSync (file, options = 'utf8') {
 }
 
 export function getCssLinkString (path) {
-  return `<link rel="stylesheet" type="text/css" href="http://localhost:3001/${path}" />`;
+  return `<link rel="stylesheet" type="text/css" href="/${path}" />`;
 }
 
 export function getJsScriptString (path) {
-  return `<script src="http://localhost:3001/${path}"></script>`;
+  return `<script src="/${path}"></script>`;
 }
 
 export function getManifestLinkString (path) {
-  return `<link rel="manifest" href="http://localhost:3001/${path}" />`;
+  return `<link rel="manifest" href="/${path}" />`;
 }
 
 export function normalizeAssets (assets) {
