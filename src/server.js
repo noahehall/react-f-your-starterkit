@@ -20,8 +20,6 @@ import http from 'http';
 
 const distPath = path.resolve(process.cwd(), 'dist');
 const publicPath = path.join(distPath, 'public');
-console.log('public path', publicPath)
-// console.log('memory fs in server', fs)
 
 // get build files in dev and prod envs
 // set to app.locals as they shouldnt change for every request
@@ -40,21 +38,8 @@ server.use(function(req, res, next) {
 
 
 if (process.env.NODE_ENV === 'development') {
-  server.use((req, res, next) => {
-    if (req.url.includes('webpack_hmr')) {
-      console.log('redirecting hmr');
-      res.redirect('http://localhost:3001/__webpack_hmr')
-    }
-    if (req.url.includes('hot-update')) {
-      console.log('redirecting to hotupdate', req.url)
-      res.redirect(`http://localhost:3001/${req.url}`)
-    }
-    else {
-      next();
-    }
-  })
   server.use(['/js', '/css'], (req, res, next) => {
-    const file = fsMethods.readFileSync(path.join(publicPath, req.originalUrl))
+    const file = fsMethods.readFileSync(path.join(publicPath, req.baseUrl, req.path))
     if (file) res.status(200).end(file);
     else next();
   })

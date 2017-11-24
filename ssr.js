@@ -7,7 +7,7 @@ import requireFromString from 'require-from-string';
 import webpack from 'webpack';
 import webpackConfig from './webpack.config.babel.js';
 import webpackHotMiddleware from 'webpack-hot-middleware';
-import webpackMiddleware from 'webpack-dev-middleware';
+import webpackDevMiddleware from 'webpack-dev-middleware';
 import fs from './src/bin/memoryFs';
 import _eval from 'eval';
 
@@ -27,9 +27,8 @@ compilers.forEach(compiler => {
   compiler.outputFileSystem = fs;
 })
 
-const webMiddleware = webpackMiddleware(
-  webCompiler,
-  webConfig.devServer
+const webMiddleware = webpackDevMiddleware(
+  webCompiler, webConfig.devServer
 );
 
 
@@ -75,7 +74,7 @@ function runNodeCompiler () {
         return path.includes('components/server') || path.endsWith('src')
           ? false
           : !path.includes('server.js');
-        
+
       }, // https://github.com/es128/anymatch
       poll: true,
     },
