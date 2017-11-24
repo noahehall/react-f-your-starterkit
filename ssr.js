@@ -13,6 +13,7 @@ import _eval from 'eval';
 
 const app = express();
 
+const HOST = '0.0.0.0';
 const NODE_IGNORE_CLIENT_HMR = false;
 const NODE_PORT = 3000;
 const NODE_SERVER_MAIN_FILE = 'node.main.js';
@@ -21,6 +22,7 @@ const WEB_PORT = 3001;
 
 function createConfig (type) {
   return webpackConfig({
+    host: HOST,
     platform: type,
     port: eval(`${type.toUpperCase()}_PORT`),
     ssr: SSR,
@@ -112,7 +114,7 @@ function runNodeCompiler () {
       if (statsJson.modules.length) {
         console.log('webpack: node compiler initiating');
         console.log(stats.toString({
-          assets: false,
+          assets: true,
           cached: false,
           children: false,
           chunks: false,
@@ -120,7 +122,7 @@ function runNodeCompiler () {
           env: false,
           errorDetails: true,
           errors: true,
-          modules: true,
+          modules: false,
           performance: false,
           timings: false,
           warnings: true,
@@ -132,7 +134,7 @@ function runNodeCompiler () {
               console.log('Address in use, retrying...');
               setTimeout(() => {
                 server.close();
-                server.listen(PORT, HOST);
+                server.listen(NODE_PORT, HOST);
               }, 1000);
             }
           })
@@ -152,8 +154,7 @@ let serverInitialized = false;
 webCompiler.plugin('done', (stats, callback = runNodeCompiler) => {
   logStatsErrorsAndWarnings(stats, 'web');
   console.log('web compiler finished');
-  if (serverInitialized) console.log('Node compiler already initialized')
-  else {
+  if (!serverInitialized) {
     console.log('Initializing node compiler');
     serverInitialized = true;
     callback();

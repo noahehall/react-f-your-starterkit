@@ -12,6 +12,7 @@ import styleLintRules from './.stylelintrc.js';
  */
 
 function mainOptions ({
+  host = '0.0.0.0',
   platform = 'node',
   port = 3000,
   ssr = 'true',
@@ -26,10 +27,10 @@ function mainOptions ({
     appTitle: 'Noah Edward Technologies Inc.',
     context: path.resolve(__dirname, '.'),
     cssFilename: 'css/[name].[id].css',
-    cssIncludeGrommet: false, // delete this
     dependencies: Object.keys(deps.dependencies),
     distDir: path.resolve(__dirname, 'dist'), // target directory
     env: process.env.NODE_ENV || 'development',
+    host,
     htmlFilename: 'index.html',
     htmlTemplate: 'src/components/App/template.html.js',
     http2Server: false,

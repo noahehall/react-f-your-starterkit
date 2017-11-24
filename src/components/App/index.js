@@ -37,7 +37,7 @@ export class App extends React.Component {
   render() {
     return (
       <div className={styles.layout}>
-        hellodfadfasfd
+        d
         <Layout>
           <article>
             <Header fixed size='small'>

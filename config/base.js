@@ -3,9 +3,15 @@ import path from 'path';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 
-export default function base (options) {
-  const getHotMiddlewareEntry = (port = options.port) => options.ssr
-    ? `webpack-hot-middleware/client?name=web&path=http://127.0.0.1:${port}/__webpack_hmr`
+export default function base (
+  options,
+  port = options.port,
+  host = options.host,
+) {
+  // TODO: remove webpack hot middleware
+  // http://code.fitness/post/2016/02/webpack-public-path-and-hot-reload.html
+  const getHotMiddlewareEntry = () => options.ssr
+    ? `webpack-hot-middleware/client?name=web&path=http://${host}:${port}/__webpack_hmr`
     : false;
 
   // TODO: splitout vendor bundle //vendor: options.dependencies,
@@ -21,9 +27,9 @@ export default function base (options) {
       options.mainEntry
     ]
 
-  const getPublicPath = (port = options.port) => (
+  const getPublicPath = () => (
     options.isDev && options.ssr && options.isWeb
-  ) ? `http://127.0.0.1:${port}/` : options.publicPath;
+  ) ? `http://${host}:${port}/` : options.publicPath;
 
   const getOutput = () => ({
     chunkFilename: options.jsFilename,
