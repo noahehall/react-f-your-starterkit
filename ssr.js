@@ -9,15 +9,13 @@ import webpackConfig from './webpack.config.babel.js';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
-const fs = global.FS;
-const clientHotReloadServer = express();
-
-const HOST = '0.0.0.0';
-const NODE_IGNORE_CLIENT_HMR = false;
-const NODE_PORT = 3000;
-const NODE_SERVER_MAIN_FILE = 'node.main.js';
-const SSR = true;
-const WEB_PORT = 3001;
+const
+  HOST = '0.0.0.0',
+  NODE_IGNORE_CLIENT_HMR = false,
+  NODE_PORT = 3000,
+  NODE_SERVER_MAIN_FILE = 'node.main.js',
+  SSR = true,
+  WEB_PORT = 3001;
 
 function createConfig (type) {
   return webpackConfig({
@@ -27,6 +25,7 @@ function createConfig (type) {
     ssr: SSR,
   });
 }
+
 const webConfig = createConfig('web');
 const nodeConfig = createConfig('node');
 
@@ -37,32 +36,30 @@ const nodeCompiler = webpack(nodeConfig);
     profile: false,
   }));
 
-  compiler.outputFileSystem = fs;
+  compiler.outputFileSystem = global.FS;
 })
 
 const webMiddleware = webpackDevMiddleware(
-  webCompiler, webConfig.devServer
+  webCompiler,
+  webConfig.devServer
 );
 
-
+const clientHotReloadServer = express();
 clientHotReloadServer.use(webMiddleware);
 clientHotReloadServer.use(webpackHotMiddleware(webCompiler));
 clientHotReloadServer.listen(webConfig.devServer.port);
 
 function compilerHasErrors (err, type) {
-  if (err) {
-    console.log(`${type} compiler has errors`)
-    console.error(err.stack || err);
-    if (err.details) {
-      console.log(`${type} compiler error details`);
-      console.error(err.details);
-    }
+  if (!err) return false;
 
-    console.log(`please fix errors and restart ${type}`);
-    return true;
+  console.log(`${type} compiler has errors`)
+  console.error(err.stack || err);
+  if (err.details) {
+    console.log(`${type} compiler error details`);
+    console.error(err.details);
   }
-
-  return false;
+  
+  return true;
 }
 
 function logStatsErrorsAndWarnings (stats, type) {
