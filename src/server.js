@@ -23,20 +23,17 @@ import http from 'http';
 const distPath = path.resolve(process.cwd(), 'dist');
 const publicPath = path.join(distPath, 'public');
 
-// get build files in dev and prod envs
-// set to app.locals as they shouldnt change for every request
-server.use(function(req, res, next) {
-  const { pwaManifestFileName, webManifest } = fsMethods.getManifest(publicPath);
+const {
+  pwaManifestFileName,
+  webManifest,
+} = fsMethods.getManifest(publicPath);
 
-  res.locals.webAssets = fsMethods.normalizeAssets([
-    pwaManifestFileName,
-    ...Object.values(webManifest),
-  ]);
+server.locals.webAssets = fsMethods.normalizeAssets([
+  pwaManifestFileName,
+  ...Object.values(webManifest),
+]);
 
-  res.locals.webManifest = webManifest;
-
-  next();
-});
+server.locals.webManifest = webManifest;
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -66,7 +63,8 @@ server.get('*', (req, res) => {
       location={req.url}
     />
   );
-  const template = templateFn(html, res.locals.webAssets);
+  
+  const template = templateFn(html, server.locals.webAssets);
 
   // Check if the render result contains a redirect, if so we need to set
   // the specific status and redirect header and end the response
