@@ -1,6 +1,4 @@
 /* eslint-disable */
-
-
 const fs = process.env.NODE_ENV === 'development'
   ? global.FS
   : require('fs').default;

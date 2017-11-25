@@ -1,16 +1,15 @@
 /* eslint-disable */
-require("babel-register");
-
+import _eval from 'eval';
+import './src/bin/memoryFs';
 import express from 'express';
 import path from 'path';
 import requireFromString from 'require-from-string';
 import webpack from 'webpack';
 import webpackConfig from './webpack.config.babel.js';
-import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackDevMiddleware from 'webpack-dev-middleware';
-import fs from './src/bin/memoryFs';
-import _eval from 'eval';
+import webpackHotMiddleware from 'webpack-hot-middleware';
 
+const fs = global.FS;
 const app = express();
 
 const HOST = '0.0.0.0';

@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import templateFn from 'components/server';
@@ -49,9 +48,6 @@ if (process.env.NODE_ENV === 'development') {
   // server.use('/js', express.static(publicPath + '/public/js'), serveIndex(publicPath + '/public/js'))
 }
 
-
-
-
 server.get('*', (req, res) => {
   const routerContext = {};
 
@@ -63,7 +59,7 @@ server.get('*', (req, res) => {
       location={req.url}
     />
   );
-  
+
   const template = templateFn(html, server.locals.webAssets);
 
   // Check if the render result contains a redirect, if so we need to set
