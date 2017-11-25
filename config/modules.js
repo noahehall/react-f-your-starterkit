@@ -14,7 +14,6 @@ import webpack from 'webpack';
 
 // TODO: split this out to multiple files
 export default function modules(options) {
-
   const getLoaders = () => [
     {
       loader: `css-loader${options.isNode ? '/locals': ''}`,
@@ -49,8 +48,8 @@ export default function modules(options) {
 
           if (options.isDev)
             pluginArray.push(
-              // postcssReporter({throwError: true}),
-              // postCssBrowserReporter()
+              postcssReporter({throwError: true}),
+              postCssBrowserReporter()
             )
 
           return pluginArray;
@@ -101,7 +100,6 @@ export default function modules(options) {
     use: options.isWeb
       ? ExtractTextPlugin.extract({
         fallback: 'style-loader',
-        // resolve-url-loader may be chained before sass-loader if necessary
         use: getCssFromNodeLoaders()
       })
       : getCssFromNodeLoaders()

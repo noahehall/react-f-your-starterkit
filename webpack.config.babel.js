@@ -19,7 +19,7 @@ function mainOptions ({
 } = {}) {
   const ssrMode = JSON.parse(ssr);
   const getEntry = () => platform === 'web'
-    ? './src/index.js'
+    ? './src/client.js'
     : './src/server.js';
 
   return {
