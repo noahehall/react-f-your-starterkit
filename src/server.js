@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import templateFn from 'components/server';
@@ -11,6 +12,7 @@ import path from 'path';
 import { matchPath } from 'react-router-dom';
 import createHistory from 'history/createMemoryHistory';
 import storeCreator from 'store';
+
 const history = createHistory();
 const store = storeCreator(history);
 import * as fsMethods from './bin/fileSystemMethods';

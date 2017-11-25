@@ -103,7 +103,9 @@ export default function plugins(options) {
     );
   else
     config.plugins.push(
+      new ExtractTextPlugin(getExtractTextPluginConfig()),
       new webpack.DefinePlugin({ 'process.env.NODE_PORT': JSON.stringify(options.port) }),
+
     )
 
   config.plugins.push(

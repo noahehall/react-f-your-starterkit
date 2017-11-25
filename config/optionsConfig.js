@@ -13,7 +13,7 @@ function getCssLoaderConfig ({
     importLoaders: 1,
     localIdentName: isDev ? '[path][name]__[local]' : 'css[hash:base64:5]',
     minimize: isProd,
-    modules: isWeb,
+    modules: true,
     sourceMap,
   };
 }
@@ -164,7 +164,6 @@ function getExtractTextPluginConfig ({
 }) {
   return {
     allChunks: true,
-    disable: isNode,
     filename: isDev ? 'css/[name].css' : 'css/[name].[id].[contenthash].css',
     ignoreOrder: true,
   };
@@ -224,7 +223,6 @@ function getStatsConfig ({
   };
 }
 
-
 function getPerformanceConfig ({
   // include options here
 }) {
@@ -246,8 +244,6 @@ function getWebpackConfig ({
     watch: isNode,
   };
 }
-
-
 
 function dynamicOptionsThree (options) {
   return {

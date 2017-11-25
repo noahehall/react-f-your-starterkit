@@ -15,16 +15,13 @@ import webpack from 'webpack';
 // TODO: split this out to multiple files
 export default function modules(options) {
 
-  const getNodeCssLoaders = () => [
+  const getLoaders = () => [
     {
-      loader: `css-loader${options.isNode ? '/locals' : ''}`,
+      loader: `css-loader${options.isNode ? '/locals': ''}`,
       options: {
         ...options.cssLoaderConfig,
       }
     },
-  ];
-
-  const getWebLoaders = () => getNodeCssLoaders().concat([
     // see https://github.com/postcss/postcss-loader
     {
       loader: 'postcss-loader',
@@ -53,36 +50,49 @@ export default function modules(options) {
           if (options.isDev)
             pluginArray.push(
               // postcssReporter({throwError: true}),
-              postCssBrowserReporter()
+              // postCssBrowserReporter()
             )
 
           return pluginArray;
         },
       }
     },
-    {loader: 'resolve-url-loader', options: {
-      ...options.resolveUrlLoaderConfig,
-    }},
-    {loader: 'sass-loader?sourceMap', options: {}},
-  ])
-
-  const getCssRulesUse = () => options.isWeb
-    ? ExtractTextPlugin.extract({
-      fallback: 'style-loader',
-      use: getWebLoaders(),
-    })
-    : getNodeCssLoaders();
+    {
+      loader: 'resolve-url-loader',
+      options: {
+        ...options.resolveUrlLoaderConfig,
+      }
+    },
+  ];
 
   const cssRules = {
     enforce: 'pre',
     test:  /\.s?(a|c)ss$/,
     exclude: /node_modules/,
-    use: getCssRulesUse(),
+    use: options.isWeb
+      ? ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: getLoaders(),
+        })
+      : getLoaders()
   };
 
   if (options.env === 'development' && options.isWeb) {
     cssRules.use = ['css-hot-loader'].concat(cssRules.use);
   }
+
+  const getCssFromNodeLoaders = () => [
+    {
+      loader: 'css-loader',
+      options: {
+        importLoaders: 0,
+        modules: false,
+        minimize: options.isProd,
+        sourceMap: options.sourceMap,
+        localIdentName: '[local]'
+      },
+    },
+  ];
 
   const cssFromNodeModules = { // dont process with post-css
     enforce: 'pre',
@@ -92,32 +102,21 @@ export default function modules(options) {
       ? ExtractTextPlugin.extract({
         fallback: 'style-loader',
         // resolve-url-loader may be chained before sass-loader if necessary
-        use: [
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 0,
-              modules: false,
-              minimize: options.isProd,
-              sourceMap: options.sourceMap,
-              localIdentName: '[local]'
-            },
-          },
-        ]
+        use: getCssFromNodeLoaders()
       })
-      : getNodeCssLoaders()
+      : getCssFromNodeLoaders()
   }
 
-  const addEslintLoader = () => options.isDev
+  const addEslintLoader = () =>  options.isDev
     ? {
       loader: 'eslint-loader',
       options: {
         fix: false, // causes compile endles loop
-        emitError: options.isDev,
-        emitWarning: options.isDev,
-        quiet: options.isProd,
+        emitError: true,
+        emitWarning: true,
+        quiet: false,
         failOnWarning: false,
-        failOnError: options.isDev,
+        failOnError: true,
       }
     }
     : null;
