@@ -10,7 +10,7 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
 const fs = global.FS;
-const app = express();
+const clientHotReloadServer = express();
 
 const HOST = '0.0.0.0';
 const NODE_IGNORE_CLIENT_HMR = false;
@@ -45,9 +45,9 @@ const webMiddleware = webpackDevMiddleware(
 );
 
 
-app.use(webMiddleware);
-app.use(webpackHotMiddleware(webCompiler));
-app.listen(webConfig.devServer.port);
+clientHotReloadServer.use(webMiddleware);
+clientHotReloadServer.use(webpackHotMiddleware(webCompiler));
+clientHotReloadServer.listen(webConfig.devServer.port);
 
 function compilerHasErrors (err, type) {
   if (err) {
