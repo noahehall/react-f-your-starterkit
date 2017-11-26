@@ -113,7 +113,8 @@ function getWebpackPwaManifestPluginConfig ({
   return {
     background_color: '#ffffff',
     description: appSlogan,
-    filename: 'manifest.json',
+    filename: 'pwa.manifest.json',
+    fingerprints: false,
     icons: getIcons(),
     inject: true,
     name: appTitle,

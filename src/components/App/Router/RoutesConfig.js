@@ -45,7 +45,7 @@ export default [
         path: '*',
         redirectToUrl: '/oops',
         routes: [],
-        statusCode: 301,
+        statusCode: 404,
       },
     ]; //,
 //   },

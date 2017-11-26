@@ -49,17 +49,24 @@ export function normalizeAssets (assets) {
 }
 
 export function getManifest (path) {
-  const pwaManifestFileName = fs.readdirSync(path).find(name => name.includes('manifest'));
+  let indexHtml = fs.readdirSync(path).find(name => name.includes('.html'));
+
+  if (indexHtml)
+    indexHtml = fs.readFileSync(`${path}/${indexHtml}`, 'utf8');
+
+  const pwaManifestFileName = fs.readdirSync(path).find(name => name.includes('pwa.manifest.json'));
 
   const webManifestFileName = fs.readdirSync(path + '/js').find(name => name.includes('manifest'));
 
   const pwaManifest = fs.readFileSync(`${path}/${pwaManifestFileName}`, 'utf8');
+
   const webManifest =  JSON.parse(fs.readFileSync(`${path}/js/${webManifestFileName}`, 'utf8'));
 
   return {
+    indexHtml,
     pwaManifest,
-    webManifest,
     pwaManifestFileName,
+    webManifest,
     webManifestFileName,
   };
 }

@@ -58,7 +58,7 @@ function compilerHasErrors (err, type) {
     console.log(`${type} compiler error details`);
     console.error(err.details);
   }
-  
+
   return true;
 }
 
@@ -149,7 +149,6 @@ function runNodeCompiler () {
 let serverInitialized = false;
 webCompiler.plugin('done', (stats, callback = runNodeCompiler) => {
   logStatsErrorsAndWarnings(stats, 'web');
-  console.log('web compiler finished');
   if (!serverInitialized) {
     console.log('Initializing node compiler');
     serverInitialized = true;

@@ -16,16 +16,33 @@ export default function base (
 
   // TODO: splitout vendor bundle //vendor: options.dependencies,
   const getEntry = () => options.isDev && options.isWeb
-    ? [
-      'babel-polyfill',
-      'react-hot-loader/patch',
-      getHotMiddlewareEntry(),
-      options.mainEntry
-    ].filter(entry => entry)
-    : [
-      'babel-polyfill',
-      options.mainEntry
-    ]
+    ? {
+      vendor: [
+        'antd',
+        'axios',
+        'classnames',
+        'react-router-dom',
+        'react-router-redux',
+        'react-table',
+        'react',
+        'redux-thunk',
+        'redux',
+        'reselect',
+        'store-npm',
+      ],
+      main: [
+        'babel-polyfill',
+        'react-hot-loader/patch',
+        getHotMiddlewareEntry(),
+        options.mainEntry
+      ].filter(entry => entry)
+    }
+    : {
+      main: [
+        'babel-polyfill',
+        options.mainEntry
+      ]
+    }
 
   const getPublicPath = () => (
     options.isDev && options.ssr && options.isWeb

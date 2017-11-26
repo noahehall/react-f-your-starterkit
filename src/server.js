@@ -12,6 +12,8 @@ const distPath = path.resolve(process.cwd(), 'dist');
 const publicPath = path.join(distPath, 'public');
 
 const {
+  indexHtml,
+  pwaManifest,
   pwaManifestFileName,
   webManifest,
 } = fsMethods.getManifest(publicPath);
@@ -23,10 +25,16 @@ server.locals.webAssets = fsMethods.normalizeAssets([
   ...Object.values(webManifest),
 ]);
 server.locals.webManifest = webManifest;
-
+server.locals.pwaManifest = pwaManifest;
+server.locals.indexHtml = indexHtml;
 server.use(publicAssetsHandler);
 
 if (process.env.NODE_ENV === 'development') {
+  server.get('/pwa.manifest.json', (req, res, next) => {
+    res.status(200).end(server.locals.pwaManifest);
+    return;
+  })
+  // TODO: need to get /manifest.json
   server.use(['/js', '/css'], (req, res, next) => {
     const file = fsMethods.readFileSync(path.join(publicPath, req.baseUrl, req.path))
     if (file) res.status(200).end(file);

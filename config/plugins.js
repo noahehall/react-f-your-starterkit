@@ -9,6 +9,7 @@ import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
 import webpack from 'webpack';
 import WebpackPwaManifest from 'webpack-pwa-manifest';
 import ManifestPlugin from 'webpack-manifest-plugin';
+import InlineChunkManifestHtmlWebpackPlugin from 'inline-chunk-manifest-html-webpack-plugin';
 
 export default function plugins(options) {
   const config = { plugins: [] };
@@ -88,14 +89,32 @@ export default function plugins(options) {
         filename: options.htmlFilename,
         template: options.htmlTemplate,
         hash: false,
+        chunks: ['runtime', 'vendor', 'main'],
+        chunksSortMode: 'manual',
         ...options.htmlWebpackPluginConfig,
       }),
+
+      // inject webpack asset manifest into html.head
+      new InlineChunkManifestHtmlWebpackPlugin(),
 
       // create PWA manifest
       // https://developer.mozilla.org/en-US/docs/Web/Manifest
       // exports json
       new WebpackPwaManifest({ ...options.webpackPwaManifestConfig }),
 
+      //splitout options.dependencies
+      //TODO: get from /starter/config/plugins
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        minChunks(module) {
+          // This prevents stylesheet resources with the .css or .scss extension
+          // from being moved from their original chunk to the vendor chunk
+          return (module.resource && (/^.*\.(css|scss)$/).test(module.resource))
+            ? false
+            : true
+        }
+      }),
+      
       // splitout webpack boilerplate + manifest
       new webpack.optimize.CommonsChunkPlugin({ name: 'runtime', minChunks: Infinity }),
 
@@ -112,24 +131,7 @@ export default function plugins(options) {
     new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify(options.env) }),
     new webpack.DefinePlugin({ 'process.env.SSR': JSON.stringify(options.ssr) }),
 
-
-    // splitout options.dependencies
-    // TODO: get from /starter/config/plugins
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   name: 'vendor',
-    //   minChunks(module) {
-    //     // This prevents stylesheet resources with the .css or .scss extension
-    //     // from being moved from their original chunk to the vendor chunk
-    //     return (module.resource && (/^.*\.(css|scss)$/).test(module.resource))
-    //       ? false
-    //       : true
-    //   }
-    // }),
-
-
-
-
-    // exports a json file
+    // exports webpack asset manifest in json format
     new ManifestPlugin({...options.manifestPluginConfig}),
   );
 
