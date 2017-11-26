@@ -6,18 +6,21 @@ import { Provider } from 'react-redux';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import ServerApp from './index.js';
+import App from './index.js';
 
-export class App extends React.Component {
+export class ServerApp extends React.Component {
   render() {
     return (
       <Provider store={this.props.store}>
-        <StaticRouter history={this.props.history} location={this.props.url} context={this.props.routerContext}>
-          <ServerApp />
+        <StaticRouter
+          location={this.props.location}
+          context={this.props.routerContext}
+        >
+          <App />
         </StaticRouter>
       </Provider>
     );
   }
 }
 
-export default App;
+export default ServerApp;

@@ -1,23 +1,12 @@
 /* eslint-disable */
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import templateFn from 'components/server';
-import App from 'components/App/Server';
+import * as fsMethods from './bin/fileSystemMethods';
 import express from 'express';
-import Routes from 'components/Routes';
+import http from 'http';
+import path from 'path';
 import serveIndex from 'serve-index';
 import serveStatic from 'serve-static';
-import path from 'path';
-import { matchPath } from 'react-router-dom';
-import createHistory from 'history/createMemoryHistory';
-import storeCreator from 'store';
-
-const history = createHistory();
-const store = storeCreator(history);
-import * as fsMethods from './bin/fileSystemMethods';
-const server = express();
-
-import http from 'http';
+import reactHandler from 'components/Server/routeHandlers/reactHandler';
+import publicAssetsHandler from 'components/Server/routeHandlers/publicAssetsHandler';
 
 const distPath = path.resolve(process.cwd(), 'dist');
 const publicPath = path.join(distPath, 'public');
@@ -27,18 +16,21 @@ const {
   webManifest,
 } = fsMethods.getManifest(publicPath);
 
+const server = express();
+
 server.locals.webAssets = fsMethods.normalizeAssets([
   pwaManifestFileName,
   ...Object.values(webManifest),
 ]);
-
 server.locals.webManifest = webManifest;
 
+server.use(publicAssetsHandler);
 
 if (process.env.NODE_ENV === 'development') {
   server.use(['/js', '/css'], (req, res, next) => {
     const file = fsMethods.readFileSync(path.join(publicPath, req.baseUrl, req.path))
     if (file) res.status(200).end(file);
+    // TODO: should be 404
     else next();
   })
 } else {
@@ -48,36 +40,7 @@ if (process.env.NODE_ENV === 'development') {
   // server.use('/js', express.static(publicPath + '/public/js'), serveIndex(publicPath + '/public/js'))
 }
 
-server.get('*', (req, res) => {
-  const routerContext = {};
-
-  const html = ReactDOMServer.renderToString(
-    <App
-      history={history}
-      store={store}
-      routerContext={routerContext}
-      location={req.url}
-    />
-  );
-
-  const template = templateFn(html, server.locals.webAssets);
-
-  // Check if the render result contains a redirect, if so we need to set
-  // the specific status and redirect header and end the response
-  if (routerContext.url) {
-    res.status(301).setHeader('Location', routerContext.url);
-    res.end();
-
-    return;
-  }
-  console.log('routerContext.url', routerContext)
-
-  // Checking is page is 404
-  const status = routerContext.status === '404' ? 404 : 200;
-
-  res.status(status).end(template);
-
-});
+server.get('*', [ reactHandler ]);
 
 console.log(`Initiating node server on ${process.env.NODE_PORT}`);
 export default http.createServer(server).listen(process.env.NODE_PORT);

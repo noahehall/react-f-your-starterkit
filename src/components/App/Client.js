@@ -6,18 +6,18 @@ import { Provider } from 'react-redux';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import ClientApp from './index.js';
+import App from './index.js';
 
-export class App extends React.Component {
+export class ClientApp extends React.Component {
   render() {
     return (
       <Provider store={this.props.store}>
         <ConnectedRouter history={this.props.history}>
-          <ClientApp />
+          <App />
         </ConnectedRouter>
       </Provider>
     );
   }
 }
 
-export default App;
+export default ClientApp

@@ -1,5 +1,6 @@
 /* eslint-disable */
-
+// TODO: client and server should share this
+// TODO: setup window.initial_state
 export default function template(html, webAssets) { return `
     <!DOCTYPE html>
     <html>
