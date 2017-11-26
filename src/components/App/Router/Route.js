@@ -8,14 +8,22 @@ import React from 'react';
 export default function CustomRoute (route) {
   return (
     <Route
+      {...route}
       exact={route.exact || false}
       path={route.path}
-      render={props => (
-        <route.component
-          {...props}
-          routes={route.routes || []}
-        />
-      )}
+      render={props => {
+        if (props.staticContext) {
+          if (route.statusCode) props.staticContext.statusCode = route.statusCode;
+          if (route.redirectToUrl) props.staticContext.url = route.redirectToUrl;
+        }
+
+        return (
+          <route.Component
+            {...props}
+            routes={route.routes || []}
+          />
+        );
+      }}
     />
   );
 }

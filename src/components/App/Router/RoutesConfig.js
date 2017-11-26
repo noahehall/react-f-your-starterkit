@@ -9,36 +9,38 @@ import React from 'react';
 
 export default [
   // {
-  //   component: App,
+  //   Component: App,
   //   routes: [
       {
         path: '/',
         exact: true,
-        component: Home,
+        Component: Home,
         routes: [],
       },
       {
         path: '/about',
         exact: false,
-        component: About,
+        Component: About,
         routes: [],
       },
       {
         path: '/canvas',
         exact: false,
-        component: Canvas,
+        Component: Canvas,
         routes: [],
       },
       {
         path: '/oops',
         exact: false,
-        component: Oops,
+        Component: Oops,
         routes: [],
       },
       {
         path: '*',
         exact: false,
-        component: () => <Redirect to='/oops'/>,
+        statusCode: 301,
+        redirectToUrl: '/oops',
+        Component: () => <Redirect to='/oops' />,
         routes: [],
       },
     ]; //,

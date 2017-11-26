@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { matchPath } from 'react-router-dom';
-import App from 'components/App/Server';
+import AppSSR from 'components/App/Server';
 import createHistory from 'history/createMemoryHistory';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
@@ -10,12 +10,12 @@ import templateFn from 'components/Server/template.html.js';
 const store = storeCreator(createHistory());
 
 export default function reactHandler (req, res, next) {
-  const routerContext = {};
+  const staticContext = {};
 
   const html = ReactDOMServer.renderToString(
-    <App
+    <AppSSR
       location={req.url}
-      routerContext={routerContext}
+      staticContext={staticContext}
       store={store}
     />
   );
@@ -24,16 +24,15 @@ export default function reactHandler (req, res, next) {
 
   // Check if the render result contains a redirect, if so we need to set
   // the specific status and redirect header and end the response
-  if (routerContext.url) {
-    res.status(301).setHeader('Location', routerContext.url);
+  if (staticContext.url) {
+    res.status(staticContext.statusCode || 301).setHeader('Location', staticContext.url);
     res.end();
 
     return;
   }
-  console.log('routerContext', routerContext)
 
   // Checking is page is 404
-  const status = routerContext.status === '404' ? 404 : 200;
+  const status = staticContext.statusCode === '404' ? 404 : 200;
 
   res.status(status).end(template);
 }
