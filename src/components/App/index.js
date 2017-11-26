@@ -3,15 +3,8 @@ import { Layout } from 'antd';
 import Navigation from './Navigation';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Route from './Router/Route';
-import RouterConfig from './Router/RouteConfig';
+import ContentRouter from './Router/ContentRouter';
 import styles from './index.scss';
-
-import {
-  Redirect, // should be in components/Routes
-  Switch,
-} from 'react-router-dom';
-
 
 // import Footer from 'components/Footer';
 
@@ -23,7 +16,7 @@ export class App extends React.Component {
       <div className={styles.layout}>
         <Layout>
           <article>
-            <Header fixed size='small'>
+            <Header fixed='true' size='small'>
               <small>
                 Noah Edward Technologies
               </small>
@@ -31,13 +24,7 @@ export class App extends React.Component {
             </Header>
             <Content>
               Thank you for supporting our opensource react starter kit!
-              <Switch>
-                {
-                  RouterConfig.map((route) =>
-                    <Route {...route} key={route.path} />
-                  )
-                }
-              </Switch>
+              <ContentRouter />
             </Content>
             <Footer>
               Find budgs? Please create an issue
