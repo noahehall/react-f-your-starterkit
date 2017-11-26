@@ -24,15 +24,16 @@ export default function reactHandler (req, res, next) {
 
   // Check if the render result contains a redirect, if so we need to set
   // the specific status and redirect header and end the response
-  if (staticContext.url) {
-    res.status(staticContext.statusCode || 301).setHeader('Location', staticContext.url);
-    res.end();
-
-    return;
-  }
+  if (staticContext.url)
+    return res
+      .status(staticContext.statusCode || 301)
+      .set({
+        'Cache-Control': 'public, max-age=600, s-maxage=1200',
+        Location: staticContext.url,
+      })
+      .end();
 
   // Checking is page is 404
-  const status = staticContext.statusCode === '404' ? 404 : 200;
 
-  res.status(status).end(template);
+  return res.status(staticContext.statusCode || 200).end(template);
 }
