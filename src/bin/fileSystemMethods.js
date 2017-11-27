@@ -70,3 +70,31 @@ export function getManifest (path) {
     webManifestFileName,
   };
 }
+
+export function setupServer (server) {
+  const {
+    indexHtml,
+    pwaManifest,
+    pwaManifestFileName,
+    webManifest,
+  } = fsMethods.getManifest(publicDir);
+
+  server.locals.webAssets = fsMethods.normalizeAssets([
+    pwaManifestFileName,
+    ...Object.values(webManifest),
+  ]);
+  server.locals.webManifest = webManifest;
+  server.locals.pwaManifest = pwaManifest;
+  server.locals.indexHtml = indexHtml;
+
+  server.get('/pwa.manifest.json', (req, res, next) => {
+    res.status(200).end(server.locals.pwaManifest);
+    return;
+  })
+  server.use(['/js', '/css'], (req, res, next) => {
+    const file = fsMethods.readFileSync(path.join(publicDir, req.baseUrl, req.path))
+    if (file) res.status(200).end(file);
+    // TODO: should be 404
+    else next();
+  })
+}

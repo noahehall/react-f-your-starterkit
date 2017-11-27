@@ -45,16 +45,14 @@ const nodeCompiler = webpack(nodeConfig);
     profile: false,
   }));
 
-  compiler.outputFileSystem = global.FS;
+  if (global.FS) compiler.outputFileSystem = global.FS;
 })
 
-const webMiddleware = webpackDevMiddleware(
+const clientHotReloadServer = express();
+clientHotReloadServer.use(webpackDevMiddleware(
   webCompiler,
   webConfig.devServer
-);
-
-const clientHotReloadServer = express();
-clientHotReloadServer.use(webMiddleware);
+));
 clientHotReloadServer.use(webpackHotMiddleware(webCompiler));
 clientHotReloadServer.listen(webConfig.devServer.port);
 
