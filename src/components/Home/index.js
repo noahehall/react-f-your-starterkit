@@ -1,7 +1,7 @@
 /* eslint-disable */
-import React from 'react';
 import { connect } from 'react-redux'
 import blah from 'store/api/blah/action.js';
+import React from 'react';
 
 export class Home extends React.Component {
   handleBlah = () => this.props.doBlah(Math.random())
@@ -30,4 +30,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Home)
+)(Home);

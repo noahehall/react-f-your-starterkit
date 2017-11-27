@@ -1,12 +1,10 @@
 /* eslint-disable */
 import { Layout } from 'antd';
+import ContentRouter from './Router/ContentRouter';
 import Navigation from './Navigation';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ContentRouter from './Router/ContentRouter';
 import styles from './index.scss';
-
-// import Footer from 'components/Footer';
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -23,7 +21,7 @@ export class App extends React.Component {
               <Navigation />
             </Header>
             <Content>
-              Thank you for supporting our opensource react starter kit! blap
+              Thank you for supporting our netech web app builder
               <ContentRouter />
             </Content>
             <Footer>
