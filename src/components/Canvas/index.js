@@ -11,11 +11,11 @@
 import 'node_modules/react-table/react-table.css';
 import { connect } from 'react-redux';
 import PopularQueries from './PopularQueries';
+import queriesActions from 'store/api/queries/action';
 import React from 'react';
 import RelatedDrugs from './RelatedDrugs';
-import store from 'store-npm';
-import queriesActions from 'store/api/queries/action';
 import rxNormActions from 'store/api/rxNorm/action';
+import store from 'store-npm';
 
 export class Canvas extends React.Component {
   componentDidMount () {

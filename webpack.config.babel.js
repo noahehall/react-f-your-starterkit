@@ -19,8 +19,6 @@ function mainOptions ({
   port = 3000,
   ssr = true,
 } = {}) {
-
-
   const ssrMode = JSON.parse(ssr);
   const getEntry = () => platform === 'web'
     ? './src/client.js'
