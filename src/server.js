@@ -1,6 +1,9 @@
 /* eslint-disable */
 // TODO: https://github.com/Raynos/http-framework#modules
-
+// TODO: add spdy
+// TODO: add cluster
+// TODO: add strong-cluster-control  http://apidocs.strongloop.com/strong-cluster-control/
+// TODO: add napa.js
 
 import * as fsMethods from './bin/fileSystemMethods';
 import express from 'express';

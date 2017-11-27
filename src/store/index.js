@@ -1,4 +1,5 @@
 /* eslint-disable */
+// TODO: add seamless-immutable
 import { ConnectedRouter, routerReducer as router, routerMiddleware } from 'react-router-redux';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import * as reducers from './api/**/*reducer.js';
