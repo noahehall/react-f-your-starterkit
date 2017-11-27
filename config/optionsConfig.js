@@ -188,7 +188,7 @@ function getUrlLoaderConfig({
   };
 }
 
-function getManifestPluginConfig ({
+function getWebpackManifestPluginConfig ({
   isNode,
   platform,
 }) {
@@ -254,7 +254,7 @@ function dynamicOptionsThree (options) {
     cssLoaderConfig: getCssLoaderConfig(options),
     extractTextPluginConfig: getExtractTextPluginConfig(options),
     htmlWebpackPluginConfig: getHtmlWebpackPluginConfig(options),
-    manifestPluginConfig: getManifestPluginConfig(options),
+    WebpackManifestPluginConfig: getWebpackManifestPluginConfig(options),
     performanceConfig: getPerformanceConfig(options),
     resolveUrlLoaderConfig: getResolveUrlLoaderConfig(options),
     statsConfig: getStatsConfig(options),

@@ -8,8 +8,8 @@ import StyleLintPlugin from 'stylelint-webpack-plugin';
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
 import webpack from 'webpack';
 import WebpackPwaManifest from 'webpack-pwa-manifest';
-import ManifestPlugin from 'webpack-manifest-plugin';
-import InlineChunkManifestHtmlWebpackPlugin from 'inline-chunk-manifest-html-webpack-plugin';
+import WebpackManifestPlugin from 'webpack-manifest-plugin';
+// import InlineChunkManifestHtmlWebpackPlugin from 'inline-chunk-manifest-html-webpack-plugin';
 import WriteFilePlugin from 'write-file-webpack-plugin';
 
 export default function plugins(options) {
@@ -84,7 +84,13 @@ export default function plugins(options) {
 
   if ( options.isWeb )
     config.plugins.push(
+      // TODO: move this to all envs section
       new ExtractTextPlugin(getExtractTextPluginConfig()),
+
+      // inject webpack asset manifest into html.head
+      // new InlineChunkManifestHtmlWebpackPlugin({
+      //   dropAsset: false, // dont create manifest.json -> handled by webpackmanifestplugin
+      // }),
 
       new HtmlWebpackPlugin({
         filename: options.htmlFilename,
@@ -92,11 +98,10 @@ export default function plugins(options) {
         hash: false,
         chunks: ['runtime', 'vendor', 'main'],
         chunksSortMode: 'manual',
+        ssr: options.ssr,
         ...options.htmlWebpackPluginConfig,
       }),
 
-      // inject webpack asset manifest into html.head
-      new InlineChunkManifestHtmlWebpackPlugin(),
 
       // create PWA manifest
       // https://developer.mozilla.org/en-US/docs/Web/Manifest
@@ -116,31 +121,37 @@ export default function plugins(options) {
         }
       }),
 
-      // splitout webpack boilerplate + manifest
+      // splitout webpack boilerplate
       new webpack.optimize.CommonsChunkPlugin({ name: 'runtime', minChunks: Infinity }),
 
       new webpack.DefinePlugin({ 'process.env.WEB_PORT': JSON.stringify(options.port) }),
 
     );
-  else
+  else if (options.isNode)
     config.plugins.push(
       new ExtractTextPlugin(getExtractTextPluginConfig()),
       new webpack.DefinePlugin({ 'process.env.NODE_PORT': JSON.stringify(options.port) }),
 
     )
 
-  // all envs
+  // all envs and platforms
   config.plugins.push(
     new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify(options.env) }),
     new webpack.DefinePlugin({ 'process.env.SSR': JSON.stringify(options.ssr) }),
 
     // exports webpack asset manifest in json format
-    new ManifestPlugin({...options.manifestPluginConfig}),
+    new WebpackManifestPlugin({...options.WebpackManifestPluginConfig}),
 
   );
 
   if (options.emitFiles) {
     config.plugins.push(new WriteFilePlugin());
+  }
+
+  if (options.emitFiles || options.isProd) {
+    config.plugins.push(
+      new webpack.DefinePlugin({ 'process.env.EMIT_FILES': JSON.stringify(true) })
+    )
   }
 
   return config;
