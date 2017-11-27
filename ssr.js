@@ -11,7 +11,7 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import fse from 'fs-extra';
 
 const
-  EMIT_FILES = true,
+  EMIT_FILES = false,
   HOST = '0.0.0.0',
   NODE_IGNORE_CLIENT_HMR = false,
   NODE_PORT = 3000,
