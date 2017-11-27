@@ -116,7 +116,7 @@ export default function modules(options) {
         emitWarning: true,
         quiet: false,
         failOnWarning: false,
-        failOnError: true,
+        failOnError: false,
       }
     }
     : null;

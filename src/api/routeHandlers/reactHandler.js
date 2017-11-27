@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { getHeaders } from 'bin/apiMethods';
 import { matchPath } from 'react-router-dom';
 import AppSSR from 'components/App/Server';
 import createHistory from 'history/createMemoryHistory';
@@ -24,14 +25,21 @@ export default function reactHandler (req, res, next) {
     .replace('__SSR_STATE__', JSON.stringify(store.getState()).replace(/</g, '\\u003c'));
   // Check if the render result contains a redirect, if so we need to set
   // the specific status and redirect header and end the response
-  if (staticContext.url)
-    return res
+  return staticContext.url
+    ? res
       .status(staticContext.statusCode || 301)
       .set({
-        'Cache-Control': 'public, max-age=600, s-maxage=1200',
+        ...getHeaders({
+          cc: 'long',
+          ct: 'html',
+        }),
         Location: staticContext.url,
       })
-      .end(responseHtml);
-
-  return res.status(staticContext.statusCode || 200).end(responseHtml);
+      .end(responseHtml)
+    : res
+        .status(staticContext.statusCode || 200)
+        .set({
+          ...getHeaders({ ct: 'html' }),
+        })
+        .end(responseHtml);
 }
