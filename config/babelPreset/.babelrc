@@ -1,0 +1,17 @@
+{
+  "presets": [
+    ["env", {
+      "targets": {
+        "node": "6.10"
+      },
+      "include": [
+        "syntax-trailing-function-commas"
+      ],
+      "forceAllTransforms": true
+    }]
+  ],
+  "plugins": [
+    "transform-runtime",
+    "transform-object-rest-spread"
+  ]
+}

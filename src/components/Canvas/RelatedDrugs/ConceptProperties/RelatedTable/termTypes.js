@@ -1,0 +1,23 @@
+/* eslint-disable */
+export default {
+  IN: 'Ingredient',
+  PIN: 'Precise Ingredient',
+  MIN: 'Multiple Ingredients',
+  SCDC: 'Semantic Clinical Drug Component',
+  SCDF: 'Semantic Clinical Drug Form',
+  SCDG: 'Semantic Clinical Dose Form Group',
+  SCD: 'Semantic Clinical Drug',
+  GPCK: 'Generic Pack',
+  BN: 'Brand Name',
+  SBDC: 'Semantic Branded Drug Component',
+  SBDF: 'Semantic Branded Drug Form',
+  SBDG: 'Semantic Branded Dose Form Group',
+  SBD: 'Semantic Branded Drug',
+  BPCK: 'Brand Name Pack',
+  PSN: 'Prescribable Name',
+  SY: 'Synonym',
+  TMSY: 'Tall Man Lettering Synonym',
+  DF: 'Dose Form',
+  ET: 'Dose Form Entry Term',
+  DFG: 'Dose Form Group',
+};

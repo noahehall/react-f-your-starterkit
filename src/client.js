@@ -1,23 +1,38 @@
-require('node-globals').default({
-  constants: Object.assign(
-    { nodeOnline: process.env.NODE_ONLINE === 'true' }, require('./config.js').constants
-  )
-});
+/* eslint-disable */
+/**
+ * TODO
+ https://github.com/google/web-starter-kit
+ */
 
-import { browserHistory, Router } from 'react-router';
-import { Provider } from 'react-redux';
-import { render } from 'react-dom';
-import configure from './store/configure';
-import Immutable from 'seamless-immutable';
+import 'babel-polyfill';
+import { AppContainer } from 'react-hot-loader';
+import { render, hydrate } from 'react-dom';
+import App from 'components/App/Client';
+import createHistory from 'history/createBrowserHistory';
 import React from 'react';
-import routes from './routes';
-import lz from 'lz-string';
+import storeCreator from 'store';
 
-const preloadedState = Immutable(JSON.parse(lz.decompress(window.__PRELOADED_STATE__)));
+const history = createHistory();
+const store = storeCreator(history);
 
-render(
-  <Provider store={configure(preloadedState)} >
-    <Router children={routes} history={browserHistory} />
-  </Provider>,
-  document.getElementById('root')
-);
+const renderFunction = process.env.SSR === true
+  ? hydrate
+  : render;
+
+function renderComponent (Component) {
+  renderFunction(
+    <AppContainer>
+      <Component history={history} store={store} />
+    </AppContainer>,
+    document.getElementById('root')
+  );
+}
+
+renderComponent(App);
+
+// echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+// https://stackoverflow.com/questions/26708205/webpack-watch-isnt-compiling-changed-files
+if (module && module.hot)
+  module.hot.accept('components/App/Client', () =>
+    renderComponent(require('components/App/Client').default)
+  );

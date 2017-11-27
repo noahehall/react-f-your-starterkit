@@ -1,24 +1,15 @@
 {
-  "presets": ["latest", "stage-0", "react"],
-  "plugins": [
-    ["module-resolver", {
-      "root": ["./src"],
-      "extensions": [".js", ".md"],
-      "alias": {
-        "readme": "./readme.md",
-      }
-    }]
+  "presets": [
+    "env",
+    "stage-1",
+    "react"
   ],
-  "env": {
-    "development": {
-      "plugins": [
-        ["react-transform", {
-          "transforms": [{
-            "transform": "livereactload/babel-transform",
-            "imports": ["react"]
-          }]
-        }]
-      ]
-    }
-  }
+  "plugins": [
+    "import-glob",
+    "transform-async-generator-functions",
+    "transform-class-properties",
+    "transform-function-bind",
+    "transform-object-rest-spread",
+    "transform-runtime",
+  ]
 }
