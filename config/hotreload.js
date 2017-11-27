@@ -9,20 +9,18 @@ export default function hotreload(
     'Access-Control-Allow-Origin': '*',
   });
 
-  const getStats = () => false
-    ? options.stats // TODO: this object should be reused
-    : ({
-      assets: true,
-      chunkModules: false,
-      chunks: false,
-      colors: true,
-      errorDetails: true,
-      errors: true,
-      hash: false,
-      modules: false,
-      timings: false,
-      warnings: true,
-    });
+  const getStats = () => ({
+    assets: true,
+    chunkModules: false,
+    chunks: false,
+    colors: true,
+    errorDetails: true,
+    errors: true,
+    hash: false,
+    modules: false,
+    timings: false,
+    warnings: true,
+  });
 
   const getSsrPath = () => ssr
     ? { path: `http://${host}:${port}/__webpack_hmr` }

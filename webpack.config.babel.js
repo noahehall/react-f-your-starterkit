@@ -37,9 +37,9 @@ function mainOptions ({
   return {
     appSlogan: 'Creating the future, together',
     appTitle: 'Noah Edward Technologies Inc.',
+    assetFilename: '[folder]/[name].[ext]',
     context: path.resolve(__dirname, '.'),
     cssFilename: 'css/[name].[id].css',
-    assetFilename: '[folder]/[name].[ext]',
     dependencies: Object.keys(deps.dependencies),
     distDir: path.resolve(__dirname, 'dist'), // target directory
     emitFiles: emitFiles || process.env.NODE_ENV === 'production',

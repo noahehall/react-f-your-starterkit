@@ -8,8 +8,6 @@ export default function base (
   port = options.port,
   host = options.host,
 ) {
-  // TODO: remove webpack hot middleware
-  // http://code.fitness/post/2016/02/webpack-public-path-and-hot-reload.html
   const getHotMiddlewareEntry = () => options.ssr
     ? `webpack-hot-middleware/client?name=web&path=http://${host}:${port}/__webpack_hmr`
     : false;

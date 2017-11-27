@@ -1,14 +1,19 @@
 /* eslint-disable */
+// TODO: https://github.com/Raynos/http-framework#modules
+
+
 import * as fsMethods from './bin/fileSystemMethods';
 import express from 'express';
 import http from 'http';
 import path from 'path';
 import reactHandler from 'components/Server/routeHandlers/reactHandler';
 import setupPublicAssetsHandlers from 'components/Server/routeHandlers/setupPublicAssetsHandlers';
+import setupServerMiddleware from 'components/Server/setupServerMiddleware';
 
 const publicDir = process.env.PUBLIC_DIR;
 const server = express();
 
+setupServerMiddleware(server);
 setupPublicAssetsHandlers(server, publicDir);
 
 if (!process.env.EMIT_FILES) {
