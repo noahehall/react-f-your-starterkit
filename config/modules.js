@@ -14,9 +14,11 @@ import webpack from 'webpack';
 
 // TODO: split this out to multiple files
 export default function modules(options) {
+  const getCssLoaderName = () => `css-loader${options.isNode ? '/locals': ''}`;
+
   const getLoaders = () => [
     {
-      loader: `css-loader${options.isNode ? '/locals': ''}`,
+      loader: getCssLoaderName(),
       options: {
         ...options.cssLoaderConfig,
       }
@@ -82,7 +84,7 @@ export default function modules(options) {
 
   const getCssFromNodeLoaders = () => [
     {
-      loader: 'css-loader',
+      loader: getCssLoaderName(),
       options: {
         importLoaders: 0,
         modules: false,
@@ -164,7 +166,7 @@ export default function modules(options) {
         loader: urlLoaderString,
         options: {
           ...options.urlLoaderConfig,
-          name: 'images/[name].[ext]',
+          name: options.assetFilename, // TODO: combine these into assetLoaders
         }
       }
     ]
@@ -216,7 +218,7 @@ export default function modules(options) {
     use: {
       loader: 'worker-loader',
       options: {
-        name: `js/worker${options.isProd ?'.[hash]' : ''}.js`,
+        name: `js/worker${options.isProd ?'.[chunkhash]' : ''}.js`,
         fallback: false,
         inline: false // set to true if assets arent loading due to same origin policy
       },
