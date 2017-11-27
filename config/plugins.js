@@ -10,6 +10,7 @@ import webpack from 'webpack';
 import WebpackPwaManifest from 'webpack-pwa-manifest';
 import ManifestPlugin from 'webpack-manifest-plugin';
 import InlineChunkManifestHtmlWebpackPlugin from 'inline-chunk-manifest-html-webpack-plugin';
+import WriteFilePlugin from 'write-file-webpack-plugin';
 
 export default function plugins(options) {
   const config = { plugins: [] };
@@ -114,11 +115,12 @@ export default function plugins(options) {
             : true
         }
       }),
-      
+
       // splitout webpack boilerplate + manifest
       new webpack.optimize.CommonsChunkPlugin({ name: 'runtime', minChunks: Infinity }),
 
       new webpack.DefinePlugin({ 'process.env.WEB_PORT': JSON.stringify(options.port) }),
+
     );
   else
     config.plugins.push(
@@ -127,13 +129,19 @@ export default function plugins(options) {
 
     )
 
+  // all envs
   config.plugins.push(
     new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify(options.env) }),
     new webpack.DefinePlugin({ 'process.env.SSR': JSON.stringify(options.ssr) }),
 
     // exports webpack asset manifest in json format
     new ManifestPlugin({...options.manifestPluginConfig}),
+
   );
+
+  if (options.emitFiles) {
+    config.plugins.push(new WriteFilePlugin());
+  }
 
   return config;
 };

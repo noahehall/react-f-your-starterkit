@@ -51,10 +51,12 @@ export default function base (
   const getOutput = () => ({
     chunkFilename: options.jsFilename,
     filename: options.jsFilename,
-    path: options.publicDir,
-    publicPath: getPublicPath(),
+    hotUpdateChunkFilename: 'hot/[id].[hash].hot-update.js',
+    hotUpdateMainFilename: 'hot/[hash].hot-update.json',
     library: options.isWeb ? 'var' : 'app',
     libraryTarget: options.isWeb ? 'umd2' : 'commonjs2',
+    path: options.publicDir,
+    publicPath: getPublicPath(),
   });
 
   const getResolve = () => ({

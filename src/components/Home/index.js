@@ -9,7 +9,7 @@ export class Home extends React.Component {
   render() {
     return (
       <div>
-        hyammer
+        blah
         <button onClick={this.handleBlah}>Clicsk to do five</button>
       </div>
     )

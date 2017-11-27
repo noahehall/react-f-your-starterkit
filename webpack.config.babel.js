@@ -12,10 +12,11 @@ import styleLintRules from './.stylelintrc.js';
  */
 
 function mainOptions ({
+  emitFiles = false,
   host = '0.0.0.0',
   platform = 'node',
   port = 3000,
-  ssr = 'true',
+  ssr = true,
 } = {}) {
   const ssrMode = JSON.parse(ssr);
   const getEntry = () => platform === 'web'
@@ -29,6 +30,7 @@ function mainOptions ({
     cssFilename: 'css/[name].[id].css',
     dependencies: Object.keys(deps.dependencies),
     distDir: path.resolve(__dirname, 'dist'), // target directory
+    emitFiles,
     env: process.env.NODE_ENV || 'development',
     host,
     htmlFilename: 'index.html',

@@ -8,8 +8,10 @@ import webpack from 'webpack';
 import webpackConfig from './webpack.config.babel.js';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
+import fse from 'fs-extra';
 
 const
+  EMIT_FILES = true,
   HOST = '0.0.0.0',
   NODE_IGNORE_CLIENT_HMR = false,
   NODE_PORT = 3000,
@@ -17,8 +19,10 @@ const
   SSR = true,
   WEB_PORT = 3001;
 
+if (EMIT_FILES) fse.emptyDirSync('./dist');
 function createConfig (type) {
   return webpackConfig({
+    emitFiles: EMIT_FILES,
     host: HOST,
     platform: type,
     port: eval(`${type.toUpperCase()}_PORT`),
