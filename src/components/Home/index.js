@@ -7,6 +7,7 @@ export class Home extends React.Component {
   handleBlah = () => this.props.doBlah(Math.random())
 
   render() {
+    console.log('props.blah are', this.props.blah)
     return (
       <div>
         blah

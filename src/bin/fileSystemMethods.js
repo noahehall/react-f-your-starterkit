@@ -1,5 +1,5 @@
 /* eslint-disable */
-const fs = process.env.EMIT_FILES
+const fs = process.env.EMIT_FILES === true
   ? require('fs-extra')
   : global.FS;
 

@@ -30,6 +30,7 @@ function mainOptions ({
     platform === 'web'
     && process.env.NODE_ENV === 'development'
     && ssrMode === false
+    && emitFiles === true
   ) {
     console.log('emptying ./dist directory');
     fse.emptyDirSync('./dist');

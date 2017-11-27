@@ -11,7 +11,7 @@ function getRxNormDefaultState () {
 }
 
 export default {
-  blah: {},
+  blah: 1234,
   queries: {},
   router: {},
   rxNorm: getRxNormDefaultState(),

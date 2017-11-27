@@ -155,7 +155,7 @@ function dynamicOptionsTwo ({
     dataPath: path.resolve(distDir, publicDir, 'data'),
     fontsPath: path.resolve(distDir, publicDir, 'fonts'),
     imagePath: path.resolve(distDir, publicDir, 'images'),
-    jsFilename: `${isNode ? '' : 'js/'}${platform}.[name]${isProd ? '.[hash]' : ''}.js`, // filename template for entry chunks
+    jsFilename: `${isNode ? '' : 'js/'}${platform}.[name]${isProd ? '.[chunkhash]' : ''}.js`, // filename template for entry chunks
     recordsOutputPath: path.resolve(distDir, privateDir, `${platform}.webpack_records.js`),
   };
 }
@@ -234,8 +234,9 @@ function getPerformanceConfig ({
 }
 
 function getWebpackConfig ({
- platform,
+ isDev,
  isNode,
+ platform,
 }) {
   return {
     bail: true,
@@ -243,7 +244,7 @@ function getWebpackConfig ({
     profile: true,
     target: platform,
     name: platform,
-    watch: isNode,
+    watch: isNode && isDev,
   };
 }
 
