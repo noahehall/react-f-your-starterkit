@@ -7,13 +7,23 @@ const headers = {
   },
 };
 
-export function getHeaders (request = { ct: 'html' }) {
+export function getHeaders (
+  request = { ct: 'html' },
+  additionalHeaders = {},
+) {
   const finalHeaders = {};
 
   Object.getOwnPropertyNames(request).forEach(key => {
+    // add matching header
     if (headers[key] && headers[key][request[key]])
       finalHeaders[headers[key][request[key]][0]] = headers[key][request[key]][1];
+
+    // log unknown header
+    else console.error(`could not find matching header for {${key}: ${request[key]}}`);
   });
 
-  return finalHeaders;
+  return {
+    ...finalHeaders,
+    ...additionalHeaders,
+  };
 }
