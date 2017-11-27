@@ -6,9 +6,9 @@ import * as fsMethods from './bin/fileSystemMethods';
 import express from 'express';
 import http from 'http';
 import path from 'path';
-import reactHandler from 'components/Server/routeHandlers/reactHandler';
-import setupPublicAssetsHandlers from 'components/Server/routeHandlers/setupPublicAssetsHandlers';
-import setupServerMiddleware from 'components/Server/setupServerMiddleware';
+import reactHandler from 'api/routeHandlers/reactHandler';
+import setupPublicAssetsHandlers from 'api/routeHandlers/setupPublicAssetsHandlers';
+import setupServerMiddleware from 'api/setupServerMiddleware';
 
 const publicDir = process.env.PUBLIC_DIR;
 const server = express();
