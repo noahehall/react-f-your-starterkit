@@ -6,13 +6,11 @@
 
 import 'babel-polyfill';
 import { AppContainer } from 'react-hot-loader';
-import React from 'react';
 import { render, hydrate } from 'react-dom';
 import App from 'components/App/Client';
-
 import createHistory from 'history/createBrowserHistory';
+import React from 'react';
 import storeCreator from 'store';
-// import { StaticRouter, matchPath } from 'react-router-dom';
 
 const history = createHistory();
 const store = storeCreator(history);
