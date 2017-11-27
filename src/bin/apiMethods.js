@@ -1,3 +1,4 @@
+// TODO: update header policy
 const headers = {
   cc: {
     'long': [ 'Cache-Control', 'public, max-age=600, s-maxage=1200' ],

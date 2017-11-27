@@ -1,3 +1,5 @@
+// TODO: https://expressjs.com/en/advanced/best-practice-security.html
+
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import errorhandler from 'errorhandler';
