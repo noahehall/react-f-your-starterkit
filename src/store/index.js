@@ -1,8 +1,8 @@
 /* eslint-disable */
 import { ConnectedRouter, routerReducer as router, routerMiddleware } from 'react-router-redux';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
-import { initialState } from './initialState';
 import * as reducers from './api/**/*reducer.js';
+import initialState from './initialState';
 import thunk from 'redux-thunk';
 
 // https://webpack.js.org/api/module-methods/#import-
@@ -48,8 +48,8 @@ export default function storeCreator(history) {
     : initialState;
 
   const updateReducerNames = (reducers) =>
-    Object.values(reducers).map(reducer => ({
-      [reducer.name]: reducer
+    Object.keys(reducers).map(fileName => ({
+      [fileName]: reducers[fileName]
     }));
 
   const store = createStore(

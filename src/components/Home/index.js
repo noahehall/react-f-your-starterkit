@@ -17,7 +17,7 @@ export class Home extends React.Component {
   }
 }
 
-const mapStateToProps = state => state.blah;
+const mapStateToProps = state => ({ blah: state.blah });
 
 const mapDispatchToProps = dispatch => {
   return {
