@@ -19,7 +19,10 @@ const
   SSR = true,
   WEB_PORT = 3001;
 
-if (EMIT_FILES) fse.emptyDirSync('./dist');
+if (EMIT_FILES) {
+  console.log('emptying ./dist directory');
+  fse.emptyDirSync('./dist');
+}
 function createConfig (type) {
   return webpackConfig({
     emitFiles: EMIT_FILES,

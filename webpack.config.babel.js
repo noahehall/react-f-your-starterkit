@@ -4,6 +4,7 @@ import optionsConfig from './config/optionsConfig';
 import path from 'path';
 import webpackConfig from './config/webpackConfig';
 import styleLintRules from './.stylelintrc.js';
+import fse from 'fs-extra';
 
 /**
  * TODO
@@ -12,16 +13,27 @@ import styleLintRules from './.stylelintrc.js';
  */
 
 function mainOptions ({
-  emitFiles = false,
+  emitFiles = true,
   host = '0.0.0.0',
   platform = 'node',
   port = 3000,
   ssr = true,
 } = {}) {
+
+
   const ssrMode = JSON.parse(ssr);
   const getEntry = () => platform === 'web'
     ? './src/client.js'
     : './src/server.js';
+
+  if (
+    platform === 'web'
+    && process.env.NODE_ENV === 'development'
+    && ssrMode === false
+  ) {
+    console.log('emptying ./dist directory');
+    fse.emptyDirSync('./dist');
+  }
 
   return {
     appSlogan: 'Creating the future, together',
