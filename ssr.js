@@ -1,6 +1,5 @@
 /* eslint-disable */
 import _eval from 'eval';
-import './src/bin/memoryFs'; // TODO: should depend on EMIT_FILES below
 import express from 'express';
 import path from 'path';
 import requireFromString from 'require-from-string';
@@ -20,9 +19,11 @@ const
   WEB_PORT = 3001;
 
 if (EMIT_FILES) {
-  console.log('emptying ./dist directory');
+  console.log('emptying ./dist directory & requiring memor-fs');
   fse.emptyDirSync('./dist');
+  require('./src/bin/memoryFs').default;
 }
+
 function createConfig (type) {
   return webpackConfig({
     emitFiles: EMIT_FILES,
@@ -38,6 +39,7 @@ const nodeConfig = createConfig('node');
 
 const webCompiler = webpack(webConfig);
 const nodeCompiler = webpack(nodeConfig);
+
 [webCompiler, nodeCompiler].forEach(compiler => {
   compiler.apply(new webpack.ProgressPlugin({
     profile: false,
@@ -154,11 +156,11 @@ function runNodeCompiler () {
 }
 
 let serverInitialized = false;
-webCompiler.plugin('done', (stats, callback = runNodeCompiler) => {
+webCompiler.plugin('done', (stats) => {
   logStatsErrorsAndWarnings(stats, 'web');
   if (!serverInitialized) {
     console.log('Initializing node compiler');
     serverInitialized = true;
-    callback();
+    runNodeCompiler();
   }
 });
