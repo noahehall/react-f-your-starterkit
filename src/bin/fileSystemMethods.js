@@ -1,7 +1,7 @@
 /* eslint-disable */
-const fs = process.env.NODE_ENV === 'development'
-  ? global.FS
-  : require('fs').default;
+const fs = process.env.EMIT_FILES
+  ? require('fs-extra')
+  : global.FS;
 
 export function readFileSync (file, options = 'utf8') {
   return fs.readFileSync(file, options);

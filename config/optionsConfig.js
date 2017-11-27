@@ -138,6 +138,7 @@ function dynamicOptionsOne ({
     isProd: env === 'production',
     privateDir: path.resolve(distDir, 'private'),
     publicDir:isNode ? distDir : path.resolve(distDir, 'public'),
+    clientPublicDir: path.resolve(distDir, 'public'),
     webpackProfile: verbose,
   };
 }

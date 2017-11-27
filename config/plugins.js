@@ -124,8 +124,6 @@ export default function plugins(options) {
       // splitout webpack boilerplate
       new webpack.optimize.CommonsChunkPlugin({ name: 'runtime', minChunks: Infinity }),
 
-      new webpack.DefinePlugin({ 'process.env.WEB_PORT': JSON.stringify(options.port) }),
-
     );
   else if (options.isNode)
     config.plugins.push(
@@ -136,8 +134,14 @@ export default function plugins(options) {
 
   // all envs and platforms
   config.plugins.push(
-    new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify(options.env) }),
-    new webpack.DefinePlugin({ 'process.env.SSR': JSON.stringify(options.ssr) }),
+    new webpack.DefinePlugin({
+      'process.env.DIST_DIR': JSON.stringify(options.distDir),
+      'process.env.NODE_ENV': JSON.stringify(options.env),
+      'process.env.PRIVATE_DIR': JSON.stringify(options.privateDir),
+      'process.env.PUBLIC_DIR': JSON.stringify(options.clientPublicDir),
+      'process.env.SSR': JSON.stringify(options.ssr),
+      [`process.env.${options.platform.toUpperCase()}_PORT`]: JSON.stringify(options.port),
+     }),
 
     // exports webpack asset manifest in json format
     new WebpackManifestPlugin({...options.WebpackManifestPluginConfig}),

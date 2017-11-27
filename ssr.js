@@ -1,6 +1,6 @@
 /* eslint-disable */
 import _eval from 'eval';
-import './src/bin/memoryFs';
+import './src/bin/memoryFs'; // TODO: should depend on EMIT_FILES below
 import express from 'express';
 import path from 'path';
 import requireFromString from 'require-from-string';

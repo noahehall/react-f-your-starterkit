@@ -8,44 +8,49 @@ import serveStatic from 'serve-static';
 import reactHandler from 'components/Server/routeHandlers/reactHandler';
 import publicAssetsHandler from 'components/Server/routeHandlers/publicAssetsHandler';
 
-const distPath = path.resolve(process.cwd(), 'dist');
-const publicPath = path.join(distPath, 'public');
-
-const {
-  indexHtml,
-  pwaManifest,
-  pwaManifestFileName,
-  webManifest,
-} = fsMethods.getManifest(publicPath);
-
+const publicDir = process.env.PUBLIC_DIR;
 const server = express();
 
-server.locals.webAssets = fsMethods.normalizeAssets([
-  pwaManifestFileName,
-  ...Object.values(webManifest),
-]);
-server.locals.webManifest = webManifest;
-server.locals.pwaManifest = pwaManifest;
-server.locals.indexHtml = indexHtml;
 server.use(publicAssetsHandler);
 
-if (process.env.NODE_ENV === 'development') {
+if (!process.env.EMIT_FILES) {
+  console.log('files NOT emitted, setting up server locals with Memory FS');
+  const {
+    indexHtml,
+    pwaManifest,
+    pwaManifestFileName,
+    webManifest,
+  } = fsMethods.getManifest(publicDir);
+
+  server.locals.webAssets = fsMethods.normalizeAssets([
+    pwaManifestFileName,
+    ...Object.values(webManifest),
+  ]);
+  server.locals.webManifest = webManifest;
+  server.locals.pwaManifest = pwaManifest;
+  server.locals.indexHtml = indexHtml;
+
   server.get('/pwa.manifest.json', (req, res, next) => {
     res.status(200).end(server.locals.pwaManifest);
     return;
   })
-  // TODO: need to get /manifest.json
   server.use(['/js', '/css'], (req, res, next) => {
-    const file = fsMethods.readFileSync(path.join(publicPath, req.baseUrl, req.path))
+    const file = fsMethods.readFileSync(path.join(publicDir, req.baseUrl, req.path))
     if (file) res.status(200).end(file);
     // TODO: should be 404
     else next();
   })
 } else {
-  console.log('not in dev', process.env.NODE_ENV);
-  // todo set this up for prod
-  // server.use('/', serveIndex(process.cwd()))
-  // server.use('/js', express.static(publicPath + '/public/js'), serveIndex(publicPath + '/public/js'))
+  console.log('files emitted, setting up server locals and express static');
+  server.use(serveStatic(publicDir, {
+    extensions: false,
+    fallthrough: true,
+    index: false, // must be false to reach reactHandler
+    redirect: true,
+  }));
+  // load indexhtml into memory
+  server.locals.indexHtml = fsMethods.readFileSync(`${publicDir}/index.html`, 'utf8');
+
 }
 
 server.get('*', [ reactHandler ]);

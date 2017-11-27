@@ -42,7 +42,7 @@ function mainOptions ({
     cssFilename: 'css/[name].[id].css',
     dependencies: Object.keys(deps.dependencies),
     distDir: path.resolve(__dirname, 'dist'), // target directory
-    emitFiles,
+    emitFiles: emitFiles || process.env.NODE_ENV === 'production',
     env: process.env.NODE_ENV || 'development',
     host,
     htmlFilename: 'index.html',

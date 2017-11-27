@@ -23,7 +23,7 @@ export class App extends React.Component {
               <Navigation />
             </Header>
             <Content>
-              Thank you for supporting our opensource react starter kit!
+              Thank you for supporting our opensource react starter kit! blap
               <ContentRouter />
             </Content>
             <Footer>
